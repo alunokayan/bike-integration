@@ -24,7 +24,7 @@ public class IndexController {
 	}
 
 	@Operation(summary = "detalhes da API", description = "Retorna os detalhes da API")
-	@GetMapping("details")
+	@GetMapping("detail")
 	public String details() {
 		return String.format("Name: %s%nGroup: %s%nVersion: %s%nTime: %s%nArtifact: %s",
 				buildProperties.getName(),
