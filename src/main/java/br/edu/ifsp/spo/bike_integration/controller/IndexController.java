@@ -18,7 +18,7 @@ public class IndexController {
 	BuildProperties buildProperties;
 
 	@Operation(summary = "versão da API", description = "Retorna a versão da API")
-	@GetMapping("version")
+	@GetMapping({"/", "home", "ping", "version"})
 	public String version() {
 		return buildProperties.getVersion();
 	}
