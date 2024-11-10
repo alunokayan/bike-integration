@@ -17,11 +17,11 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Builder
-@Table(name = "webservice_token")
+@Table(name = "auth_token")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class WebServiceToken {
+public class AuthToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,11 +33,11 @@ public class WebServiceToken {
     @Column(name = "criado_em", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime criadoEm;
 
-    @Column(name = "expira_em")
+    @Column(name = "expira_em", nullable = false)
     private LocalDateTime expiraEm;
 
     @Column(nullable = false)
-    private Boolean ativo;
+    private Boolean validado;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "id_usuario", nullable = false)

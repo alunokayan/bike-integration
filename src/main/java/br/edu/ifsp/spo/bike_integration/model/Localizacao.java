@@ -17,29 +17,32 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Builder
-@Table(name = "webservice_token")
+@Table(name = "localizacao")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class WebServiceToken {
+public class Localizacao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, unique = true)
-    private String token;
+    @Column(nullable = false)
+    private String latitude;
+
+    @Column(nullable = false)
+    private String longitude;
+
+    @Column(nullable = false)
+    private String cep;
 
     @Column(name = "criado_em", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime criadoEm;
 
-    @Column(name = "expira_em")
-    private LocalDateTime expiraEm;
-
-    @Column(nullable = false)
-    private Boolean ativo;
+    @Column(name = "atualizado_em")
+    private LocalDateTime atualizadoEm;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "id_usuario", nullable = false)
-    private Usuario usuario;
+    @JoinColumn(name = "id_tipo_localizacao", nullable = false)
+    private TipoLocalizacao tipoLocalizacao;
 }

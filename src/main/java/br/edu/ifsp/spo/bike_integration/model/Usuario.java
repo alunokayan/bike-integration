@@ -7,32 +7,57 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@Getter
-@Setter
 @Builder
-@AllArgsConstructor
+@Table(name = "usuario")
+@Data
 @NoArgsConstructor
-@Table(name = "WebServiceToken")
+@AllArgsConstructor
 public class Usuario {
-
-	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false, length = 512)
-    private String nome;
     
-    @Column(nullable = false, length = 512)
-    private String email;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
+    @Column(name = "nome_usuario", nullable = false, unique = true)
+    private String nomeUsuario;
+
+    @Column(nullable = false)
+    private String senha;
+
+    @Column(name = "criado_em", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime criadoEm;
+
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "id_perfil")
+    private Perfil perfil;
+
+    @OneToOne(optional = true)
+    @JoinColumn(name = "id_pessoa_fisica")
+    private PessoaFisica pessoaFisica;
+
+    @OneToOne(optional = true)
+    @JoinColumn(name = "id_pessoa_juridica")
+    private PessoaJuridica pessoaJuridica;
+
+    @OneToOne(optional = true)
+    @JoinColumn(name = "id_endereco")
+    private Endereco endereco;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "id_tipo_usuario", nullable = false)
+    private TipoUsuario tipoUsuario;
+    
+    @OneToOne(optional = true)
+    @JoinColumn(name = "id_email")
+    private Email email;
 }

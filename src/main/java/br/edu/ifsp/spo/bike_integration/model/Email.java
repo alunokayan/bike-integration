@@ -7,8 +7,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,29 +15,25 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Builder
-@Table(name = "webservice_token")
+@Table(name = "email")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class WebServiceToken {
+public class Email {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, unique = true)
-    private String token;
+    @Column(nullable = false)
+    private String valor;
 
     @Column(name = "criado_em", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime criadoEm;
 
-    @Column(name = "expira_em")
-    private LocalDateTime expiraEm;
+    @Column(name = "atualizado_em")
+    private LocalDateTime atualizadoEm;
 
     @Column(nullable = false)
-    private Boolean ativo;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "id_usuario", nullable = false)
-    private Usuario usuario;
+    private Boolean validado;
 }
