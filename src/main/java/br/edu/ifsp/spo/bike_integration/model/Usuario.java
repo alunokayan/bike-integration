@@ -44,15 +44,15 @@ public class Usuario {
     @JoinColumn(name = "id_perfil")
     private Perfil perfil;
 
-    @OneToOne(optional = true)
+    @OneToOne(optional = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_pessoa_fisica")
     private PessoaFisica pessoaFisica;
 
-    @OneToOne(optional = true)
+    @OneToOne(optional = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_pessoa_juridica")
     private PessoaJuridica pessoaJuridica;
 
-    @OneToOne(optional = true)
+    @OneToOne(optional = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_endereco")
     private Endereco endereco;
 

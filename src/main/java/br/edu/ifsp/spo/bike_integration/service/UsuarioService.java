@@ -1,48 +1,61 @@
 package br.edu.ifsp.spo.bike_integration.service;
 
-import javax.crypto.SecretKey;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.edu.ifsp.spo.bike_integration.dto.UsuarioDto;
 import br.edu.ifsp.spo.bike_integration.exception.CryptoException;
-import br.edu.ifsp.spo.bike_integration.model.Senha;
-import br.edu.ifsp.spo.bike_integration.model.TipoUsuario;
+import br.edu.ifsp.spo.bike_integration.factory.UsuarioFactory;
 import br.edu.ifsp.spo.bike_integration.model.Usuario;
 import br.edu.ifsp.spo.bike_integration.repository.UsuarioRepository;
-import br.edu.ifsp.spo.bike_integration.util.CryptoUtil;
 
 @Service
 public class UsuarioService {
 
-	@Autowired
-	private UsuarioRepository usuarioRepository;
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
-	private UsuarioService() {
-	}
+    @Autowired
+    private PessoaFisicaService pessoaFisicaService;
 
-	public Usuario create(UsuarioDto usuario) throws CryptoException {
-		if (usuarioRepository.findByNomeUsuario(usuario.getNome()).isPresent()) {
-			throw new IllegalArgumentException("Nome de usuário já existe");
-		}
-		// Gera chave de criptografia
-		SecretKey key = CryptoUtil.generateKey();
+    @Autowired
+    private PessoaJuridicaService pessoaJuridicaService;
 
-		// Criptografa a senha
-		String senhaCriptografada = CryptoUtil.encrypt(usuario.getSenha(), key);
+    @Autowired
+    private EmailService emailService;
 
-		// Salva usuário
-		return usuarioRepository.save(
-				Usuario.builder()
-				.nomeUsuario(usuario.getNome())
-				.senha(Senha.builder()
-						.valor(senhaCriptografada)
-						.chave(CryptoUtil.getSecretKeyAsString(key))
-						.build())
-				.tipoUsuario(TipoUsuario.builder()
-						.id(usuario.getIdTipoUsuario())
-                        .build())
-				.build());
+    @Autowired
+    private UsuarioFactory usuarioFactory;
+
+    public Usuario create(UsuarioDto usuarioDto) throws CryptoException {
+        if (usuarioRepository.findByNomeUsuario(usuarioDto.getNomeUsuario()).isPresent())
+            throw new IllegalArgumentException("Nome de usuário já existe");
+
+        if (emailService.getEmailByEndereco(usuarioDto.getEmail()) != null)
+            throw new IllegalArgumentException("Email já cadastrado");
+
+        if (pessoaFisicaService.getPessoaFisicaByCpf(usuarioDto.getCpf()) != null)
+            throw new IllegalArgumentException("CPF já cadastrado");
+
+        if (pessoaJuridicaService.getPessoaJuridicaByCnpj(usuarioDto.getCnpj()) != null)
+            throw new IllegalArgumentException("CNPJ já cadastrado");
+
+        return usuarioRepository.save(usuarioFactory.fromDto(usuarioDto));
+    }
+    
+	public void delete(String nomeUsuario, String cpf, String cnpj) {
+		Usuario usuario = usuarioRepository.findByNomeUsuario(nomeUsuario)
+				.orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
+		
+		if (cpf == null && cnpj == null)
+			throw new IllegalArgumentException("Informe CPF ou CNPJ para deletar o usuário");
+		
+		if (cpf != null && !usuario.getPessoaFisica().getCpf().equals(cpf))
+                throw new IllegalArgumentException("CPF não corresponde ao usuário");
+		
+		if (cnpj != null && !usuario.getPessoaJuridica().getCnpj().equals(cnpj))
+				throw new IllegalArgumentException("CNPJ não corresponde ao usuário");
+		
+		usuarioRepository.delete(usuario);
 	}
 }
