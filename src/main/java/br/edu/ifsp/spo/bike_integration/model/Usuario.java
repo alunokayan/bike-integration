@@ -2,6 +2,7 @@ package br.edu.ifsp.spo.bike_integration.model;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,11 +11,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Builder
@@ -22,6 +26,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class Usuario {
     
     @Id
@@ -30,9 +36,6 @@ public class Usuario {
 
     @Column(name = "nome_usuario", nullable = false, unique = true)
     private String nomeUsuario;
-
-    @Column(nullable = false)
-    private String senha;
 
     @Column(name = "criado_em", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime criadoEm;
@@ -57,7 +60,16 @@ public class Usuario {
     @JoinColumn(name = "id_tipo_usuario", nullable = false)
     private TipoUsuario tipoUsuario;
     
-    @OneToOne(optional = true)
+    @OneToOne(optional = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_email")
     private Email email;
+    
+    @OneToOne(optional = false, cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_senha")
+    private Senha senha;
+    
+    @PrePersist
+	public void prePersist() {
+		this.criadoEm = LocalDateTime.now();
+	}
 }
