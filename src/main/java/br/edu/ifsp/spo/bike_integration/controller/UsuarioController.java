@@ -1,6 +1,8 @@
 package br.edu.ifsp.spo.bike_integration.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,6 +14,7 @@ import br.edu.ifsp.spo.bike_integration.dto.UsuarioDto;
 import br.edu.ifsp.spo.bike_integration.exception.CryptoException;
 import br.edu.ifsp.spo.bike_integration.service.UsuarioService;
 import br.edu.ifsp.spo.bike_integration.util.FormatUtil;
+import br.edu.ifsp.spo.bike_integration.util.ResponseUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -25,28 +28,16 @@ public class UsuarioController {
 
 	@Operation(description = "Cria um novo usuário.")
 	@PostMapping("/create")
-	public String create(@RequestBody UsuarioDto usuario) throws CryptoException {
-		try {
-			usuarioService.create(usuario);
-			return "Usuário criado com sucesso";
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new IllegalArgumentException("Erro ao criar usuário: " + e.getMessage());
-		}
+	public ResponseEntity<Object> create(@RequestBody UsuarioDto usuario) throws CryptoException {
+		usuarioService.create(usuario);
+		return ResponseUtil.createResponse("Usuário criado com sucesso", HttpStatus.CREATED);
 	}
 
 	@Operation(description = "Deleta um usuário.")
 	@DeleteMapping("/delete")
-	public String delete(@RequestParam String nomeUsuario, @RequestParam(required = false) String cpf,
+	public ResponseEntity<Object> delete(@RequestParam String nomeUsuario, @RequestParam(required = false) String cpf,
 			@RequestParam(required = false) String cnpj) {
-		try {
-			cpf = FormatUtil.formatCpf(cpf);
-	        cnpj = FormatUtil.formatCnpj(cnpj);
-			usuarioService.delete(nomeUsuario, cpf, cnpj);
-			return "Usuário deletado com sucesso";
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "Erro ao deletar: " + e.getMessage();
-		}
+		usuarioService.delete(nomeUsuario, FormatUtil.formatCpf(cpf), FormatUtil.formatCnpj(cnpj));
+		return ResponseUtil.createResponse("Usuário deletado com sucesso", HttpStatus.OK);
 	}
 }
