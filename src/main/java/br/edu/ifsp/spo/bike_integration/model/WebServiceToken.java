@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,9 +26,9 @@ public class WebServiceToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "token", nullable = false, unique = true)
     private String token;
 
     @Column(name = "criado_em", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
@@ -36,10 +37,15 @@ public class WebServiceToken {
     @Column(name = "expira_em")
     private LocalDateTime expiraEm;
 
-    @Column(nullable = false)
+    @Column(name = "ativo", nullable = false)
     private Boolean ativo;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
+    
+    @PrePersist
+    public void prePersist() {
+    this.criadoEm = LocalDateTime.now();
+    }
 }

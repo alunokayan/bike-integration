@@ -24,27 +24,27 @@ public class Endereco {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "rua", nullable = false)
     private String rua;
 
-    @Column(nullable = false)
+    @Column(name = "numero", nullable = false)
     private String numero;
 
-    @Column(nullable = true)
+    @Column(name = "complemento", nullable = true)
     private String complemento;
 
-    @Column(nullable = false)
+    @Column(name = "bairro", nullable = false)
     private String bairro;
 
-    @Column(nullable = false)
+    @Column(name = "cidade", nullable = false)
     private String cidade;
 
-    @Column(nullable = false)
+    @Column(name = "estado", nullable = false)
     private String estado;
 
-    @Column(nullable = false)
+    @Column(name = "cep", nullable = false)
     private String cep;
 
     @Column(name = "criado_em", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")

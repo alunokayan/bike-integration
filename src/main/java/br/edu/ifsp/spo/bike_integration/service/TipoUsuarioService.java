@@ -12,7 +12,7 @@ public class TipoUsuarioService {
 	@Autowired
 	private TipoUsuarioRepository tipoUsuarioRepository;
 	
-	public TipoUsuario getTipoUsuarioById(Integer id) {
+	public TipoUsuario getTipoUsuarioById(Long id) {
     return tipoUsuarioRepository.findById(id)
         .orElseThrow(() -> new RuntimeException("Tipo de usuário não encontrado"));
 	}

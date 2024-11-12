@@ -28,8 +28,8 @@ public class UsuarioBuilder {
 	private TipoUsuarioService tipoUsuarioService;
 
 	public Usuario build(String nome, String nomeUsuario, 
-			Integer idPerfil, String cpf, String cnpj, EnderecoDto endereco, 
-			String email, String senha, Integer idTipoUsuario) throws CryptoException {
+			Long idPerfil, String cpf, String cnpj, EnderecoDto endereco, 
+			String email, String senha, Long idTipoUsuario) throws CryptoException {
 		// Gera chave de criptografia
 		SecretKey key = CryptoUtil.generateKey();
 		

@@ -23,9 +23,9 @@ public class TipoEvento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false)
+    @Column(name = "nome", nullable = false)
     private String nome;
 
-    @Column(nullable = false)
+    @Column(name = "descricao", nullable = false)
     private String descricao;
 }

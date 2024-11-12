@@ -21,11 +21,11 @@ public class TipoUsuario {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "nome", nullable = false)
     private String nome;
 
-    @Column(nullable = false)
+    @Column(name = "descricao", nullable = false)
     private String descricao;
 }

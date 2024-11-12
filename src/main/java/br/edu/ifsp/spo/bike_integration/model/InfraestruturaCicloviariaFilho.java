@@ -8,8 +8,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -19,39 +19,33 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Builder
-@Table(name = "problema")
+@Table(name = "infraestrutura_cicloviaria_filho")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Problema {
+public class InfraestruturaCicloviariaFilho {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "descricao", nullable = false)
-    private String descricao;
     
-    @Lob
-    @Column(name = "foto")
-    private byte[] foto;
-
-    @Column(name = "criado_em", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime criadoEm;
-
-    @Column(nullable = false)
-    private Boolean ativo;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "id_tipo_problema", nullable = false)
-    private TipoProblema tipoProblema;
-    
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "id_infraestrutura_cicloviaria", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "id_infraestrutura_pai", nullable = false)
     private InfraestruturaCicloviaria infraestruturaCicloviaria;
     
+    @OneToOne(optional = false)
+    @JoinColumn(name = "id_localizacao", nullable = false)
+    private Localizacao localizacao;
+
+    @OneToOne(optional = false)
+    @JoinColumn(name = "id_tipo_infraestrutura_cicloviaria", nullable = false)
+    private TipoInfraestruturaCicloviaria tipoInfraestruturaCicloviaria;
+    
+    @Column(name = "criado_em", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime criadoEm;
+    
     @PrePersist
-	public void prePersist() {
-	this.criadoEm = LocalDateTime.now();
-	}
+    public void prePersist() {
+    criadoEm = LocalDateTime.now();
+    }
 }

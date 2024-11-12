@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import br.edu.ifsp.spo.bike_integration.model.TipoUsuario;
 
-public interface TipoUsuarioRepository extends JpaRepository<TipoUsuario, Integer>{
+public interface TipoUsuarioRepository extends JpaRepository<TipoUsuario, Long>{
 	
-	Optional<TipoUsuario> findById(Integer id);
+	Optional<TipoUsuario> findById(Long id);
 }

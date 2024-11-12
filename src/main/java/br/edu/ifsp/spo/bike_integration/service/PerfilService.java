@@ -12,7 +12,7 @@ public class PerfilService {
 	@Autowired
 	private PerfilRepository perfilRepository;
 	
-	public Perfil findById(Integer id) {
+	public Perfil findById(Long id) {
 	return perfilRepository.findById(id).orElse(null);
 	}
 	

@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,12 +27,12 @@ public class Evento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "nome", nullable = false)
     private String nome;
 
-    @Column(nullable = false)
+    @Column(name = "descricao", nullable = false)
     private String descricao;
 
     @Column(name = "criado_em", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
@@ -46,7 +47,7 @@ public class Evento {
     @Column(name = "data_final", nullable = false)
     private LocalDateTime dataFinal;
 
-    @Column(nullable = false)
+    @Column(name = "gratuito", nullable = false)
     private Boolean gratuito;
 
     @ManyToOne(optional = false)
@@ -60,4 +61,9 @@ public class Evento {
     @ManyToOne(optional = false)
     @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
+    
+    @PrePersist
+	public void prePersist() {
+	this.criadoEm = LocalDateTime.now();
+	}
 }

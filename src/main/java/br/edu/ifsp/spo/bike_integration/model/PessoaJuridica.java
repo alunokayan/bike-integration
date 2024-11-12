@@ -21,11 +21,11 @@ public class PessoaJuridica {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "nome", nullable = false)
     private String nome;
 
-    @Column(nullable = false)
+    @Column(name = "cnpj", nullable = false)
     private String cnpj;
 }

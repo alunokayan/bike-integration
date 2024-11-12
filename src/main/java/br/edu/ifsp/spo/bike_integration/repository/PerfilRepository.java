@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import br.edu.ifsp.spo.bike_integration.model.Perfil;
 
-public interface PerfilRepository extends JpaRepository<Perfil, Integer>{
-	Optional<Perfil> findById(Integer id);
+public interface PerfilRepository extends JpaRepository<Perfil, Long>{
+	Optional<Perfil> findById(Long id);
 }

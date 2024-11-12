@@ -24,12 +24,12 @@ public class Senha {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "valor", nullable = false)
     private String valor;
     
-    @Column(nullable = false)
+    @Column(name = "chave", nullable = false)
     private String chave;
     
     @Column(name = "criado_em", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")

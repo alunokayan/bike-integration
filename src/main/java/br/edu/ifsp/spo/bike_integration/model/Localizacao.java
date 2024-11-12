@@ -8,7 +8,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,15 +26,15 @@ public class Localizacao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "latitude", nullable = false)
     private String latitude;
 
-    @Column(nullable = false)
+    @Column(name = "longitude", nullable = false)
     private String longitude;
 
-    @Column(nullable = false)
+    @Column(name = "cep", nullable = false)
     private String cep;
 
     @Column(name = "criado_em", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
@@ -42,7 +43,12 @@ public class Localizacao {
     @Column(name = "atualizado_em")
     private LocalDateTime atualizadoEm;
 
-    @ManyToOne(optional = false)
+    @OneToOne(optional = false)
     @JoinColumn(name = "id_tipo_localizacao", nullable = false)
     private TipoLocalizacao tipoLocalizacao;
+    
+    @PrePersist
+    public void prePersist() {
+    this.criadoEm = LocalDateTime.now();
+    }
 }

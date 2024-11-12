@@ -19,7 +19,7 @@ public class UsuarioDto {
 	private String nomeUsuario;
 
 	@Schema(example = "1")
-	private int idPerfil;
+	private Long idPerfil;
 
 	@Schema(example = "000.000.000-00")
 	private String cpf;
@@ -36,6 +36,6 @@ public class UsuarioDto {
 	private String senha;
 
 	@Schema(example = "2")
-	private int idTipoUsuario;
+	private Long idTipoUsuario;
 
 }
