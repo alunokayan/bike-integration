@@ -1,6 +1,6 @@
 package br.edu.ifsp.spo.bike_integration.model;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -38,10 +38,10 @@ public class Localizacao {
     private String cep;
 
     @Column(name = "criado_em", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime criadoEm;
+    private Date criadoEm;
 
     @Column(name = "atualizado_em")
-    private LocalDateTime atualizadoEm;
+    private Date atualizadoEm;
 
     @OneToOne(optional = false)
     @JoinColumn(name = "id_tipo_localizacao", nullable = false)
@@ -49,6 +49,6 @@ public class Localizacao {
     
     @PrePersist
     public void prePersist() {
-    this.criadoEm = LocalDateTime.now();
+    this.criadoEm = new Date();
     }
 }

@@ -1,6 +1,6 @@
 package br.edu.ifsp.spo.bike_integration.model;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -33,13 +33,13 @@ public class Senha {
     private String chave;
     
     @Column(name = "criado_em", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime criadoEm;
+    private Date criadoEm;
 
     @Column(name = "atualizado_em")
-    private LocalDateTime atualizadoEm;
+    private Date atualizadoEm;
     
     @PrePersist
     protected void onCreate() {
-        this.criadoEm = LocalDateTime.now();
+        this.criadoEm = new Date();
     }
 }

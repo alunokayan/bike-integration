@@ -1,6 +1,6 @@
 package br.edu.ifsp.spo.bike_integration.model;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,16 +30,16 @@ public class Email {
     private String valor;
 
     @Column(name = "criado_em", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime criadoEm;
+    private Date criadoEm;
 
     @Column(name = "atualizado_em")
-    private LocalDateTime atualizadoEm;
+    private Date atualizadoEm;
 
     @Column(nullable = false)
     private Boolean validado;
     
     @PrePersist
 	public void prePersist() {
-	this.criadoEm = LocalDateTime.now();
+	this.criadoEm = new Date();
 	}
 }

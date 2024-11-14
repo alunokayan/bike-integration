@@ -25,16 +25,15 @@ public class UsuarioController {
 
 	@Autowired
 	private UsuarioService usuarioService;
-
+	
 	@Operation(description = "Cria um novo usuário.")
-	@PostMapping("/create")
+	@PostMapping("/usuario/create")
 	public ResponseEntity<Object> create(@RequestBody UsuarioDto usuario) throws CryptoException {
-		usuarioService.create(usuario);
-		return ResponseUtil.createResponse("Usuário criado com sucesso", HttpStatus.CREATED);
+		return ResponseUtil.createResponse("Usuário criado com sucesso id: " + usuarioService.create(usuario).getId(), HttpStatus.CREATED);
 	}
-
+	
 	@Operation(description = "Deleta um usuário.")
-	@DeleteMapping("/delete")
+	@DeleteMapping("/usuario/delete")
 	public ResponseEntity<Object> delete(@RequestParam String nomeUsuario, @RequestParam(required = false) String cpf,
 			@RequestParam(required = false) String cnpj) {
 		usuarioService.delete(nomeUsuario, FormatUtil.formatCpf(cpf), FormatUtil.formatCnpj(cnpj));

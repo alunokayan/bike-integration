@@ -1,6 +1,6 @@
 package br.edu.ifsp.spo.bike_integration.model;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,10 +30,10 @@ public class InfraestruturaCicloviaria {
     private float notaMedia;
     
     @Column(name = "criado_em", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime criadoEm;
+    private Date criadoEm;
     
     @PrePersist
 	public void prePersist() {
-	this.criadoEm = LocalDateTime.now();
+	this.criadoEm = new Date();
 	}
 }

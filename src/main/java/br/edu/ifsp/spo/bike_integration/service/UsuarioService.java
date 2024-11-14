@@ -27,6 +27,11 @@ public class UsuarioService {
     @Autowired
     private UsuarioFactory usuarioFactory;
 
+	public Usuario getByNomeUsuario(String nomeUsuario) {
+    return usuarioRepository.findByNomeUsuario(nomeUsuario)
+        .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
+    }
+    
     public Usuario create(UsuarioDto usuarioDto) throws CryptoException {
         if (usuarioRepository.findByNomeUsuario(usuarioDto.getNomeUsuario()).isPresent())
             throw new IllegalArgumentException("Nome de usuário já existe");

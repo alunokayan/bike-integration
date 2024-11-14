@@ -1,6 +1,6 @@
 package br.edu.ifsp.spo.bike_integration.model;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -38,7 +38,7 @@ public class Usuario {
     private String nomeUsuario;
 
     @Column(name = "criado_em", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime criadoEm;
+    private Date criadoEm;
 
     @ManyToOne(optional = true)
     @JoinColumn(name = "id_perfil")
@@ -70,6 +70,6 @@ public class Usuario {
     
     @PrePersist
 	public void prePersist() {
-		this.criadoEm = LocalDateTime.now();
+		this.criadoEm = new Date();
 	}
 }

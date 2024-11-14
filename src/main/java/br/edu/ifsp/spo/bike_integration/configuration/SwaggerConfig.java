@@ -20,10 +20,13 @@ public class SwaggerConfig {
                         .title(buildProperties.getName())
                         .version(buildProperties.getVersion())
                         .description("Documentação da API Bike Integration"))
-                .components(new Components().addSecuritySchemes("AccessToken",
-            			new SecurityScheme().type(SecurityScheme.Type.APIKEY).in(SecurityScheme.In.HEADER)
+                .components(new Components()
+                		.addSecuritySchemes("AccessToken",
+            			new SecurityScheme()
+            				.type(SecurityScheme.Type.APIKEY)
+            				.in(SecurityScheme.In.HEADER)
             				.name("access-token")))
-            		.addSecurityItem(new SecurityRequirement().addList("AccessToken"));
-
+        		.addSecurityItem(new SecurityRequirement()
+        				.addList("AccessToken"));
     }
 }

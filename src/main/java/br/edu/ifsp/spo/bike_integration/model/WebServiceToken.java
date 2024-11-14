@@ -1,6 +1,6 @@
 package br.edu.ifsp.spo.bike_integration.model;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,10 +32,10 @@ public class WebServiceToken {
     private String token;
 
     @Column(name = "criado_em", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime criadoEm;
+    private Date criadoEm;
 
     @Column(name = "expira_em")
-    private LocalDateTime expiraEm;
+    private Date expiraEm;
 
     @Column(name = "ativo", nullable = false)
     private Boolean ativo;
@@ -46,6 +46,6 @@ public class WebServiceToken {
     
     @PrePersist
     public void prePersist() {
-    this.criadoEm = LocalDateTime.now();
+    this.criadoEm = new Date();
     }
 }

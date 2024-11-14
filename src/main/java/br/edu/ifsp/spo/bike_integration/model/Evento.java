@@ -1,7 +1,8 @@
 package br.edu.ifsp.spo.bike_integration.model;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,7 +16,9 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Builder
@@ -23,6 +26,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class Evento {
 
     @Id
@@ -36,16 +41,16 @@ public class Evento {
     private String descricao;
 
     @Column(name = "criado_em", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime criadoEm;
+    private Date criadoEm;
 
     @Column(name = "atualizado_em")
-    private LocalDateTime atualizadoEm;
+    private Date atualizadoEm;
 
     @Column(name = "data_inicial", nullable = false)
-    private LocalDateTime dataInicial;
+    private Date dataInicial;
 
     @Column(name = "data_final", nullable = false)
-    private LocalDateTime dataFinal;
+    private Date dataFinal;
 
     @Column(name = "gratuito", nullable = false)
     private Boolean gratuito;
@@ -54,9 +59,9 @@ public class Evento {
     @JoinColumn(name = "id_tipo_evento", nullable = false)
     private TipoEvento tipoEvento;
 
-    @OneToOne(optional = false)
-    @JoinColumn(name = "id_localizacao", nullable = false)
-    private Localizacao localizacao;
+    @OneToOne(optional = false, cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_endereco", nullable = false)
+    private Endereco endereco;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "id_usuario", nullable = false)
@@ -64,6 +69,6 @@ public class Evento {
     
     @PrePersist
 	public void prePersist() {
-	this.criadoEm = LocalDateTime.now();
+	this.criadoEm = new Date();
 	}
 }
