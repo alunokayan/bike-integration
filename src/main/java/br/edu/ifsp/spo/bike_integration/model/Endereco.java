@@ -46,6 +46,12 @@ public class Endereco {
 
     @Column(name = "cep", nullable = false)
     private String cep;
+    
+    @Column(name = "latitude", nullable = true)
+    private String latitude;
+    
+    @Column(name = "longitude", nullable = true)
+    private String longitude;
 
     @Column(name = "criado_em", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date criadoEm;

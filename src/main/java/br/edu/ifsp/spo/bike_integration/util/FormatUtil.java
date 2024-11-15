@@ -18,4 +18,12 @@ public class FormatUtil {
         cnpj = cnpj.replaceAll("\\D", ""); // Remove tudo que não for número
         return cnpj.replaceAll("(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})", "$1.$2.$3/$4-$5");
     }
+    
+	public static String formatCep(String cep) {
+		if (cep == null || cep.isEmpty()) {
+			return cep;
+		}
+		cep = cep.replaceAll("\\D", ""); // Remove tudo que não for número
+        return cep.replaceAll("(\\d{5})(\\d{3})", "$1-$2");
+	}
 }

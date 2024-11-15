@@ -16,4 +16,8 @@ public class ResponseUtil {
 	public static ResponseEntity<Object> createResponse(HttpStatus status) {
 		return new ResponseEntity<>(status);
 	}
+	
+	public static ResponseEntity<Object> createResponse(Object object, HttpStatus status) {
+		return new ResponseEntity<>(object, status);
+	}
 }
