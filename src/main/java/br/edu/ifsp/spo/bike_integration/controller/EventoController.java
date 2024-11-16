@@ -24,7 +24,7 @@ public class EventoController {
 
 	@Operation(description = "Cria um novo evento.")
 	@PostMapping("/evento/create")
-	public ResponseEntity<Object> create(@RequestBody EventoDto evento) {
+	public ResponseEntity<Object> create(@RequestBody EventoDto evento) throws Exception {
 		return ResponseUtil.createResponse("Evento criado com sucesso id: " + eventoService.create(evento).getId(),
 				HttpStatus.CREATED);
 	}

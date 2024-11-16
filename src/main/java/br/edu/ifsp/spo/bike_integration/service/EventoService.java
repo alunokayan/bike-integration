@@ -19,7 +19,7 @@ public class EventoService {
 	@Autowired
 	private EventoFactory eventoFactory;
 
-	public Evento create(EventoDto evento) {
+	public Evento create(EventoDto evento) throws Exception {
 		Optional<Evento> eventoFromDto = eventoRepository.findByNome(evento.getNome());
 
 		if (eventoFromDto.isPresent() && evento.equalsEvento(eventoFromDto.get())) {

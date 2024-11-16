@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.edu.ifsp.spo.bike_integration.dto.UsuarioDto;
-import br.edu.ifsp.spo.bike_integration.exception.CryptoException;
 import br.edu.ifsp.spo.bike_integration.service.UsuarioService;
 import br.edu.ifsp.spo.bike_integration.util.FormatUtil;
 import br.edu.ifsp.spo.bike_integration.util.ResponseUtil;
@@ -25,13 +24,14 @@ public class UsuarioController {
 
 	@Autowired
 	private UsuarioService usuarioService;
-	
+
 	@Operation(description = "Cria um novo usuário.")
 	@PostMapping("/usuario/create")
-	public ResponseEntity<Object> create(@RequestBody UsuarioDto usuario) throws CryptoException {
-		return ResponseUtil.createResponse("Usuário criado com sucesso id: " + usuarioService.create(usuario).getId(), HttpStatus.CREATED);
+	public ResponseEntity<Object> create(@RequestBody UsuarioDto usuario) throws Exception {
+		return ResponseUtil.createResponse("Usuário criado com sucesso id: " + usuarioService.create(usuario).getId(),
+				HttpStatus.CREATED);
 	}
-	
+
 	@Operation(description = "Deleta um usuário.")
 	@DeleteMapping("/usuario/delete")
 	public ResponseEntity<Object> delete(@RequestParam String nomeUsuario, @RequestParam(required = false) String cpf,

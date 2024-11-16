@@ -13,7 +13,7 @@ public class EventoFactory {
 	@Autowired
 	private EventoBuilder eventoBuilder;
 	
-	public Evento fromDto(EventoDto evento) {
+	public Evento fromDto(EventoDto evento) throws Exception {
 		return eventoBuilder.build(
 				evento.getNome(), 
 				evento.getDescricao(), 

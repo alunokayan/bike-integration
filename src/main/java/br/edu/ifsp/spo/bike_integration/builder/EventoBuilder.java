@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import br.edu.ifsp.spo.bike_integration.dto.EnderecoDto;
-import br.edu.ifsp.spo.bike_integration.model.Endereco;
 import br.edu.ifsp.spo.bike_integration.model.Evento;
 import br.edu.ifsp.spo.bike_integration.service.TipoEventoService;
 import br.edu.ifsp.spo.bike_integration.service.UsuarioService;
@@ -20,8 +19,11 @@ public class EventoBuilder {
 	@Autowired
 	private UsuarioService usuarioService;
 	
-	public Evento build(String nome, String descricao, Date dataInicial, Date dataFinal,
-			Boolean gratuito, Long idTipoEvento, EnderecoDto endereco, String usuarioResponsavel) {
+	@Autowired
+	private EnderecoBuilder enderecoBuilder;
+	
+	public Evento build(String nome, String descricao, Date dataInicial, Date dataFinal, Boolean gratuito,
+			Long idTipoEvento, EnderecoDto endereco, String usuarioResponsavel) throws Exception {
 		return Evento.builder()
 				.nome(nome)
 				.descricao(descricao)
@@ -29,15 +31,7 @@ public class EventoBuilder {
 				.dataFinal(dataFinal)
 				.gratuito(gratuito)
 				.tipoEvento(tipoEventoService.getById(idTipoEvento))
-				.endereco(Endereco.builder()
-		                .rua(endereco.getRua())
-		                .numero(endereco.getNumero())
-		                .complemento(endereco.getComplemento())
-		                .bairro(endereco.getBairro())
-		                .cidade(endereco.getCidade())
-		                .estado(endereco.getEstado())
-		                .cep(endereco.getCep())
-		                .build())
+				.endereco(enderecoBuilder.build(endereco))
 				.usuario(usuarioService.getByNomeUsuario(usuarioResponsavel))
 			.build();
 	}

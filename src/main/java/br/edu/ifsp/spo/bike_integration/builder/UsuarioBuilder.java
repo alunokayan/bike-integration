@@ -6,9 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import br.edu.ifsp.spo.bike_integration.dto.EnderecoDto;
-import br.edu.ifsp.spo.bike_integration.exception.CryptoException;
 import br.edu.ifsp.spo.bike_integration.model.Email;
-import br.edu.ifsp.spo.bike_integration.model.Endereco;
 import br.edu.ifsp.spo.bike_integration.model.PessoaFisica;
 import br.edu.ifsp.spo.bike_integration.model.PessoaJuridica;
 import br.edu.ifsp.spo.bike_integration.model.Senha;
@@ -26,40 +24,46 @@ public class UsuarioBuilder {
 	
 	@Autowired
 	private TipoUsuarioService tipoUsuarioService;
+	
+	@Autowired
+	private EnderecoBuilder enderecoBuilder;
 
 	public Usuario build(String nome, String nomeUsuario, Long idPerfil, String cpf, String cnpj, EnderecoDto endereco,
-			String email, String senha, Long idTipoUsuario) throws CryptoException {
-		// Gera chave de criptografia
-		SecretKey key = CryptoUtil.generateKey();
-		
-		PessoaFisica pessoaFisica = cpf != null ? PessoaFisica.builder().nome(nome).cpf(FormatUtil.formatCpf(cpf)).build() : null;
-		
-		PessoaJuridica pessoaJuridica = cnpj != null ? PessoaJuridica.builder().nome(nome).cnpj(FormatUtil.formatCnpj(cnpj)).build() : null;
-		
-		return Usuario.builder()
-				.nomeUsuario(nomeUsuario)
-				.perfil(perfilService.findById(idPerfil))
-				.pessoaFisica(pessoaFisica)
-				.pessoaJuridica(pessoaJuridica)
-				.endereco(Endereco.builder()
-		                .rua(endereco.getRua())
-		                .numero(endereco.getNumero())
-		                .complemento(endereco.getComplemento())
-		                .bairro(endereco.getBairro())
-		                .cidade(endereco.getCidade())
-		                .estado(endereco.getEstado())
-		                .cep(endereco.getCep())
-		                .build())
-				.email(Email.builder()
-                        .valor(email)
-                        .validado(true)
-                        .build())
-				.senha(Senha.builder()
-                        .valor(CryptoUtil.encrypt(senha, key))
-                        .chave(CryptoUtil.getSecretKeyAsString(key))
-                        .build())
-				.tipoUsuario(tipoUsuarioService.getTipoUsuarioById(idTipoUsuario))
-				.build();
+			String email, String senha, Long idTipoUsuario) throws Exception {		
+	// Gera chave de criptografia
+	SecretKey key = CryptoUtil.generateKey();
+	
+	// Constrói pessoa física e jurídica
+	PessoaFisica pessoaFisica = this.buildPessoaFisica(nomeUsuario, cpf);
+	PessoaJuridica pessoaJuridica = this.buildPessoaJuridica(nome, cnpj);
+	
+	return Usuario.builder()
+			.nomeUsuario(nomeUsuario)
+			.perfil(perfilService.findById(idPerfil))
+			.pessoaFisica(pessoaFisica)
+			.pessoaJuridica(pessoaJuridica)
+			.endereco(enderecoBuilder.build(endereco))
+			.email(Email.builder()
+                    .valor(email)
+                    .validado(true)
+                    .build())
+			.senha(Senha.builder()
+                    .valor(CryptoUtil.encrypt(senha, key))
+                    .chave(CryptoUtil.getSecretKeyAsString(key))
+                    .build())
+			.tipoUsuario(tipoUsuarioService.getTipoUsuarioById(idTipoUsuario))
+			.build();
 	}
+	
+	// PRIVATES
+	private PessoaFisica buildPessoaFisica(String nome, String cpf) {
+	return cpf != null ? PessoaFisica.builder().nome(nome).cpf(FormatUtil.formatCpf(cpf)).build() : null;
+	}
+	
+	private PessoaJuridica buildPessoaJuridica(String nome, String cnpj) {
+	return cnpj != null ? PessoaJuridica.builder().nome(nome).cnpj(FormatUtil.formatCnpj(cnpj)).build() : null;
+	}
+	
+	
 	
 }

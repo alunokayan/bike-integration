@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.edu.ifsp.spo.bike_integration.dto.UsuarioDto;
-import br.edu.ifsp.spo.bike_integration.exception.CryptoException;
 import br.edu.ifsp.spo.bike_integration.factory.UsuarioFactory;
 import br.edu.ifsp.spo.bike_integration.model.Usuario;
 import br.edu.ifsp.spo.bike_integration.repository.UsuarioRepository;
@@ -32,7 +31,13 @@ public class UsuarioService {
         .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
     }
     
-    public Usuario create(UsuarioDto usuarioDto) throws CryptoException {
+    public Usuario create(UsuarioDto usuarioDto) throws Exception {
+    	if (usuarioDto.getCnpj() != null && usuarioDto.getCpf() != null)
+    		throw new IllegalArgumentException("Informe CPF ou CNPJ, não ambos");
+    	
+    	if (usuarioDto.getCnpj() == null && usuarioDto.getCpf() == null)
+    		throw new IllegalArgumentException("Informe CPF ou CNPJ");
+    	
         if (usuarioRepository.findByNomeUsuario(usuarioDto.getNomeUsuario()).isPresent())
             throw new IllegalArgumentException("Nome de usuário já existe");
 

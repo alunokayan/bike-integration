@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 
 import br.edu.ifsp.spo.bike_integration.builder.UsuarioBuilder;
 import br.edu.ifsp.spo.bike_integration.dto.UsuarioDto;
-import br.edu.ifsp.spo.bike_integration.exception.CryptoException;
 import br.edu.ifsp.spo.bike_integration.model.Usuario;
 
 @Component
@@ -14,7 +13,7 @@ public class UsuarioFactory {
     @Autowired
     private UsuarioBuilder usuarioBuilder;
 
-    public Usuario fromDto(UsuarioDto usuarioDto) throws CryptoException {
+    public Usuario fromDto(UsuarioDto usuarioDto) throws Exception {
         return usuarioBuilder.build(
             usuarioDto.getNome(),
             usuarioDto.getNomeUsuario(),
