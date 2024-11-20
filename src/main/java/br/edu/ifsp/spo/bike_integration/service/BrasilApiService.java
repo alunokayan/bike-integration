@@ -5,9 +5,13 @@ import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import br.edu.ifsp.spo.bike_integration.hardcode.BrasilApiType;
 import br.edu.ifsp.spo.bike_integration.hardcode.ConfiguracaoApiType;
 import br.edu.ifsp.spo.bike_integration.model.ConfiguracaoApiExterna;
 import br.edu.ifsp.spo.bike_integration.response.BrasilApiCepResponse;
+import br.edu.ifsp.spo.bike_integration.response.BrasilApiCnpjResponse;
+import br.edu.ifsp.spo.bike_integration.util.FormatUtil;
+import jakarta.annotation.PostConstruct;
 
 @Service
 public class BrasilApiService {
@@ -18,17 +22,35 @@ public class BrasilApiService {
 	@Autowired
 	private RestTemplate restTemplate;
 
+	private ConfiguracaoApiExterna configuracao;
+	
+	@PostConstruct
+    public void init() {
+        configuracao = configuracaoApiService.getConfiguracaoByNome(ConfiguracaoApiType.BRASIL_API);
+    }
+
 	public BrasilApiCepResponse buscarEnderecoPorCep(String cep) throws NotFoundException {
 		if (!cep.matches("\\d{5}-?\\d{3}"))
 			throw new IllegalArgumentException("CEP inválido.");
 
-		ConfiguracaoApiExterna configuracao = configuracaoApiService
-				.getConfiguracaoByNome(ConfiguracaoApiType.BRASIL_API);
-
 		try {
-			return restTemplate.getForObject(configuracao.getUrl() + ConfiguracaoApiType.BRASIL_API.getEndpoint() + cep,
+			return restTemplate.getForObject(configuracao.getUrl() + BrasilApiType.CEP.getEndpoint() + FormatUtil.removeNonNumeric(cep),
 					BrasilApiCepResponse.class);
 		} catch (Exception e) {
+			e.printStackTrace();
+			throw new NotFoundException();
+		}
+	}
+
+	public BrasilApiCnpjResponse buscarEmpresaPorCnpj(String cnpj) throws NotFoundException {
+		if (!cnpj.matches("\\d{2}\\.?\\d{3}\\.?\\d{3}/?\\d{4}-?\\d{2}"))
+			throw new IllegalArgumentException("CNPJ inválido.");
+
+		try {
+			return restTemplate.getForObject(configuracao.getUrl() + BrasilApiType.CNPJ.getEndpoint() + FormatUtil.removeNonNumeric(cnpj),
+					BrasilApiCnpjResponse.class);
+		} catch (Exception e) {
+			e.printStackTrace();
 			throw new NotFoundException();
 		}
 	}

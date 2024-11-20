@@ -44,6 +44,7 @@ public class EventoDto {
 	@Schema(example = "usuario123", description = "Nome de usuário responsável pelo evento")
 	private String usuarioResponsavel;
 
+	@Schema(hidden = true)
 	public boolean equalsEvento(Evento other) {
 		if (other == null)
 			return false;
@@ -54,6 +55,7 @@ public class EventoDto {
 		        && Objects.equals(nome, other.getNome());
 	}
 	
+	@Schema(hidden = true)
 	public boolean compareDateValues(Date date1, Date date2) {
 	    if (date1 == null || date2 == null) {
 	        return false;

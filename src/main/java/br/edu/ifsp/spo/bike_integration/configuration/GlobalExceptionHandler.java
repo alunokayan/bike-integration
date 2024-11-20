@@ -15,33 +15,33 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request) {
-        return ResponseUtil.createResponse("Erro: " + ex.getMessage(), HttpStatus.BAD_REQUEST);
+        return ResponseUtil.createResponse("Erro: \n" + ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(CryptoException.class)
     public ResponseEntity<Object> handleCryptoException(CryptoException ex, WebRequest request) {
-        return ResponseUtil.createResponse("Erro de criptografia: " + ex.getMessage(), HttpStatus.BAD_REQUEST);
+        return ResponseUtil.createResponse("Erro de criptografia: \n" + ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
     
     @ExceptionHandler(NotFoundException.class)
 	public ResponseEntity<Object> handleNotFoundException(NotFoundException ex, WebRequest request) {
-		return ResponseUtil.createResponse("Erro: " + "não encontrado.", HttpStatus.NOT_FOUND);
+		return ResponseUtil.createResponse("Erro: \n" + "não encontrado.", HttpStatus.NOT_FOUND);
 	}
     
     @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)	
     public ResponseEntity<Object> handleAccessDeniedException(org.springframework.security.access.AccessDeniedException ex, WebRequest request) {
-        return ResponseUtil.createResponse("Erro de acesso: " + ex.getMessage(), HttpStatus.FORBIDDEN);
+        return ResponseUtil.createResponse("Erro de acesso: \n" + ex.getMessage(), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleGeneralException(Exception ex, WebRequest request) {
         ex.printStackTrace();
-        return ResponseUtil.createResponse("Erro interno: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return ResponseUtil.createResponse("Erro interno: \n" + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
     
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Object> handleRuntimeException(RuntimeException ex, WebRequest request) {
         ex.printStackTrace();
-        return ResponseUtil.createResponse("Erro interno: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return ResponseUtil.createResponse("Erro interno: \n" + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

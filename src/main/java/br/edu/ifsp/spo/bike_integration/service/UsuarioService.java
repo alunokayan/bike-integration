@@ -7,6 +7,7 @@ import br.edu.ifsp.spo.bike_integration.dto.UsuarioDto;
 import br.edu.ifsp.spo.bike_integration.factory.UsuarioFactory;
 import br.edu.ifsp.spo.bike_integration.model.Usuario;
 import br.edu.ifsp.spo.bike_integration.repository.UsuarioRepository;
+import br.edu.ifsp.spo.bike_integration.util.validate.UsuarioCreateValidate;
 
 @Service
 public class UsuarioService {
@@ -15,47 +16,22 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
 
     @Autowired
-    private PessoaFisicaService pessoaFisicaService;
-
-    @Autowired
-    private PessoaJuridicaService pessoaJuridicaService;
-
-    @Autowired
-    private EmailService emailService;
-
-    @Autowired
     private UsuarioFactory usuarioFactory;
+    
+    @Autowired
+    private UsuarioCreateValidate usuarioCreateValidate;
 
 	public Usuario getByNomeUsuario(String nomeUsuario) {
-    return usuarioRepository.findByNomeUsuario(nomeUsuario)
-        .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
+		return this.getUsuarioByName(nomeUsuario);
     }
     
     public Usuario create(UsuarioDto usuarioDto) throws Exception {
-    	if (usuarioDto.getCnpj() != null && usuarioDto.getCpf() != null)
-    		throw new IllegalArgumentException("Informe CPF ou CNPJ, não ambos");
-    	
-    	if (usuarioDto.getCnpj() == null && usuarioDto.getCpf() == null)
-    		throw new IllegalArgumentException("Informe CPF ou CNPJ");
-    	
-        if (usuarioRepository.findByNomeUsuario(usuarioDto.getNomeUsuario()).isPresent())
-            throw new IllegalArgumentException("Nome de usuário já existe");
-
-        if (emailService.getEmailByEndereco(usuarioDto.getEmail()) != null)
-            throw new IllegalArgumentException("Email já cadastrado");
-
-        if (pessoaFisicaService.getPessoaFisicaByCpf(usuarioDto.getCpf()) != null)
-            throw new IllegalArgumentException("CPF já cadastrado");
-
-        if (pessoaJuridicaService.getPessoaJuridicaByCnpj(usuarioDto.getCnpj()) != null)
-            throw new IllegalArgumentException("CNPJ já cadastrado");
-
+    	usuarioCreateValidate.validate(usuarioDto);
         return usuarioRepository.save(usuarioFactory.fromDto(usuarioDto));
     }
     
 	public void delete(String nomeUsuario, String cpf, String cnpj) {
-		Usuario usuario = usuarioRepository.findByNomeUsuario(nomeUsuario)
-				.orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
+		Usuario usuario = this.getUsuarioByName(nomeUsuario);
 		
 		if (cpf == null && cnpj == null)
 			throw new IllegalArgumentException("Informe CPF ou CNPJ para deletar o usuário");
@@ -67,5 +43,11 @@ public class UsuarioService {
 				throw new IllegalArgumentException("CNPJ não corresponde ao usuário");
 		
 		usuarioRepository.delete(usuario);
+	}
+	
+	// PRIVATE METHODS
+	private Usuario getUsuarioByName(String nomeUsuario) {
+		return usuarioRepository.findByNomeUsuario(nomeUsuario)
+		        .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
 	}
 }

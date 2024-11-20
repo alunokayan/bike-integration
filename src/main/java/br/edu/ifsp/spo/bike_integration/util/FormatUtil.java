@@ -26,4 +26,8 @@ public class FormatUtil {
 		cep = cep.replaceAll("\\D", ""); // Remove tudo que não for número
         return cep.replaceAll("(\\d{5})(\\d{3})", "$1-$2");
 	}
+	
+	public static String removeNonNumeric(String str) {
+        return str.replaceAll("\\D", "");
+    }
 }

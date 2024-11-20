@@ -5,8 +5,9 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum ConfiguracaoApiType {
-	BRASIL_API("BRASIL_API");
+public enum BrasilApiType {
+	CEP("/cep/v2/"), 
+	CNPJ("/cnpj/v1/");
 	
-	private String nome;
+	private String endpoint;
 }

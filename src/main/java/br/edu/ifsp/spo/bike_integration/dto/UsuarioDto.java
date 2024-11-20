@@ -37,5 +37,15 @@ public class UsuarioDto {
 
 	@Schema(example = "2")
 	private Long idTipoUsuario;
+	
+	@Schema(hidden = true)
+	public String getOnlyNumbersCpf() {
+		return cpf.replaceAll("[^0-9]", "");
+	}
+	
+	@Schema(hidden = true)
+	public String getOnlyNumbersCnpj() {
+		return cnpj.replaceAll("[^0-9]", "");
+	}
 
 }
