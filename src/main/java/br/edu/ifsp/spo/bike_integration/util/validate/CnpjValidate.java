@@ -38,7 +38,7 @@ public class CnpjValidate {
 
 	private boolean isCnpjValid(String cnpj) {
 		try {
-			return "Ativa".equals(brasilApiService.buscarEmpresaPorCnpj(cnpj).getDescricaoSituacaoCadastral());
+			return brasilApiService.buscarEmpresaPorCnpj(cnpj).getDescricaoSituacaoCadastral().equals("ATIVA");
 		} catch (Exception e) {
 			return false;
 		}
