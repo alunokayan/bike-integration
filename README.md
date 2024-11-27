@@ -55,7 +55,9 @@ Para compilar e executar o projeto, utilize os seguintes comandos:
 ## Endpoints
 
 A API utiliza Swagger para mapeamento dos endpoints
-
+   ```url
+   localhost:8080/bike-integration/swagger-ui/index.html
+   ```
 
 ## Licença
 
