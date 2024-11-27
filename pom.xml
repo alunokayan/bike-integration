@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.3.5</version>
+		<version>3.3.6</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>br.edu.ifsp.spo</groupId>
@@ -32,6 +32,7 @@
 		<springdoc-openapi-starter-webmvc-ui.version>2.6.0</springdoc-openapi-starter-webmvc-ui.version>
 		<javax.servlet-api.version>4.0.1</javax.servlet-api.version>
 		<spring-security-core.version>5.7.3</spring-security-core.version>
+		<caelum-stella-core.version>2.1.7</caelum-stella-core.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -80,6 +81,11 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>${javax.servlet-api.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>br.com.caelum.stella</groupId>
+			<artifactId>caelum-stella-core</artifactId>
+			<version>${caelum-stella-core.version}</version>
 		</dependency>
 	</dependencies>
 
