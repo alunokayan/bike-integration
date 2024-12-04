@@ -26,23 +26,20 @@ public class ConfiguracaoApiExterna {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "nome", nullable = false, unique = true)
+	@Column(name = "nome", nullable = false)
 	private String nome;
 
-	@Column(name = "url", nullable = false)
+	@Column(name = "url", nullable = false, unique = true)
 	private String url;
 
 	@Column(name = "chave", nullable = true)
 	private String chave;
 
-	@Column(name = "criado_em", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-	private Date criadoEm;
-
-	@Column(name = "atualizado_em")
+	@Column(name = "dt_atualizacao", nullable = false)
 	private Date atualizadoEm;
 
 	@PrePersist
 	public void prePersist() {
-	this.criadoEm = new Date();
+	this.atualizadoEm = new Date();
 	}
 }

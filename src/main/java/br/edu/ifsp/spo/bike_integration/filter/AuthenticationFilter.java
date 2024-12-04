@@ -8,19 +8,19 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import br.edu.ifsp.spo.bike_integration.service.TokenService;
+import br.edu.ifsp.spo.bike_integration.service.WebServiceToken;
 
 @Component
 public class AuthenticationFilter extends OncePerRequestFilter {
 
 	@Autowired
-	private TokenService tokenService;
+	private WebServiceToken webServiceToken;
 	
     @Override
     protected void doFilterInternal(jakarta.servlet.http.HttpServletRequest request,
                                     jakarta.servlet.http.HttpServletResponse response, jakarta.servlet.FilterChain filterChain)
             throws jakarta.servlet.ServletException, IOException {
-        Authentication authentication = tokenService.getAuthentication(request);
+        Authentication authentication = webServiceToken.getAuthentication(request);
         if (authentication != null) {
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }

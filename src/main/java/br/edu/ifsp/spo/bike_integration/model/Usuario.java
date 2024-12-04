@@ -2,16 +2,13 @@ package br.edu.ifsp.spo.bike_integration.model;
 
 import java.util.Date;
 
-import jakarta.persistence.CascadeType;
+import br.edu.ifsp.spo.bike_integration.converter.EnderecoConverter;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,43 +30,32 @@ public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    @Column(name = "nome", nullable = false)
+    private String nome;
 
     @Column(name = "nome_usuario", nullable = false, unique = true)
     private String nomeUsuario;
 
-    @Column(name = "criado_em", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Date criadoEm;
-
-    @ManyToOne(optional = true)
-    @JoinColumn(name = "id_perfil")
-    private Perfil perfil;
-
-    @OneToOne(optional = true, cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_pessoa_fisica")
-    private PessoaFisica pessoaFisica;
-
-    @OneToOne(optional = true, cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_pessoa_juridica")
-    private PessoaJuridica pessoaJuridica;
-
-    @OneToOne(optional = true, cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_endereco")
-    private Endereco endereco;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "id_tipo_usuario", nullable = false)
-    private TipoUsuario tipoUsuario;
+    @Column(name = "endereco", nullable = false)
+    @Convert(converter = EnderecoConverter.class)
+    private String endereco;
     
-    @OneToOne(optional = true, cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_email")
-    private Email email;
+    @Column(name = "email", nullable = false)
+    private String email;
     
-    @OneToOne(optional = false, cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_senha")
-    private Senha senha;
+    @Column(name = "senha", nullable = false)
+    private String senha;
     
-    @PrePersist
-	public void prePersist() {
-		this.criadoEm = new Date();
-	}
+    @Column(name = "hash", nullable = false)
+    private String hash;
+    
+    @Column(name = "cpf", nullable = false)
+    private String cpf;
+    
+    @Column(name = "cnpj", nullable = false)
+    private String cnpj;
+    
+    @Column(name = "dt_criacao", nullable = false)
+    private Date dtCriacao;
 }

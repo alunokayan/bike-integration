@@ -11,12 +11,12 @@ import br.edu.ifsp.spo.bike_integration.util.HeaderUtil;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Service
-public class TokenService {
+public class WebServiceToken {
 
 	@Autowired
 	private WebServiceTokenRepository webServiceTokenRepository;
 	
-	private TokenService() {
+	private WebServiceToken() {
 	}
 	
 	public Authentication getAuthentication(HttpServletRequest request) {
