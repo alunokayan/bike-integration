@@ -22,9 +22,9 @@ public class EnderecoConverter implements AttributeConverter<EnderecoDto, String
 	}
 
 	@Override
-	public EnderecoDto convertToEntityAttribute(String dbData) {
+	public EnderecoDto convertToEntityAttribute(String json) {
 		try {
-			return objectMapper.readValue(dbData, EnderecoDto.class);
+			return objectMapper.readValue(json, EnderecoDto.class);
 		} catch (JsonProcessingException e) {
 			throw new IllegalArgumentException("Erro ao converter JSON para Endereco", e);
 		}

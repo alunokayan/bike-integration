@@ -1,7 +1,7 @@
 package br.edu.ifsp.spo.bike_integration.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -16,9 +16,10 @@ public class BrasilApiCepResponse {
     private String city;
     private String neighborhood;
     private String street;
+    
+    @JsonIgnore
     private String service;
-
-    @JsonProperty("location")
+    
     private Location location;
 
     // Getters e Setters

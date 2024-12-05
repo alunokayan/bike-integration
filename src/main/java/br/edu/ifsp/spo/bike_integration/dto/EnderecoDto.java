@@ -1,5 +1,6 @@
 package br.edu.ifsp.spo.bike_integration.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,13 +11,23 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class EnderecoDto {
-	private String rua;
-	private Long numero;
-	private String complemento;
-	private String bairro;
-	private String cidade;
-	private String estado;
+
+	@Schema(example = "89010025")
 	private String cep;
-	private String latitude;
-	private String longitude;
+
+	@Schema(example = "SC")
+	private String estado;
+
+	@Schema(example = "Blumenau")
+	private String cidade;
+
+	@Schema(example = "Centro")
+	private String bairro;
+
+	@Schema(example = "Rua Doutor Luiz de Freitas Melro")
+	private String rua;
+
+	@Schema(example = "123")
+	private Long numero;
+
 }
