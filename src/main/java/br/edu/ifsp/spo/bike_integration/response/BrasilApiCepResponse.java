@@ -3,6 +3,8 @@ package br.edu.ifsp.spo.bike_integration.response;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,6 +34,8 @@ public class BrasilApiCepResponse {
         
         @Getter
         @Setter
+        @AllArgsConstructor
+        @Builder
         public static class Coordinates {
             private String longitude;
             private String latitude;

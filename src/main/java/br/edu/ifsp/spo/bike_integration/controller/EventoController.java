@@ -3,13 +3,16 @@ package br.edu.ifsp.spo.bike_integration.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.edu.ifsp.spo.bike_integration.dto.EventoDto;
+import br.edu.ifsp.spo.bike_integration.dto.GeoJsonDto;
 import br.edu.ifsp.spo.bike_integration.model.Evento;
 import br.edu.ifsp.spo.bike_integration.service.EventoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,7 +40,23 @@ public class EventoController {
 	@Operation(summary = "Cadastra um novo evento.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "201", description = "Evento cadastrado com sucesso."),
 			@ApiResponse(responseCode = "500", description = "Erro ao cadastrar evento.") })
-	public Evento cadastrarEvento(@RequestBody EventoDto evento){
+	public Evento cadastrarEvento(@RequestBody EventoDto evento) {
 		return eventoService.cadastrarEvento(evento);
+	}
+
+	@GetMapping("/evento")
+	@Operation(summary = "Busca um evento pelo id.")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Evento encontrado com sucesso."),
+			@ApiResponse(responseCode = "500", description = "Erro ao buscar evento.") })
+	public Evento buscarEvento(@RequestParam(name = "id", required = true) Long id) {
+		return eventoService.buscarEvento(id);
+	}
+
+	@GetMapping("/eventoAsGeoJsonById")
+	@Operation(summary = "Busca um evento pelo id e retorna como GeoJson.")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Evento encontrado com sucesso."),
+			@ApiResponse(responseCode = "500", description = "Erro ao buscar evento.") })
+	public GeoJsonDto buscarEventoAsGeoJson(@RequestParam(name = "id", required = false) Long id) throws NotFoundException {
+		return eventoService.buscarEventoAsGeoJsonById(id);
 	}
 }
