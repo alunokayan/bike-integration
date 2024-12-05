@@ -10,9 +10,8 @@ import br.edu.ifsp.spo.bike_integration.response.BrasilApiCnpjResponse;
 import br.edu.ifsp.spo.bike_integration.service.BrasilApiService;
 import br.edu.ifsp.spo.bike_integration.util.FormatUtil;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
@@ -23,8 +22,9 @@ public class EmpresaController {
 	@Autowired
 	private BrasilApiService brasilApiService;
 
-	@Operation(description = "Busca informacoes da empresa pelo cnpj.")
-	@ApiResponse(content = @Content(schema = @Schema(implementation = BrasilApiCnpjResponse.class)))
+	@Operation(summary = "Busca informacoes da empresa pelo cnpj.")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Empresa encontrada com sucesso."),
+			@ApiResponse(responseCode = "404", description = "Empresa não encontrada.") })
 	@GetMapping("/empresa/getByCnpj")
 	public BrasilApiCnpjResponse buscarEmpresaPorCnpj(String cnpj) throws NotFoundException {
 		return brasilApiService.buscarEmpresaPorCnpj(FormatUtil.formatCnpj(cnpj));

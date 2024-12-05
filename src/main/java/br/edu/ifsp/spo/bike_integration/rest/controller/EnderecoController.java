@@ -10,9 +10,8 @@ import br.edu.ifsp.spo.bike_integration.response.BrasilApiCepResponse;
 import br.edu.ifsp.spo.bike_integration.service.BrasilApiService;
 import br.edu.ifsp.spo.bike_integration.util.FormatUtil;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
@@ -23,9 +22,9 @@ public class EnderecoController {
 	@Autowired
 	private BrasilApiService brasilApiService;
 
-	@Operation(description = "Busca endereço completo pelo cep.")
-	@ApiResponse(content = @Content(schema = @Schema(implementation = BrasilApiCepResponse.class)))
-	@ApiResponse(responseCode = "404", description = "Endereço não encontrado.")
+	@Operation(summary = "Busca endereço completo pelo cep.")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Endereço encontrado com sucesso."),
+			@ApiResponse(responseCode = "404", description = "Endereço não encontrado.") })
 	@GetMapping("/endereco/getByCep")
 	public BrasilApiCepResponse buscarEnderecoPorCep(String cep) throws NotFoundException {
 		return brasilApiService.buscarEnderecoPorCep(FormatUtil.formatCep(cep));
