@@ -1,5 +1,9 @@
+
 package br.edu.ifsp.spo.bike_integration.dto;
 
+import org.springframework.stereotype.Component;
+
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,24 +14,30 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Component
 public class EnderecoDto {
 
-	@Schema(example = "89010025")
-	private String cep;
+ @Schema(example = "89010025")
+ private String cep;
 
-	@Schema(example = "SC")
-	private String estado;
+ @Schema(example = "SC")
+ private String estado;
 
-	@Schema(example = "Blumenau")
-	private String cidade;
+ @Schema(example = "Blumenau")
+ private String cidade;
 
-	@Schema(example = "Centro")
-	private String bairro;
+ @Schema(example = "Centro")
+ private String bairro;
 
-	@Schema(example = "Rua Doutor Luiz de Freitas Melro")
-	private String rua;
+ @Schema(example = "Rua Doutor Luiz de Freitas Melro")
+ private String rua;
 
-	@Schema(example = "123")
-	private Long numero;
+ @Schema(example = "123")
+ private Long numero;
 
+ @Hidden
+ private Double latitude;
+
+ @Hidden
+ private Double longitude;
 }

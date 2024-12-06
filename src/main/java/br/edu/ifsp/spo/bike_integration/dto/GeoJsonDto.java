@@ -41,6 +41,6 @@ public class GeoJsonDto {
     @Builder
     public static class GeometryDto {
         private String type;
-        private List<List<List<String>>> coordinates;
+        private List<List<List<Double>>> coordinates;
     }
 }

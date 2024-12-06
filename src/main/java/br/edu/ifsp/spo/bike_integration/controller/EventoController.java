@@ -40,7 +40,7 @@ public class EventoController {
 	@Operation(summary = "Cadastra um novo evento.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "201", description = "Evento cadastrado com sucesso."),
 			@ApiResponse(responseCode = "500", description = "Erro ao cadastrar evento.") })
-	public Evento cadastrarEvento(@RequestBody EventoDto evento) {
+	public Evento cadastrarEvento(@RequestBody EventoDto evento) throws NotFoundException {
 		return eventoService.cadastrarEvento(evento);
 	}
 
@@ -56,7 +56,18 @@ public class EventoController {
 	@Operation(summary = "Busca um evento pelo id e retorna como GeoJson.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Evento encontrado com sucesso."),
 			@ApiResponse(responseCode = "500", description = "Erro ao buscar evento.") })
-	public GeoJsonDto buscarEventoAsGeoJson(@RequestParam(name = "id", required = false) Long id) throws NotFoundException {
+	public GeoJsonDto buscarEventoAsGeoJson(@RequestParam(name = "id", required = false) Long id)
+			throws NotFoundException {
 		return eventoService.buscarEventoAsGeoJsonById(id);
+	}
+
+	@GetMapping("/eventosAsGeoJson")
+	@Operation(summary = "Busca eventos no raio estipulado com base na latitude e longitude informada.")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Eventos encontrados com sucesso."),
+			@ApiResponse(responseCode = "500", description = "Erro ao buscar eventos.") })
+	public GeoJsonDto buscarEventosAsGeoJson(@RequestParam(name = "latitude", required = true) Double latitude,
+			@RequestParam(name = "longitude", required = true) Double longitude,
+			@RequestParam(name = "raio", required = true) Double raio) {
+		return eventoService.buscarEventosAsGeoJson(latitude, longitude, raio);
 	}
 }

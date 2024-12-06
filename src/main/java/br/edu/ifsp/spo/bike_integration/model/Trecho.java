@@ -27,16 +27,16 @@ public class Trecho {
 	private String nome;
 	
 	@Column(name = "latitude_inicial")
-	private String latitudeInicial;
+	private Double latitudeInicial;
 	
 	@Column(name = "longitude_inicial")
-	private String longitudeInicial;
+	private Double longitudeInicial;
 	
 	@Column(name = "latitude_final")
-	private String latitudeFinal;
+	private Double latitudeFinal;
 	
 	@Column(name = "longitude_final")
-	private String longitudeFinal;
+	private Double longitudeFinal;
 	
 	@Column(name = "cep")
 	private String cep;

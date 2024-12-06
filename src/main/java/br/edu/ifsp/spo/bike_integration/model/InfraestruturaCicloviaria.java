@@ -32,16 +32,16 @@ public class InfraestruturaCicloviaria {
 	private Double notaMedia;
 	
 	@Column(name = "latitude_inicial")
-	private String latitudeInicial;
+	private Double latitudeInicial;
 	
 	@Column(name = "longitude_inicial")
-	private String longitudeInicial;
+	private Double longitudeInicial;
 	
 	@Column(name = "latitude_final")
-	private String latitudeFinal;
+	private Double latitudeFinal;
 	
 	@Column(name = "longitude_final")
-	private String longitudeFinal;
+	private Double longitudeFinal;
 	
 	@ManyToOne
 	@JoinColumn(name = "tipo_infraestrutura_cicloviaria_id")
