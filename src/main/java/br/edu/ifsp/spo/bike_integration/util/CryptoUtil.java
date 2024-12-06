@@ -39,6 +39,10 @@ public class CryptoUtil {
 		return new SecretKeySpec(decodedKey, 0, decodedKey.length, "AES");
 	}
 
+	public static String encrypt(String value, String key) throws CryptoException {
+		return encrypt(value, getSecretKeyFromString(key));		
+	}
+	
 	public static String encrypt(String value, SecretKey key) throws CryptoException {
 		try {	
 			Cipher cipher = Cipher.getInstance(ALGORITHM);
