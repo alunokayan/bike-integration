@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.mail.MessagingException;
 
 @RestController
 @RequestMapping("/v1")
@@ -22,12 +23,12 @@ public class LoginController {
 
 	@Autowired
 	private LoginService loginService;
-	
+
 	@GetMapping("/login")
 	@Operation(summary = "Realiza o login.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Login realizado com sucesso."),
-            @ApiResponse(responseCode = "500", description = "Erro ao realizar login.") })
-	public Usuario login(@RequestBody UsuarioLoginDto usuario) throws CryptoException {
+			@ApiResponse(responseCode = "500", description = "Erro ao realizar login.") })
+	public Usuario login(@RequestBody UsuarioLoginDto usuario) throws CryptoException, MessagingException {
 		return loginService.login(usuario);
 	}
 }
