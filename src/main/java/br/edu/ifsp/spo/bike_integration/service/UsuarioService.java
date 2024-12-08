@@ -9,6 +9,7 @@ import br.edu.ifsp.spo.bike_integration.dto.UsuarioDto;
 import br.edu.ifsp.spo.bike_integration.model.Usuario;
 import br.edu.ifsp.spo.bike_integration.repository.UsuarioRepository;
 import br.edu.ifsp.spo.bike_integration.util.FormatUtil;
+import jakarta.mail.MessagingException;
 
 @Service
 public class UsuarioService {
@@ -22,20 +23,38 @@ public class UsuarioService {
 	@Autowired
 	private NivelHabilidadeService nivelHabilidadeService;
 
+	@Autowired
+	private TokenService tokenService;
+
+	@Autowired
+	private EmailService emailService;
+
 	public Usuario loadUsuarioById(Long id) {
 		return usuarioRepository.findById(id).orElse(null);
 	}
 
-	public Usuario createUsuario(UsuarioDto usuarioDto) {
+	public Usuario createUsuario(UsuarioDto usuarioDto) throws MessagingException {
+		// Busca as coordenadas do endereço
 		Map<String, Double> coordenadas = openStreetMapApiService
 				.buscarCoordenadasPorEndereco(FormatUtil.formatEnderecoToOpenStreetMapApi(usuarioDto.getEndereco()));
 		usuarioDto.getEndereco().setLatitude(coordenadas.get("lat"));
 		usuarioDto.getEndereco().setLongitude(coordenadas.get("lon"));
 
-		return usuarioRepository.save(Usuario.builder().nome(usuarioDto.getNome())
+		// Salva o usuário
+		Usuario usuarioSaved = usuarioRepository.save(Usuario.builder().nome(usuarioDto.getNome())
 				.nomeUsuario(usuarioDto.getNomeUsuario()).endereco(usuarioDto.getEndereco())
 				.email(usuarioDto.getEmail()).senha(usuarioDto.getSenha()).cpf(usuarioDto.getCpf())
 				.cnpj(usuarioDto.getCnpj())
 				.nivelHabilidade(nivelHabilidadeService.loadNivelHabilidade(usuarioDto.getNivelHabilidade())).build());
+
+		// Gera o token
+		tokenService.generateToken(usuarioSaved);
+
+		// Envia o token por e-mail
+		emailService.sendTokenEmail(this.loadUsuarioById(usuarioSaved.getId()));
+
+		// Retorna o usuário
+		return usuarioSaved;
+
 	}
 }

@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.mail.MessagingException;
 
 @RestController
 @RequestMapping("/v1/usuario")
@@ -36,7 +37,7 @@ public class UsuarioController {
 	@Operation(summary = "Cria um novo usuário.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "201", description = "Usuário criado com sucesso."),
 			@ApiResponse(responseCode = "400", description = "Erro na requisição.") })
-	public Usuario create(@RequestBody UsuarioDto usuarioDto) {
+	public Usuario create(@RequestBody UsuarioDto usuarioDto) throws MessagingException {
 		return usuarioService.createUsuario(usuarioDto);
 	}
 }

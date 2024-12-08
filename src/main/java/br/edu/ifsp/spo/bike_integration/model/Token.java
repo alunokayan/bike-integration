@@ -2,6 +2,8 @@ package br.edu.ifsp.spo.bike_integration.model;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -38,8 +40,9 @@ public class Token {
 	@Column(name = "dt_expiracao", nullable = false)
 	private Date dtExpiracao;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_usuario", nullable = false)
+	@JsonBackReference
 	private Usuario usuario;
 	
 	@PrePersist

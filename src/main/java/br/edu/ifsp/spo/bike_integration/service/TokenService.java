@@ -16,8 +16,8 @@ public class TokenService {
 	@Autowired
 	private TokenRepository tokenRepository;
 
-	public void generateToken(Usuario usuario) {
-		tokenRepository.saveAndFlush(
+	public Token generateToken(Usuario usuario) {
+		return tokenRepository.save(
 				Token.builder().dtCriacao(new Date()).dtExpiracao(new Date(System.currentTimeMillis() + 6 * 60000))
 						.tokenGerado(this.generateToken()).usuario(usuario).build());
 	}
@@ -28,8 +28,19 @@ public class TokenService {
 
 	public Boolean isValidToken(String tokenValue, Long idUsuario) {
 		Token token = this.getToken(tokenValue);
-		return token != null && idUsuario.equals(token.getUsuario().getId())
-				&& token.getDtExpiracao().after(new Date());
+		if (token != null && idUsuario.equals(token.getUsuario().getId()) && token.getDtExpiracao().after(new Date())) {
+			this.deleteToken(token);
+			return true;
+		}
+		return false;
+	}
+
+	public void deleteToken(Token token) {
+		tokenRepository.delete(token);
+	}
+
+	public Token updateToken(Token token) {
+		return tokenRepository.save(token);
 	}
 
 	/*
