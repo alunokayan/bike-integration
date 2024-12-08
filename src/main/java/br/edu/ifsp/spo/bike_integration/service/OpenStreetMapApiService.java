@@ -49,7 +49,7 @@ public class OpenStreetMapApiService {
 				Double lon = Double.valueOf((String) firstResult.get("lon"));
 				return Map.of("lat", lat, "lon", lon);
 			}
-			throw new IllegalArgumentException("Endereço não encontrado");
+			throw new IllegalArgumentException();
 		} catch (Exception e) {
 			logger.error("Erro ao buscar coordenadas do endereço: " + endereco, e);
 			throw new IllegalArgumentException("Endereço não encontrado");

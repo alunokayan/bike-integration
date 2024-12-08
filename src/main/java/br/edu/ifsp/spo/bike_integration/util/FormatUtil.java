@@ -6,6 +6,9 @@ import br.edu.ifsp.spo.bike_integration.response.BrasilApiCepResponse;
 
 public class FormatUtil {
 
+	private FormatUtil() {
+	}
+
 	public static String formatCpf(String cpf) {
 		if (cpf == null || cpf.isEmpty()) {
 			return cpf;
@@ -35,8 +38,8 @@ public class FormatUtil {
 	}
 
 	public static String formatEnderecoToOpenStreetMapApi(EnderecoDto endereco) {
-		return endereco.getRua() + ", " + endereco.getNumero() + " - " + endereco.getBairro() + ", "
-				+ endereco.getCidade() + " - " + endereco.getEstado();
+		return endereco.getRua() + ", " + endereco.getNumero() + " - " + endereco.getCidade() + " - "
+				+ endereco.getEstado();
 	}
 
 	public static EnderecoDto convertToDto(BrasilApiCepResponse endereco, Long numero) {
