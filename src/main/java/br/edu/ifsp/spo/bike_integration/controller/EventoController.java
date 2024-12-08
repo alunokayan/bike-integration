@@ -21,14 +21,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping("/v1")
+@RequestMapping("/v1/evento")
 @Tag(name = "Evento", description = "Controller para operações relacionadas a eventos.")
 public class EventoController {
 
 	@Autowired
 	private EventoService eventoService;
 
-	@GetMapping("/eventos")
+	@GetMapping("/list")
 	@Operation(summary = "Lista todos os eventos cadastrados.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Eventos listados com sucesso."),
 			@ApiResponse(responseCode = "500", description = "Erro ao listar eventos.") })
@@ -36,15 +36,15 @@ public class EventoController {
 		return eventoService.listarEventos();
 	}
 
-	@PostMapping("/evento")
+	@PostMapping("/create")
 	@Operation(summary = "Cadastra um novo evento.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "201", description = "Evento cadastrado com sucesso."),
 			@ApiResponse(responseCode = "500", description = "Erro ao cadastrar evento.") })
-	public Evento cadastrarEvento(@RequestBody EventoDto evento) throws NotFoundException {
+	public Evento cadastrarEvento(@RequestBody EventoDto evento) {
 		return eventoService.cadastrarEvento(evento);
 	}
 
-	@GetMapping("/evento")
+	@GetMapping("/get")
 	@Operation(summary = "Busca um evento pelo id.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Evento encontrado com sucesso."),
 			@ApiResponse(responseCode = "500", description = "Erro ao buscar evento.") })
@@ -52,7 +52,7 @@ public class EventoController {
 		return eventoService.buscarEvento(id);
 	}
 
-	@GetMapping("/eventoAsGeoJsonById")
+	@GetMapping("/getAsGeoJson")
 	@Operation(summary = "Busca um evento pelo id e retorna como GeoJson.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Evento encontrado com sucesso."),
 			@ApiResponse(responseCode = "500", description = "Erro ao buscar evento.") })
@@ -61,7 +61,7 @@ public class EventoController {
 		return eventoService.buscarEventoAsGeoJsonById(id);
 	}
 
-	@GetMapping("/eventosAsGeoJson")
+	@GetMapping("/listAsGeoJson")
 	@Operation(summary = "Busca eventos no raio estipulado com base na latitude e longitude informada.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Eventos encontrados com sucesso."),
 			@ApiResponse(responseCode = "500", description = "Erro ao buscar eventos.") })

@@ -1,5 +1,7 @@
 package br.edu.ifsp.spo.bike_integration.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,8 @@ public class BrasilApiService {
         configuracao = configuracaoApiService.getConfiguracaoByNome(ConfiguracaoApiType.BRASIL_API);
     }
 
+	Logger logger = LoggerFactory.getLogger(BrasilApiService.class);
+	
 	public BrasilApiCepResponse buscarEnderecoPorCep(String cep) throws NotFoundException {
 		if (!cep.matches("\\d{5}-?\\d{3}"))
 			throw new IllegalArgumentException("CEP inválido.");
@@ -37,7 +41,7 @@ public class BrasilApiService {
 			return restTemplate.getForObject(configuracao.getUrl() + BrasilApiType.CEP.getEndpoint() + FormatUtil.removeNonNumeric(cep),
 					BrasilApiCepResponse.class);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Erro ao buscar endereço pelo CEP: " + cep, e);
 			throw new NotFoundException();
 		}
 	}
@@ -50,7 +54,7 @@ public class BrasilApiService {
 			return restTemplate.getForObject(configuracao.getUrl() + BrasilApiType.CNPJ.getEndpoint() + FormatUtil.removeNonNumeric(cnpj),
 					BrasilApiCnpjResponse.class);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Erro ao buscar empresa pelo CNPJ: " + cnpj, e);
 			throw new NotFoundException();
 		}
 	}

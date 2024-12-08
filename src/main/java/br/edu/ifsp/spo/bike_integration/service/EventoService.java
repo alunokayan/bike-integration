@@ -1,6 +1,7 @@
 package br.edu.ifsp.spo.bike_integration.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
@@ -10,7 +11,7 @@ import br.edu.ifsp.spo.bike_integration.dto.EventoDto;
 import br.edu.ifsp.spo.bike_integration.dto.GeoJsonDto;
 import br.edu.ifsp.spo.bike_integration.model.Evento;
 import br.edu.ifsp.spo.bike_integration.repository.EventoRepository;
-import br.edu.ifsp.spo.bike_integration.response.BrasilApiCepResponse.Location.Coordinates;
+import br.edu.ifsp.spo.bike_integration.util.FormatUtil;
 import br.edu.ifsp.spo.bike_integration.util.GeoJsonUtil;
 
 @Service
@@ -23,7 +24,7 @@ public class EventoService {
 	private TipoEventoService tipoEventoService;
 
 	@Autowired
-	private BrasilApiService brasilApiService;
+	private OpenStreetMapApiService openStreetMapApiService;
 
 	public Evento buscarEvento(Long id) {
 		return eventoRepository.findById(id).orElse(null);
@@ -41,11 +42,11 @@ public class EventoService {
 		return eventoRepository.findAll();
 	}
 
-	public Evento cadastrarEvento(EventoDto eventoDto) throws NotFoundException {
-		Coordinates coordenadas = brasilApiService.buscarEnderecoPorCep(eventoDto.getEndereco().getCep()).getLocation()
-				.getCoordinates();
-		eventoDto.getEndereco().setLatitude(coordenadas.getLatitude());
-		eventoDto.getEndereco().setLongitude(coordenadas.getLongitude());
+	public Evento cadastrarEvento(EventoDto eventoDto) {
+		Map<String, Double> coordenadas = openStreetMapApiService
+				.buscarCoordenadasPorEndereco(FormatUtil.formatEnderecoToOpenStreetMapApi(eventoDto.getEndereco()));
+		eventoDto.getEndereco().setLatitude(coordenadas.get("lat"));
+		eventoDto.getEndereco().setLongitude(coordenadas.get("lon"));
 
 		return eventoRepository.save(
 				Evento.builder().nome(eventoDto.getNome()).descricao(eventoDto.getDescricao()).data(eventoDto.getData())

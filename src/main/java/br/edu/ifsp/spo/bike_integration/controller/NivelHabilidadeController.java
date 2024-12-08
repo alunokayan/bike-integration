@@ -18,14 +18,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping("/v1")
+@RequestMapping("/v1/nivel-habilidade")
 @Tag(name = "NivelHabilidade", description = "Controller para operações relacionadas a níveis de habilidade.")
 public class NivelHabilidadeController {
 	
 	@Autowired
 	private NivelHabilidadeService nivelHabilidadeService;
 	
-	@GetMapping("/niveis-habilidade")
+	@GetMapping("/list")
 	@Operation(summary = "Lista todos os níveis de habilidade cadastrados.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Níveis de habilidade listados com sucesso."),
             @ApiResponse(responseCode = "500", description = "Erro ao listar níveis de habilidade.") })
@@ -33,7 +33,7 @@ public class NivelHabilidadeController {
 		return nivelHabilidadeService.listarNiveisHabilidade();
 	}
 	
-	@PostMapping("/nivel-habilidade")
+	@PostMapping("/create")
 	@Operation(summary = "Cadastra um novo nível de habilidade.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Nível de habilidade cadastrado com sucesso."),
             @ApiResponse(responseCode = "500", description = "Erro ao cadastrar nível de habilidade.") })

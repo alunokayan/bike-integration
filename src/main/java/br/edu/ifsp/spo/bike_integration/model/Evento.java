@@ -40,12 +40,12 @@ public class Evento {
 	@Column(name = "data")
 	private Date data;
 
+	@Column(name = "dt_atualizacao")
+	private Date dtAtualizacao;
+	
 	@Column(name = "endereco", nullable = false)
 	@Convert(converter = EnderecoConverter.class)
 	private EnderecoDto endereco;
-
-	@Column(name = "dt_atualizacao")
-	private Date dtAtualizacao;
 
 	@ManyToOne
 	@JoinColumn(name = "id_tipo_evento")
@@ -53,7 +53,7 @@ public class Evento {
 
 	@PrePersist
 	void prePersist() {
-		dtAtualizacao = new Date();
+		this.dtAtualizacao = new Date();
 	}
 
 }

@@ -17,14 +17,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 
 @RestController
-@RequestMapping("/v1")
+@RequestMapping("/v1/login")
 @Tag(name = "Login", description = "Controller para operações relacionadas a login.")
 public class LoginController {
 
 	@Autowired
 	private LoginService loginService;
 
-	@GetMapping("/login")
+	@GetMapping("/do")
 	@Operation(summary = "Realiza o login.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Login realizado com sucesso."),
 			@ApiResponse(responseCode = "500", description = "Erro ao realizar login.") })

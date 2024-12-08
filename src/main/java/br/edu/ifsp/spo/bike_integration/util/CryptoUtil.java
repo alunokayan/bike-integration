@@ -29,6 +29,10 @@ public class CryptoUtil {
 		}
 	}
 	
+	public static String generateKeyAsString() throws CryptoException {
+		return getSecretKeyAsString(generateKey());
+	}
+	
 	public static String getSecretKeyAsString(SecretKey secretKey) {
         byte[] encodedKey = secretKey.getEncoded();
         return Base64.getEncoder().encodeToString(encodedKey);

@@ -10,7 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping
+@RequestMapping("/app")
 @Tag(name = "Index", description = "Index Controller, com informações da API")
 public class IndexController {
 

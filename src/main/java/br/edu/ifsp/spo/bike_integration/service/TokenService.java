@@ -17,21 +17,19 @@ public class TokenService {
 	private TokenRepository tokenRepository;
 
 	public void generateToken(Usuario usuario) {
-		Token token = new Token();
-		token.setDtCriacao(new Date());
-		token.setDtExpiracao(new Date(System.currentTimeMillis() + 6 * 60000));
-		token.setTokenGerado(this.generateToken());
-		token.setUsuario(usuario);
-		tokenRepository.save(token);
+		tokenRepository.saveAndFlush(
+				Token.builder().dtCriacao(new Date()).dtExpiracao(new Date(System.currentTimeMillis() + 6 * 60000))
+						.tokenGerado(this.generateToken()).usuario(usuario).build());
 	}
 
 	public Token getToken(String tokenValue) {
 		return tokenRepository.findByTokenGerado(tokenValue).orElse(null);
 	}
 
-	public Boolean validToken(String tokenValue) {
+	public Boolean isValidToken(String tokenValue, Long idUsuario) {
 		Token token = this.getToken(tokenValue);
-		return token != null && token.getDtExpiracao().after(new Date());
+		return token != null && idUsuario.equals(token.getUsuario().getId())
+				&& token.getDtExpiracao().after(new Date());
 	}
 
 	/*

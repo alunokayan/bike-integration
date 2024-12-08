@@ -44,7 +44,7 @@ public class InfraestruturaCicloviaria {
 	private Double longitudeFinal;
 	
 	@ManyToOne
-	@JoinColumn(name = "tipo_infraestrutura_cicloviaria_id")
+	@JoinColumn(name = "id_tipo_infraestrutura_cicloviaria")
 	private TipoInfraestruturaCicloviaria tipoInfraestruturaCicloviariaId;
 	
 }

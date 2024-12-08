@@ -18,14 +18,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping("/v1")
+@RequestMapping("/v1/tipo-evento")
 @Tag(name = "TipoEvento", description = "Controller para operações relacionadas a tipos de eventos.")
 public class TipoEventoController {
 	
 	@Autowired
 	private TipoEventoService tipoEventoService;
 	
-	@GetMapping("/tipos-eventos")
+	@GetMapping("/list")
 	@Operation(summary = "Lista todos os tipos de eventos cadastrados.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Tipos de eventos listados com sucesso."),
             @ApiResponse(responseCode = "500", description = "Erro ao listar tipos de eventos.") })
@@ -33,7 +33,7 @@ public class TipoEventoController {
 		return tipoEventoService.listarTiposEventos();
     }
 	
-	@PostMapping("/tipo-evento")
+	@PostMapping("/create")
 	@Operation(summary = "Cadastra um novo tipo de evento.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Tipo de evento cadastrado com sucesso."),
             @ApiResponse(responseCode = "500", description = "Erro ao cadastrar tipo de evento.") })
