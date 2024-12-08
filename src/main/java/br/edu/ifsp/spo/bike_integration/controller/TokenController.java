@@ -46,7 +46,7 @@ public class TokenController {
 			@ApiResponse(responseCode = "500", description = "Erro ao reenviar o token.") })
 	public ResponseEntity<Void> sendTokenEmail(@RequestParam Long idUsuario) throws MessagingException {
 		tokenService.generateToken(this.usuarioService.loadUsuarioById(idUsuario));
-		emailService.sendTokenEmail(this.usuarioService.loadUsuarioById(idUsuario));
+		emailService.sendLoginTokenEmail(this.usuarioService.loadUsuarioById(idUsuario));
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }

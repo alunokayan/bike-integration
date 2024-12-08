@@ -51,7 +51,7 @@ public class UsuarioService {
 		tokenService.generateToken(usuarioSaved);
 
 		// Envia o token por e-mail
-		emailService.sendTokenEmail(this.loadUsuarioById(usuarioSaved.getId()));
+		emailService.sendCadastroTokenEmail(this.loadUsuarioById(usuarioSaved.getId()));
 
 		// Retorna o usuário
 		return usuarioSaved;

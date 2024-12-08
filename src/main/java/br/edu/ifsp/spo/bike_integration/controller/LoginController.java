@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.edu.ifsp.spo.bike_integration.dto.UsuarioLoginDto;
@@ -30,5 +31,14 @@ public class LoginController {
 			@ApiResponse(responseCode = "500", description = "Erro ao realizar login.") })
 	public Usuario login(@RequestBody UsuarioLoginDto usuario) throws CryptoException, MessagingException {
 		return loginService.login(usuario);
+	}
+
+	@PostMapping("/recover")
+	@Operation(summary = "Recupera a senha.")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Senha recuperada com sucesso."),
+			@ApiResponse(responseCode = "500", description = "Erro ao recuperar senha.") })
+	public void recoverPassword(@RequestParam String idUsuario, @RequestParam String token, String novaSenha)
+			throws MessagingException, CryptoException {
+		loginService.recoverPassword(idUsuario, token, novaSenha);
 	}
 }

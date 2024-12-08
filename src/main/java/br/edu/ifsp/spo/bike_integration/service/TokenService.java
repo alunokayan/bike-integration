@@ -17,29 +17,31 @@ public class TokenService {
 	private TokenRepository tokenRepository;
 
 	public Token generateToken(Usuario usuario) {
+		Token lastToken = tokenRepository.findLastTokenByUsuarioId(usuario.getId()).orElse(null);
+
+		if (lastToken != null) {
+			this.disableToken(lastToken);
+		}
 		return tokenRepository.save(
 				Token.builder().dtCriacao(new Date()).dtExpiracao(new Date(System.currentTimeMillis() + 6 * 60000))
 						.tokenGerado(this.generateToken()).usuario(usuario).build());
 	}
 
 	public Token getToken(String tokenValue) {
-		return tokenRepository.findByTokenGerado(tokenValue).orElse(null);
+		return this.tokenRepository.findByTokenGerado(tokenValue).orElse(null);
 	}
 
 	public Boolean isValidToken(String tokenValue, Long idUsuario) {
 		Token token = this.getToken(tokenValue);
 		if (token != null && idUsuario.equals(token.getUsuario().getId()) && token.getDtExpiracao().after(new Date())) {
-			this.deleteToken(token);
+			this.disableToken(token);
 			return true;
 		}
 		return false;
 	}
 
-	public void deleteToken(Token token) {
-		tokenRepository.delete(token);
-	}
-
-	public Token updateToken(Token token) {
+	public Token disableToken(Token token) {
+		token.setDtExpiracao(new Date(System.currentTimeMillis() - 1 * 60000));
 		return tokenRepository.save(token);
 	}
 

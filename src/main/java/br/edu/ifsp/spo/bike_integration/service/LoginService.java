@@ -15,10 +15,10 @@ public class LoginService {
 
 	@Autowired
 	private UsuarioRepository usuarioRepository;
-	
+
 	@Autowired
 	private TokenService tokenService;
-	
+
 	@Autowired
 	private EmailService emailService;
 
@@ -27,20 +27,39 @@ public class LoginService {
 				usuarioRepository.findByEmail(usuario.getEmail()).orElse(usuarioRepository.findByCpf(usuario.getCpf())
 						.orElse(usuarioRepository.findByCnpj(usuario.getCnpj()).orElse(null))));
 
-		if (usuarioLogado != null
-				&& !CryptoUtil.encrypt(usuario.getSenha(), usuarioLogado.getHash()).equals(usuarioLogado.getSenha())) {
-			throw new IllegalArgumentException("Senha inválida!");
-		} else if (usuarioLogado == null) {
-			throw new IllegalArgumentException("Usuário não encontrado!");
+		if (!usuario.getSenha().isBlank() && usuarioLogado != null && !usuario.getSenha().equals(CryptoUtil
+				.decrypt(usuarioLogado.getSenha(), CryptoUtil.getSecretKeyFromString(usuarioLogado.getHash())))) {
+			throw new IllegalArgumentException("Usuário ou senha inválidos!");
 		}
 
 		// Gerar token
 		this.tokenService.generateToken(usuarioLogado);
-		
+
 		// Enviar email com token
-		this.emailService.sendTokenEmail(usuarioLogado);
-		
+		this.emailService.sendLoginTokenEmail(usuarioLogado);
+
 		return usuarioLogado;
+	}
+
+	public void recoverPassword(String idUsuario, String token, String novaSenha)
+			throws CryptoException, MessagingException {
+		Usuario usuario = this.usuarioRepository.findById(Long.parseLong(idUsuario)).orElse(null);
+
+		if (usuario == null) {
+			throw new IllegalArgumentException("Usuário não encontrado!");
+		}
+
+		if (Boolean.FALSE.equals(this.tokenService.isValidToken(token, usuario.getId()))) {
+			throw new IllegalArgumentException("Token inválido!");
+		}
+
+		usuario.setHash(CryptoUtil.generateKeyAsString());
+		usuario.setSenha(CryptoUtil.encrypt(novaSenha, usuario.getHash()));
+		this.usuarioRepository.save(usuario);
+
+		this.tokenService.disableToken(this.tokenService.getToken(token));
+
+		this.emailService.sendRecuperacaoTokenEmail(usuario);
 	}
 
 }
