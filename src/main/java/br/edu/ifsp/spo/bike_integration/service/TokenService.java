@@ -1,6 +1,7 @@
 package br.edu.ifsp.spo.bike_integration.service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,10 @@ public class TokenService {
 	public Token disableToken(Token token) {
 		token.setDtExpiracao(new Date(System.currentTimeMillis() - 1 * 60000));
 		return tokenRepository.save(token);
+	}
+	
+	public List<Token> listTokensByUser(Long idUsuario) {
+		return tokenRepository.findByUsuarioId(idUsuario);
 	}
 
 	/*

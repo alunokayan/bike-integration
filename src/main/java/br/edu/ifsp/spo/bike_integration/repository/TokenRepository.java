@@ -1,5 +1,6 @@
 package br.edu.ifsp.spo.bike_integration.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,4 +15,7 @@ public interface TokenRepository extends JpaRepository<Token, Long> {
 
 	@Query(value = "SELECT * FROM token t WHERE t.id_usuario = :idUsuario ORDER BY t.dt_criacao DESC LIMIT 1", nativeQuery = true)
 	Optional<Token> findLastTokenByUsuarioId(@Param("idUsuario") Long idUsuario);
+	
+	@Query(value = "SELECT * FROM token t WHERE t.id_usuario = :idUsuario", nativeQuery = true)
+	List<Token> findByUsuarioId(@Param("idUsuario") Long idUsuario);
 }

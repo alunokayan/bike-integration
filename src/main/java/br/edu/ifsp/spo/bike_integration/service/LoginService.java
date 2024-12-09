@@ -23,13 +23,25 @@ public class LoginService {
 	private EmailService emailService;
 
 	public Usuario login(UsuarioLoginDto usuario) throws CryptoException, MessagingException {
-		Usuario usuarioLogado = usuarioRepository.findByNomeUsuario(usuario.getNomeUsuario()).orElse(
-				usuarioRepository.findByEmail(usuario.getEmail()).orElse(usuarioRepository.findByCpf(usuario.getCpf())
-						.orElse(usuarioRepository.findByCnpj(usuario.getCnpj()).orElse(null))));
+		Usuario usuarioLogado;
+
+		if (usuario.getNomeUsuario() != null) {
+			usuarioLogado = this.usuarioRepository.findByNomeUsuario(usuario.getNomeUsuario()).orElse(null);
+		} else if (usuario.getEmail() != null) {
+			usuarioLogado = this.usuarioRepository.findByEmail(usuario.getEmail()).orElse(null);
+		} else if (usuario.getCpf() != null) {
+			usuarioLogado = this.usuarioRepository.findByCpf(usuario.getCpf()).orElse(null);
+		} else if (usuario.getCnpj() != null) {
+			usuarioLogado = this.usuarioRepository.findByCnpj(usuario.getCnpj()).orElse(null);
+		} else {
+			throw new IllegalArgumentException("Usuário não encontrado!");
+		}
 
 		if (!usuario.getSenha().isBlank() && usuarioLogado != null && !usuario.getSenha().equals(CryptoUtil
 				.decrypt(usuarioLogado.getSenha(), CryptoUtil.getSecretKeyFromString(usuarioLogado.getHash())))) {
 			throw new IllegalArgumentException("Usuário ou senha inválidos!");
+		} else if (usuarioLogado == null) {
+			throw new IllegalArgumentException("Usuário não encontrado!");
 		}
 
 		// Gerar token

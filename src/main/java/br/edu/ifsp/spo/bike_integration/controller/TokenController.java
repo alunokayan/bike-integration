@@ -1,5 +1,7 @@
 package br.edu.ifsp.spo.bike_integration.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.edu.ifsp.spo.bike_integration.model.Token;
 import br.edu.ifsp.spo.bike_integration.service.EmailService;
 import br.edu.ifsp.spo.bike_integration.service.TokenService;
 import br.edu.ifsp.spo.bike_integration.service.UsuarioService;
@@ -48,5 +51,13 @@ public class TokenController {
 		tokenService.generateToken(this.usuarioService.loadUsuarioById(idUsuario));
 		emailService.sendLoginTokenEmail(this.usuarioService.loadUsuarioById(idUsuario));
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	@GetMapping("/listByUser")
+	@Operation(summary = "Lista os tokens de um usuário.")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Tokens listados com sucesso."),
+			@ApiResponse(responseCode = "500", description = "Erro ao listar os tokens.") })
+	public List<Token> listTokensByUser(@RequestParam Long idUsuario) {
+		return tokenService.listTokensByUser(idUsuario);
 	}
 }
