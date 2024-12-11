@@ -42,7 +42,7 @@ public class EventoService {
 		return eventoRepository.findAll();
 	}
 
-	public Evento cadastrarEvento(EventoDto eventoDto) {
+	public Evento createEvento(EventoDto eventoDto) {
 		Map<String, Double> coordenadas = openStreetMapApiService
 				.buscarCoordenadasPorEndereco(FormatUtil.formatEnderecoToOpenStreetMapApi(eventoDto.getEndereco()));
 		eventoDto.getEndereco().setLatitude(coordenadas.get("lat"));
@@ -53,6 +53,34 @@ public class EventoService {
 						.dtAtualizacao(eventoDto.getDataAtualizacao()).endereco(eventoDto.getEndereco())
 						.tipoEvento(tipoEventoService.loadTipoEvento(eventoDto.getIdTipoEvento())).build());
 	}
+
+	public Evento updateEvento(Long id, EventoDto eventoDto) {
+		Evento evento = eventoRepository.findById(id).orElse(null);
+		if (evento != null) {
+			Map<String, Double> coordenadas = openStreetMapApiService
+					.buscarCoordenadasPorEndereco(FormatUtil.formatEnderecoToOpenStreetMapApi(eventoDto.getEndereco()));
+			eventoDto.getEndereco().setLatitude(coordenadas.get("lat"));
+			eventoDto.getEndereco().setLongitude(coordenadas.get("lon"));
+
+			evento.setNome(eventoDto.getNome());
+			evento.setDescricao(eventoDto.getDescricao());
+			evento.setData(eventoDto.getData());
+			evento.setDtAtualizacao(eventoDto.getDataAtualizacao());
+			evento.setEndereco(eventoDto.getEndereco());
+			evento.setTipoEvento(tipoEventoService.loadTipoEvento(eventoDto.getIdTipoEvento()));
+
+			return eventoRepository.save(evento);
+		}
+		return null;
+	}
+
+	public void deleteEvento(Long id) {
+		eventoRepository.deleteById(id);
+	}
+
+	/*
+	 * PRIVATE METHODS
+	 */
 
 	private List<Evento> getEventosProximosByLocation(Double latitude, Double longitude, Double raio) {
 		return eventoRepository.findEventosProximosByLocation(latitude, longitude, raio);

@@ -1,6 +1,10 @@
 
 package br.edu.ifsp.spo.bike_integration.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import br.edu.ifsp.spo.bike_integration.dto.EnderecoDto;
 import br.edu.ifsp.spo.bike_integration.response.BrasilApiCepResponse;
 
@@ -45,5 +49,13 @@ public class FormatUtil {
 	public static EnderecoDto convertToDto(BrasilApiCepResponse endereco, Long numero) {
 		return EnderecoDto.builder().cep(endereco.getCep()).estado(endereco.getState()).cidade(endereco.getCity())
 				.bairro(endereco.getNeighborhood()).rua(endereco.getStreet()).numero(numero).build();
+	}
+	
+	public static EnderecoDto convertToDto(String endereco) throws JsonProcessingException {
+		JsonNode json = new ObjectMapper().readTree(endereco);
+		
+		return EnderecoDto.builder().cep(json.get("cep").asText()).estado(json.get("estado").asText())
+				.cidade(json.get("cidade").asText()).bairro(json.get("bairro").asText())
+				.rua(json.get("logradouro").asText()).numero(json.get("numero").asLong()).build();
 	}
 }

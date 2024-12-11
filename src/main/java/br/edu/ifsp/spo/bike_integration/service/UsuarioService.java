@@ -57,4 +57,24 @@ public class UsuarioService {
 		return usuarioSaved;
 
 	}
+	
+	public Usuario updateUsuario(Long id, UsuarioDto usuarioDto) {
+		Usuario usuario = usuarioRepository.findById(id).orElse(null);
+		if (usuario == null) {
+			return null;
+		}
+		usuario.setNome(usuarioDto.getNome());
+		usuario.setNomeUsuario(usuarioDto.getNomeUsuario());
+		usuario.setEndereco(usuarioDto.getEndereco());
+		usuario.setEmail(usuarioDto.getEmail());
+		usuario.setSenha(usuarioDto.getSenha());
+		usuario.setCpf(usuarioDto.getCpf());
+		usuario.setCnpj(usuarioDto.getCnpj());
+		usuario.setNivelHabilidade(nivelHabilidadeService.loadNivelHabilidade(usuarioDto.getNivelHabilidade()));
+		return usuarioRepository.save(usuario);
+	}
+	
+	public void deleteUsuario(Long id) {
+		usuarioRepository.deleteById(id);
+	}
 }

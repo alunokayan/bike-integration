@@ -4,8 +4,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -40,8 +43,24 @@ public class EventoController {
 	@Operation(summary = "Cadastra um novo evento.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "201", description = "Evento cadastrado com sucesso."),
 			@ApiResponse(responseCode = "500", description = "Erro ao cadastrar evento.") })
-	public Evento cadastrarEvento(@RequestBody EventoDto evento) {
-		return eventoService.cadastrarEvento(evento);
+	public ResponseEntity<Evento> cadastrarEvento(@RequestBody EventoDto evento) {
+		return ResponseEntity.status(201).body(eventoService.createEvento(evento));
+	}
+	
+	@PutMapping("/update")
+	@Operation(summary = "Atualiza um evento.")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Evento atualizado com sucesso."),
+			@ApiResponse(responseCode = "500", description = "Erro ao atualizar evento.") })
+	public Evento atualizarEvento(@RequestParam(name = "id", required = true) Long id, @RequestBody EventoDto evento) {
+		return eventoService.updateEvento(id, evento);
+	}
+	
+	@DeleteMapping("/delete")
+	@Operation(summary = "Deleta um evento.")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Evento deletado com sucesso."),
+			@ApiResponse(responseCode = "500", description = "Erro ao deletar evento.") })
+	public void deletarEvento(@RequestParam(name = "id", required = true) Long id) {
+		eventoService.deleteEvento(id);
 	}
 
 	@GetMapping("/get")
