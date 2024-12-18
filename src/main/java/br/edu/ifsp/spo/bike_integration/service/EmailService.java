@@ -15,6 +15,9 @@ public class EmailService {
 	@Autowired
 	private JavaMailSender mailSender;
 
+	@Autowired
+	private TokenService tokenService;
+
 	// Constants for email subjects
 	private static final String SUBJECT_CADASTRO = "Token de Cadastro - Bicity App";
 	private static final String SUBJECT_RECUPERACAO = "Token de Recuperação - Bicity App";
@@ -26,29 +29,28 @@ public class EmailService {
 	private static final String HTML_FOOTER = "<p style='margin-top: 30px; font-size: 12px; color: #6c757d;'>Atenciosamente,<br>Equipe Bicity App</p></div></body></html>";
 
 	// Envia um e-mail com o token de cadastro para o usuário.
-	public void sendCadastroTokenEmail(Usuario usuario) throws MessagingException {
-		String htmlContent = buildEmailContent(usuario.getNome(),
-				"Obrigado por se registrar no <strong>Bicity App</strong>.", "Seu token de cadastro é:",
-				usuario.getLastToken().getTokenGerado());
-		sendEmail(usuario.getEmail(), SUBJECT_CADASTRO, htmlContent);
+	public void sendCadastroTokenEmail(String email, String token) throws MessagingException {
+		String htmlContent = buildEmailContent("", "Obrigado por se registrar no <strong>Bicity App</strong>.",
+				"Seu token de cadastro é:", token);
+		sendEmail(email, SUBJECT_CADASTRO, htmlContent);
 	}
-	
+
 	// Envia um e-mail com o token de recuperação para o usuário.
 	public void sendRecuperacaoTokenEmail(Usuario usuario) throws MessagingException {
 		String htmlContent = buildEmailContent(usuario.getNome(),
 				"Você solicitou a recuperação de sua senha no <strong>Bicity App</strong>.",
-				"Seu token de recuperação é:", usuario.getLastToken().getTokenGerado());
+				"Seu token de recuperação é:", tokenService.getLastTokenByEmail(usuario.getEmail()).getTokenGerado());
 		sendEmail(usuario.getEmail(), SUBJECT_RECUPERACAO, htmlContent);
 	}
-	
+
 	// Envia um e-mail com o token de login para o usuário.
 	public void sendLoginTokenEmail(Usuario usuario) throws MessagingException {
 		String htmlContent = buildEmailContent(usuario.getNome(),
 				"Você solicitou um token de login no <strong>Bicity App</strong>.", "Seu token de login é:",
-				usuario.getLastToken().getTokenGerado());
+				tokenService.getLastTokenByEmail(usuario.getEmail()).getTokenGerado());
 		sendEmail(usuario.getEmail(), SUBJECT_LOGIN, htmlContent);
 	}
-	
+
 	// Envia uma mensagem personalizada para o destinatário.
 	public void sendAnyMessageEmail(String message, String to) throws MessagingException {
 		String htmlContent = buildEmailContent("", message, "", "");

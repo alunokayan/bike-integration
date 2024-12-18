@@ -13,9 +13,9 @@ public interface TokenRepository extends JpaRepository<Token, Long> {
 
 	Optional<Token> findByTokenGerado(String tokenGerado);
 
-	@Query(value = "SELECT * FROM token t WHERE t.id_usuario = :idUsuario ORDER BY t.dt_criacao DESC LIMIT 1", nativeQuery = true)
-	Optional<Token> findLastTokenByUsuarioId(@Param("idUsuario") Long idUsuario);
-	
-	@Query(value = "SELECT * FROM token t WHERE t.id_usuario = :idUsuario", nativeQuery = true)
-	List<Token> findByUsuarioId(@Param("idUsuario") Long idUsuario);
+	@Query(value = "SELECT * FROM token t WHERE t.email = :email ORDER BY t.dt_criacao DESC LIMIT 1", nativeQuery = true)
+	Optional<Token> findLastTokenByEmail(@Param("email") String email);
+
+	@Query(value = "SELECT * FROM token t WHERE t.email = :email", nativeQuery = true)
+	List<Token> findByEmail(@Param("email") String email);
 }

@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import br.edu.ifsp.spo.bike_integration.model.Token;
 import br.edu.ifsp.spo.bike_integration.service.EmailService;
 import br.edu.ifsp.spo.bike_integration.service.TokenService;
-import br.edu.ifsp.spo.bike_integration.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -32,24 +31,20 @@ public class TokenController {
 	@Autowired
 	private EmailService emailService;
 
-	@Autowired
-	private UsuarioService usuarioService;
-
 	@GetMapping("/isValidToken")
 	@Operation(summary = "Valida o token.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Token válido."),
 			@ApiResponse(responseCode = "500", description = "Token inválido.") })
-	public boolean isValidateToken(@RequestParam String token, @RequestParam Long idUsuario) {
-		return tokenService.isValidToken(token, idUsuario);
+	public boolean isValidateToken(@RequestParam String token, @RequestParam String email) {
+		return tokenService.isValidToken(token, email);
 	}
 
-	@PostMapping("/resendNewToken")
-	@Operation(summary = "Reenvia um novo token.")
-	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Token reenviado com sucesso."),
-			@ApiResponse(responseCode = "500", description = "Erro ao reenviar o token.") })
-	public ResponseEntity<Void> sendTokenEmail(@RequestParam Long idUsuario) throws MessagingException {
-		tokenService.generateToken(this.usuarioService.loadUsuarioById(idUsuario));
-		emailService.sendLoginTokenEmail(this.usuarioService.loadUsuarioById(idUsuario));
+	@PostMapping("/sendToken")
+	@Operation(summary = "Envia um novo token.")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Token enviado com sucesso."),
+			@ApiResponse(responseCode = "500", description = "Erro ao enviar o token.") })
+	public ResponseEntity<Void> sendTokenEmail(@RequestParam String email) throws MessagingException {
+		emailService.sendCadastroTokenEmail(email, tokenService.generateToken(email).getTokenGerado());
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
@@ -57,7 +52,7 @@ public class TokenController {
 	@Operation(summary = "Lista os tokens de um usuário.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Tokens listados com sucesso."),
 			@ApiResponse(responseCode = "500", description = "Erro ao listar os tokens.") })
-	public List<Token> listTokensByUser(@RequestParam Long idUsuario) {
-		return tokenService.listTokensByUser(idUsuario);
+	public List<Token> listTokensByUser(@RequestParam String email) {
+		return tokenService.listTokensByEmail(email);
 	}
 }

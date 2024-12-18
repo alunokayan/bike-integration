@@ -1,28 +1,21 @@
 package br.edu.ifsp.spo.bike_integration.model;
 
 import java.util.Date;
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import br.edu.ifsp.spo.bike_integration.converter.EnderecoConverter;
 import br.edu.ifsp.spo.bike_integration.dto.EnderecoDto;
 import br.edu.ifsp.spo.bike_integration.exception.CryptoException;
 import br.edu.ifsp.spo.bike_integration.util.CryptoUtil;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -75,21 +68,6 @@ public class Usuario {
 	@ManyToOne
 	@JoinColumn(name = "id_nivel_habilidade", nullable = false)
 	private NivelHabilidade nivelHabilidade;
-
-	@OneToMany(mappedBy = "usuario", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JsonManagedReference
-	private List<Token> tokens;
-
-	@Transient
-	private Token lastToken;
-
-	public Token getLastToken() {
-		if (this.tokens != null && !this.tokens.isEmpty()) {
-			this.lastToken = this.tokens.stream().max((t1, t2) -> t1.getDtCriacao().compareTo(t2.getDtCriacao()))
-					.orElse(null);
-		}
-		return this.lastToken;
-	}
 
 	@PrePersist
 	public void prePersist() throws CryptoException {

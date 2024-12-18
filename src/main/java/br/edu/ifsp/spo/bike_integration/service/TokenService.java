@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.edu.ifsp.spo.bike_integration.model.Token;
-import br.edu.ifsp.spo.bike_integration.model.Usuario;
 import br.edu.ifsp.spo.bike_integration.repository.TokenRepository;
 
 @Service
@@ -17,24 +16,24 @@ public class TokenService {
 	@Autowired
 	private TokenRepository tokenRepository;
 
-	public Token generateToken(Usuario usuario) {
-		Token lastToken = tokenRepository.findLastTokenByUsuarioId(usuario.getId()).orElse(null);
+	public Token generateToken(String email) {
+		Token lastToken = tokenRepository.findLastTokenByEmail(email).orElse(null);
 
 		if (lastToken != null) {
 			this.disableToken(lastToken);
 		}
 		return tokenRepository.save(
 				Token.builder().dtCriacao(new Date()).dtExpiracao(new Date(System.currentTimeMillis() + 6 * 60000))
-						.tokenGerado(this.generateToken()).usuario(usuario).build());
+						.tokenGerado(this.generateToken()).email(email).build());
 	}
 
 	public Token getToken(String tokenValue) {
 		return this.tokenRepository.findByTokenGerado(tokenValue).orElse(null);
 	}
 
-	public Boolean isValidToken(String tokenValue, Long idUsuario) {
+	public Boolean isValidToken(String tokenValue, String email) {
 		Token token = this.getToken(tokenValue);
-		if (token != null && idUsuario.equals(token.getUsuario().getId()) && token.getDtExpiracao().after(new Date())) {
+		if (token != null && email.equals(token.getEmail()) && token.getDtExpiracao().after(new Date())) {
 			this.disableToken(token);
 			return true;
 		}
@@ -45,9 +44,13 @@ public class TokenService {
 		token.setDtExpiracao(new Date(System.currentTimeMillis() - 1 * 60000));
 		return tokenRepository.save(token);
 	}
-	
-	public List<Token> listTokensByUser(Long idUsuario) {
-		return tokenRepository.findByUsuarioId(idUsuario);
+
+	public List<Token> listTokensByEmail(String email) {
+		return tokenRepository.findByEmail(email);
+	}
+
+	public Token getLastTokenByEmail(String email) {
+		return tokenRepository.findLastTokenByEmail(email).orElse(null);
 	}
 
 	/*

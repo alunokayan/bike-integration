@@ -23,12 +23,6 @@ public class UsuarioService {
 	@Autowired
 	private NivelHabilidadeService nivelHabilidadeService;
 
-	@Autowired
-	private TokenService tokenService;
-
-	@Autowired
-	private EmailService emailService;
-
 	public Usuario loadUsuarioById(Long id) {
 		return usuarioRepository.findById(id).orElse(null);
 	}
@@ -41,23 +35,14 @@ public class UsuarioService {
 		usuarioDto.getEndereco().setLongitude(coordenadas.get("lon"));
 
 		// Salva o usuário
-		Usuario usuarioSaved = usuarioRepository.save(Usuario.builder().nome(usuarioDto.getNome())
+		return usuarioRepository.save(Usuario.builder().nome(usuarioDto.getNome())
 				.nomeUsuario(usuarioDto.getNomeUsuario()).endereco(usuarioDto.getEndereco())
 				.email(usuarioDto.getEmail()).senha(usuarioDto.getSenha()).cpf(usuarioDto.getCpf())
 				.cnpj(usuarioDto.getCnpj())
 				.nivelHabilidade(nivelHabilidadeService.loadNivelHabilidade(usuarioDto.getNivelHabilidade())).build());
 
-		// Gera o token
-		tokenService.generateToken(usuarioSaved);
-
-		// Envia o token por e-mail
-		emailService.sendCadastroTokenEmail(this.loadUsuarioById(usuarioSaved.getId()));
-
-		// Retorna o usuário
-		return usuarioSaved;
-
 	}
-	
+
 	public Usuario updateUsuario(Long id, UsuarioDto usuarioDto) {
 		Usuario usuario = usuarioRepository.findById(id).orElse(null);
 		if (usuario == null) {
@@ -73,7 +58,7 @@ public class UsuarioService {
 		usuario.setNivelHabilidade(nivelHabilidadeService.loadNivelHabilidade(usuarioDto.getNivelHabilidade()));
 		return usuarioRepository.save(usuario);
 	}
-	
+
 	public void deleteUsuario(Long id) {
 		usuarioRepository.deleteById(id);
 	}

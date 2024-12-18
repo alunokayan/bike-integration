@@ -45,7 +45,7 @@ public class LoginService {
 		}
 
 		// Gerar token
-		this.tokenService.generateToken(usuarioLogado);
+		this.tokenService.generateToken(usuarioLogado.getEmail());
 
 		// Enviar email com token
 		this.emailService.sendLoginTokenEmail(usuarioLogado);
@@ -61,7 +61,7 @@ public class LoginService {
 			throw new IllegalArgumentException("Usuário não encontrado!");
 		}
 
-		if (Boolean.FALSE.equals(this.tokenService.isValidToken(token, usuario.getId()))) {
+		if (Boolean.FALSE.equals(this.tokenService.isValidToken(token, usuario.getEmail()))) {
 			throw new IllegalArgumentException("Token inválido!");
 		}
 
