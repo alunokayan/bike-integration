@@ -40,17 +40,33 @@ public class TokenService {
 		return false;
 	}
 
-	public Token disableToken(Token token) {
-		token.setDtExpiracao(new Date(System.currentTimeMillis() - 1 * 60000));
-		return tokenRepository.save(token);
+	public List<Token> listTokens() {
+		return tokenRepository.findAll();
 	}
 
 	public List<Token> listTokensByEmail(String email) {
 		return tokenRepository.findByEmail(email);
 	}
 
+	public List<Token> listAllExpiredTokens() {
+		return tokenRepository.findAllExpiredTokens();
+	}
+
 	public Token getLastTokenByEmail(String email) {
 		return tokenRepository.findLastTokenByEmail(email).orElse(null);
+	}
+
+	public Token disableToken(Token token) {
+		token.setDtExpiracao(new Date(System.currentTimeMillis() - 1 * 60000));
+		return tokenRepository.save(token);
+	}
+
+	public void removeToken(Token token) {
+		tokenRepository.delete(token);
+	}
+
+	public void removeAll(List<Token> tokens) {
+		tokenRepository.deleteAll(tokens);
 	}
 
 	/*

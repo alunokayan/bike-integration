@@ -18,4 +18,7 @@ public interface TokenRepository extends JpaRepository<Token, Long> {
 
 	@Query(value = "SELECT * FROM token t WHERE t.email = :email", nativeQuery = true)
 	List<Token> findByEmail(@Param("email") String email);
+
+	@Query(value = "SELECT * FROM token t WHERE t.dt_expiracao < now()", nativeQuery = true)
+	List<Token> findAllExpiredTokens();
 }
