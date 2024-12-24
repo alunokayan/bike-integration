@@ -53,15 +53,20 @@ public class SwaggerConfig {
 	GroupedOpenApi tipoEventoApi() {
 		return GroupedOpenApi.builder().group("TipoEvento").pathsToMatch("/v1/tipo-evento/**").build();
 	}
-	
+
 	@Bean
 	GroupedOpenApi empresaApi() {
 		return GroupedOpenApi.builder().group("Empresa").pathsToMatch("/v1/empresa/**").build();
 	}
-	
+
 	@Bean
 	GroupedOpenApi enderecoApi() {
 		return GroupedOpenApi.builder().group("Endereco").pathsToMatch("/v1/endereco/**").build();
+	}
+
+	@Bean
+	GroupedOpenApi infraestruturaApi() {
+		return GroupedOpenApi.builder().group("Infraestrutura").pathsToMatch("/v1/infraestrutura/**").build();
 	}
 
 	@Bean

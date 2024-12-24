@@ -21,31 +21,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Trecho {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
-	@Column(name = "nome")
-	private String nome;
-	
-	@Column(name = "latitude_inicial")
-	private Double latitudeInicial;
-	
-	@Column(name = "longitude_inicial")
-	private Double longitudeInicial;
-	
-	@Column(name = "latitude_final")
-	private Double latitudeFinal;
-	
-	@Column(name = "longitude_final")
-	private Double longitudeFinal;
-	
-	@Column(name = "cep")
-	private String cep;
-	
+
+	@Column(name = "latitude")
+	private Double latitude;
+
+	@Column(name = "longitude")
+	private Double longitude;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_infraestrutura_cicloviaria", nullable = false)
-	private InfraestruturaCicloviaria infraestruturasCicloviarias	;
+	private InfraestruturaCicloviaria infraestruturaCicloviaria;
 
 }

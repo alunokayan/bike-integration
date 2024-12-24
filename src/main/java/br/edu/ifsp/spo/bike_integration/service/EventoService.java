@@ -12,7 +12,7 @@ import br.edu.ifsp.spo.bike_integration.dto.GeoJsonDto;
 import br.edu.ifsp.spo.bike_integration.model.Evento;
 import br.edu.ifsp.spo.bike_integration.repository.EventoRepository;
 import br.edu.ifsp.spo.bike_integration.util.FormatUtil;
-import br.edu.ifsp.spo.bike_integration.util.GeoJsonUtil;
+import br.edu.ifsp.spo.bike_integration.util.GeoJsonUtilFactory;
 
 @Service
 public class EventoService {
@@ -31,11 +31,12 @@ public class EventoService {
 	}
 
 	public GeoJsonDto buscarEventoAsGeoJsonById(Long id) throws NotFoundException {
-		return GeoJsonUtil.convertToGeoJson(this.eventoRepository.findById(id).orElseThrow(NotFoundException::new));
+		return GeoJsonUtilFactory
+				.convertEventosToGeoJson(this.eventoRepository.findById(id).orElseThrow(NotFoundException::new));
 	}
 
 	public GeoJsonDto buscarEventosAsGeoJson(Double latitude, Double longitude, Double raio) {
-		return GeoJsonUtil.convertToGeoJson(this.getEventosProximosByLocation(latitude, longitude, raio));
+		return GeoJsonUtilFactory.convertEventosToGeoJson(this.getEventosProximosByLocation(latitude, longitude, raio));
 	}
 
 	public List<Evento> listarEventos() {
