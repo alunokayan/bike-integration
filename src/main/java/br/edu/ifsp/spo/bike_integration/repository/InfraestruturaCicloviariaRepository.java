@@ -15,8 +15,10 @@ public interface InfraestruturaCicloviariaRepository extends JpaRepository<Infra
 
 	List<InfraestruturaCicloviaria> findAll();
 
-	@Query(value = "SELECT DISTINCT i FROM InfraestruturaCicloviaria i " + "JOIN i.trechos t "
-			+ "WHERE ST_Distance_Sphere(POINT(t.latitude, t.longitude), POINT(:latitude, :longitude)) <= :raio")
+	@Query("SELECT ic " + "FROM InfraestruturaCicloviaria ic " + "JOIN ic.trechos t "
+			+ "WHERE ST_Distance_Sphere(POINT(t.latitude, t.longitude), POINT(:latitude, :longitude)) <= :raio "
+			+ "GROUP BY ic.id "
+			+ "ORDER BY MIN(CAST(ST_Distance_Sphere(POINT(t.latitude, t.longitude), POINT(:latitude, :longitude)) AS double)) ASC")
 	List<InfraestruturaCicloviaria> findInfraestruturasProximasByLocation(@Param("latitude") double latitude,
 			@Param("longitude") double longitude, @Param("raio") double raio);
 
