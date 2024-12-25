@@ -3,7 +3,6 @@ package br.edu.ifsp.spo.bike_integration.configuration;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,11 +19,8 @@ import br.edu.ifsp.spo.bike_integration.filter.AuthenticationFilter;
 @EnableWebSecurity
 public class SecurityConfig {
 
-	@Autowired
-	private AuthenticationFilter tokenFilter;
-
 	@Bean
-	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+	SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationFilter tokenFilter) throws Exception {
 		http.csrf(csrf -> csrf.disable())
 				.authorizeHttpRequests(requests -> requests
 						.requestMatchers(getPublicRequestMatchersAsArray()).permitAll()
