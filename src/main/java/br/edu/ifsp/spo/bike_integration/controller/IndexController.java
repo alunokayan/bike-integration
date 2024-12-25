@@ -18,7 +18,7 @@ public class IndexController {
 	BuildProperties buildProperties;
 
 	@Operation(summary = "versão da API", description = "Retorna a versão da API")
-	@GetMapping({"/", "home", "ping", "version"})
+	@GetMapping({ "/", "home", "ping", "version" })
 	public String version() {
 		return buildProperties.getVersion();
 	}
@@ -26,7 +26,7 @@ public class IndexController {
 	@Operation(summary = "detalhes da API", description = "Retorna os detalhes da API")
 	@GetMapping("detail")
 	public String details() {
-		return String.format("Name: %s%nGroup: %s%nVersion: %s%nTime: %s%nArtifact: %s",
+		return "Name: %s%nGroup: %s%nVersion: %s%nTime: %s%nArtifact: %s".formatted(
 				buildProperties.getName(),
 				buildProperties.getGroup(),
 				buildProperties.getVersion(),

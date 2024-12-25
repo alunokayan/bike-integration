@@ -52,7 +52,7 @@ public class EventoController {
 	@Operation(summary = "Atualiza um evento.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Evento atualizado com sucesso."),
 			@ApiResponse(responseCode = "500", description = "Erro ao atualizar evento.") })
-	public ResponseEntity<Evento> atualizarEvento(@RequestParam(name = "id", required = true) Long id,
+	public ResponseEntity<Evento> atualizarEvento(@RequestParam(required = true) Long id,
 			@RequestBody EventoDto evento) {
 		return ResponseEntity.ok(eventoService.updateEvento(id, evento));
 	}
@@ -61,7 +61,7 @@ public class EventoController {
 	@Operation(summary = "Deleta um evento.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Evento deletado com sucesso."),
 			@ApiResponse(responseCode = "500", description = "Erro ao deletar evento.") })
-	public ResponseEntity<Void> deletarEvento(@RequestParam(name = "id", required = true) Long id) {
+	public ResponseEntity<Void> deletarEvento(@RequestParam(required = true) Long id) {
 		eventoService.deleteEvento(id);
 		return ResponseEntity.ok().build();
 	}
@@ -70,7 +70,7 @@ public class EventoController {
 	@Operation(summary = "Busca um evento pelo id.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Evento encontrado com sucesso."),
 			@ApiResponse(responseCode = "500", description = "Erro ao buscar evento.") })
-	public ResponseEntity<Evento> buscarEvento(@RequestParam(name = "id", required = true) Long id) {
+	public ResponseEntity<Evento> buscarEvento(@RequestParam(required = true) Long id) {
 		return ResponseEntity.ok(eventoService.buscarEvento(id));
 	}
 
@@ -78,7 +78,7 @@ public class EventoController {
 	@Operation(summary = "Busca um evento pelo id e retorna como GeoJson.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Evento encontrado com sucesso."),
 			@ApiResponse(responseCode = "500", description = "Erro ao buscar evento.") })
-	public ResponseEntity<GeoJsonDto> buscarEventoAsGeoJson(@RequestParam(name = "id", required = false) Long id)
+	public ResponseEntity<GeoJsonDto> buscarEventoAsGeoJson(@RequestParam(required = false) Long id)
 			throws NotFoundException {
 		return ResponseEntity.ok(eventoService.buscarEventoAsGeoJsonById(id));
 	}
@@ -88,9 +88,9 @@ public class EventoController {
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Eventos encontrados com sucesso."),
 			@ApiResponse(responseCode = "500", description = "Erro ao buscar eventos.") })
 	public ResponseEntity<GeoJsonDto> buscarEventosAsGeoJson(
-			@RequestParam(name = "latitude", required = true) Double latitude,
-			@RequestParam(name = "longitude", required = true) Double longitude,
-			@RequestParam(name = "raio", required = true) Double raio) {
+			@RequestParam(required = true) Double latitude,
+			@RequestParam(required = true) Double longitude,
+			@RequestParam(required = true) Double raio) {
 		return ResponseEntity.ok(eventoService.buscarEventosAsGeoJson(latitude, longitude, raio));
 	}
 }
