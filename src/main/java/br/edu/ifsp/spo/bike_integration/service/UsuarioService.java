@@ -9,7 +9,7 @@ import br.edu.ifsp.spo.bike_integration.dto.UsuarioDto;
 import br.edu.ifsp.spo.bike_integration.model.Usuario;
 import br.edu.ifsp.spo.bike_integration.repository.UsuarioRepository;
 import br.edu.ifsp.spo.bike_integration.util.FormatUtil;
-import jakarta.mail.MessagingException;
+import br.edu.ifsp.spo.bike_integration.util.validate.CpfValidate;
 
 @Service
 public class UsuarioService {
@@ -27,7 +27,7 @@ public class UsuarioService {
 		return usuarioRepository.findById(id).orElse(null);
 	}
 
-	public Usuario createUsuario(UsuarioDto usuarioDto) throws MessagingException {
+	public Usuario createUsuario(UsuarioDto usuarioDto) {
 		// Busca as coordenadas do endereço
 		Map<String, Double> coordenadas = openStreetMapApiService
 				.buscarCoordenadasPorEndereco(FormatUtil.formatEnderecoToOpenStreetMapApi(usuarioDto.getEndereco()));
@@ -61,5 +61,9 @@ public class UsuarioService {
 
 	public void deleteUsuario(Long id) {
 		usuarioRepository.deleteById(id);
+	}
+
+	public String validateCpf(String cpf) {
+		return CpfValidate.validate(cpf);
 	}
 }

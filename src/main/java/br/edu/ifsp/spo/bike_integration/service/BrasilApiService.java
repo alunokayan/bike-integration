@@ -25,20 +25,21 @@ public class BrasilApiService {
 	private RestTemplate restTemplate;
 
 	private ConfiguracaoApiExterna configuracao;
-	
+
 	@PostConstruct
-    public void init() {
-        configuracao = configuracaoApiService.getConfiguracaoByNome(ConfiguracaoApiType.BRASIL_API);
-    }
+	public void init() {
+		configuracao = configuracaoApiService.getConfiguracaoByNome(ConfiguracaoApiType.BRASIL_API);
+	}
 
 	Logger logger = LoggerFactory.getLogger(BrasilApiService.class);
-	
+
 	public BrasilApiCepResponse buscarEnderecoPorCep(String cep) throws NotFoundException {
 		if (!cep.matches("\\d{5}-?\\d{3}"))
 			throw new IllegalArgumentException("CEP inválido.");
 
 		try {
-			return restTemplate.getForObject(configuracao.getUrl() + BrasilApiType.CEP.getEndpoint() + FormatUtil.removeNonNumeric(cep),
+			return restTemplate.getForObject(
+					configuracao.getUrl() + BrasilApiType.CEP.getEndpoint() + FormatUtil.removeNonNumeric(cep),
 					BrasilApiCepResponse.class);
 		} catch (Exception e) {
 			logger.error("Erro ao buscar endereço pelo CEP: " + cep, e);
@@ -48,10 +49,11 @@ public class BrasilApiService {
 
 	public BrasilApiCnpjResponse buscarEmpresaPorCnpj(String cnpj) throws NotFoundException {
 		if (!cnpj.matches("\\d{2}\\.?\\d{3}\\.?\\d{3}/?\\d{4}-?\\d{2}"))
-			throw new IllegalArgumentException("CNPJ inválido.");
+			cnpj = FormatUtil.formatCnpj(cnpj);
 
 		try {
-			return restTemplate.getForObject(configuracao.getUrl() + BrasilApiType.CNPJ.getEndpoint() + FormatUtil.removeNonNumeric(cnpj),
+			return restTemplate.getForObject(
+					configuracao.getUrl() + BrasilApiType.CNPJ.getEndpoint() + FormatUtil.removeNonNumeric(cnpj),
 					BrasilApiCnpjResponse.class);
 		} catch (Exception e) {
 			logger.error("Erro ao buscar empresa pelo CNPJ: " + cnpj, e);

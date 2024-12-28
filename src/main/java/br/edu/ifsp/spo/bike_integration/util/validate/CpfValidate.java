@@ -1,40 +1,36 @@
-
 package br.edu.ifsp.spo.bike_integration.util.validate;
-
-import java.util.List;
 
 import org.springframework.stereotype.Component;
 
 import br.com.caelum.stella.validation.CPFValidator;
+import br.edu.ifsp.spo.bike_integration.util.FormatUtil;
 
 @Component
-public class CpfValidate {
+public interface CpfValidate {
 
-    public List<String> validate(String cpf, List<String> exceptions) {
-        validateCpfLength(cpf, exceptions);
-        validateCpfNumeric(cpf, exceptions);
-        validateCpfValidity(cpf, exceptions);
-        return exceptions;
-    }
+	String CPF_LENGTH_ERROR = "CPF deve conter 11 caracteres";
+	String CPF_INVALID_ERROR = "CPF inválido";
+	String CPF_VALID = "CPF válido";
 
-    // PRIVATE METHODS
-    private void validateCpfLength(String cpf, List<String> exceptions) {
-        if (cpf.length() != 11)
-            exceptions.add("CPF deve conter 11 caracteres");
-    }
+	static String validate(String cpf) {
+		cpf = FormatUtil.removeNonNumeric(cpf);
 
-    private void validateCpfNumeric(String cpf, List<String> exceptions) {
-        if (!cpf.matches("[0-9]+"))
-            exceptions.add("CPF deve conter apenas números");
-    }
+		if (!isCpfLengthValid(cpf)) {
+			return CPF_LENGTH_ERROR;
+		}
+		if (!isCpfValid(cpf)) {
+			return CPF_INVALID_ERROR;
+		}
+		return CPF_VALID;
+	}
 
-    private void validateCpfValidity(String cpf, List<String> exceptions) {
-        if (!isCpfValid(cpf))
-            exceptions.add("CPF inválido");
-    }
+	// PRIVATE METHODS
+	private static boolean isCpfLengthValid(String cpf) {
+		return cpf.length() == 11;
+	}
 
-    private boolean isCpfValid(String cpf) {
-    	CPFValidator cpfValidator = new CPFValidator();
-    	return cpfValidator.invalidMessagesFor(cpf).isEmpty();
-    }
+	private static boolean isCpfValid(String cpf) {
+		CPFValidator cpfValidator = new CPFValidator();
+		return cpfValidator.invalidMessagesFor(cpf).isEmpty();
+	}
 }
