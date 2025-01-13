@@ -9,8 +9,11 @@ import org.springframework.stereotype.Service;
 
 import br.edu.ifsp.spo.bike_integration.dto.EventoDto;
 import br.edu.ifsp.spo.bike_integration.dto.GeoJsonDto;
+import br.edu.ifsp.spo.bike_integration.hardcode.PaginationType;
 import br.edu.ifsp.spo.bike_integration.model.Evento;
 import br.edu.ifsp.spo.bike_integration.repository.EventoRepository;
+import br.edu.ifsp.spo.bike_integration.response.ListEventoResponse;
+import br.edu.ifsp.spo.bike_integration.util.DateUtil;
 import br.edu.ifsp.spo.bike_integration.util.FormatUtil;
 import br.edu.ifsp.spo.bike_integration.util.GeoJsonUtilFactory;
 
@@ -39,8 +42,22 @@ public class EventoService {
 		return GeoJsonUtilFactory.convertEventosToGeoJson(this.getEventosProximosByLocation(latitude, longitude, raio));
 	}
 
-	public List<Evento> listarEventos() {
-		return eventoRepository.findAll();
+	public ListEventoResponse listarEventos(Long pagina, String nome, String descricao, String data, String cidade,
+			String estado, Long faixaKm, Long nivelHabilidade, Boolean gratuito) {
+
+		Long limit = PaginationType.RESULTS_PER_PAGE.getValue();
+
+		Long offset = (pagina - 1) * limit;
+
+		List<Evento> eventos = eventoRepository.findAll(limit, offset, nome, descricao, DateUtil.fixFormattDate(data),
+				cidade, estado, faixaKm, nivelHabilidade, gratuito);
+
+		Long count = eventoRepository.countAll(nome, descricao, DateUtil.fixFormattDate(data), cidade, estado, faixaKm,
+				nivelHabilidade, gratuito);
+
+		Long totalPaginas = (long) Math.ceil(count / (double) limit);
+
+		return ListEventoResponse.builder().eventos(eventos).totalRegistros(count).totalPaginas(totalPaginas).build();
 	}
 
 	public Evento createEvento(EventoDto eventoDto) {
