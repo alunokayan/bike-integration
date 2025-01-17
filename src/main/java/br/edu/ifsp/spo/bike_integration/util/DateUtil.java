@@ -28,9 +28,7 @@ public interface DateUtil {
 		if (date == null) {
 			return null;
 		}
-		if (date.contains("-")) {
-			return fixDateSlash(date);
-		} else if (date.contains("/")) {
+		if (date.contains("/")) {
 			return fixDateHyphen(date);
 		}
 		return date;
@@ -43,11 +41,6 @@ public interface DateUtil {
 	private static String fixDateHyphen(String date) {
 		String[] dateSplited = date.split("/");
 		return dateSplited[2] + "-" + dateSplited[1] + "-" + dateSplited[0];
-	}
-
-	private static String fixDateSlash(String date) {
-		String[] dateSplited = date.split("-");
-		return dateSplited[2] + "/" + dateSplited[1] + "/" + dateSplited[0];
 	}
 
 }

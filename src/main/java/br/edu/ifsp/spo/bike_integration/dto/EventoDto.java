@@ -24,11 +24,17 @@ public class EventoDto {
 	@Schema(example = "2021-10-10T10:00:00.000")
 	private Date data;
 	
-	private EnderecoDto endereco;
-	
 	@Hidden
 	@Builder.Default
 	private Date dataAtualizacao = new Date();
+	
+	private EnderecoDto endereco;
+	
+	@Schema(example = "10")
+	private Long faixaKm;
+	
+	@Schema(example = "true")
+	private Boolean gratuito;
 	
 	@Schema(example = "1")
 	private Long idTipoEvento;

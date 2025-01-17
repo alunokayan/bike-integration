@@ -42,8 +42,17 @@ public class EnderecoController {
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Latitude e longitude encontradas com sucesso."),
 			@ApiResponse(responseCode = "404", description = "Latitude e longitude não encontradas.") })
-	public Map<String, Double> buscarLatAndLonByCepAndNumber(@RequestParam String cep, @RequestParam Long numero) throws NotFoundException {
+	public Map<String, Double> buscarLatAndLonByCepAndNumber(@RequestParam String cep, @RequestParam Long numero)
+			throws NotFoundException {
 		return openStreetMapApiService.buscarCoordenadasPorEndereco(FormatUtil.formatEnderecoToOpenStreetMapApi(
 				FormatUtil.convertToDto(brasilApiService.buscarEnderecoPorCep(cep), numero)));
+	}
+
+	@GetMapping("/getCepByLatAndLon")
+	@Operation(summary = "Busca cep pelo latitude e longitude.")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Cep encontrado com sucesso."),
+			@ApiResponse(responseCode = "404", description = "Cep não encontrado.") })
+	public Map<String, String> buscarCepPorLatAndLon(@RequestParam String latitude, @RequestParam String longitude) {
+		return openStreetMapApiService.buscarCepPorCoordenadas(latitude, longitude);
 	}
 }

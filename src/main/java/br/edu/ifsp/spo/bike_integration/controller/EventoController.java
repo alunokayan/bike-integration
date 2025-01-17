@@ -17,7 +17,6 @@ import br.edu.ifsp.spo.bike_integration.dto.GeoJsonDto;
 import br.edu.ifsp.spo.bike_integration.model.Evento;
 import br.edu.ifsp.spo.bike_integration.response.ListEventoResponse;
 import br.edu.ifsp.spo.bike_integration.service.EventoService;
-import br.edu.ifsp.spo.bike_integration.util.DateUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -39,9 +38,10 @@ public class EventoController {
 			@RequestParam(required = false) String nome, @RequestParam(required = false) String descricao,
 			@RequestParam(required = false) String data, @RequestParam(required = false) String cidade,
 			@RequestParam(required = false) String estado, @RequestParam(required = false) Long faixaKm,
-			@RequestParam(required = false) Long nivelHabilidade, @RequestParam(required = false) Boolean gratuito) {
-		return ResponseEntity.ok(eventoService.listarEventos(pagina, nome, descricao, DateUtil.fixFormattDate(data),
-				cidade, estado, faixaKm, nivelHabilidade, gratuito));
+			@RequestParam(required = false) Long tipoEvento, @RequestParam(required = false) Long nivelHabilidade,
+			@RequestParam(required = false) Boolean gratuito) {
+		return ResponseEntity.ok(eventoService.listarEventos(pagina, nome, descricao, data, cidade, estado, faixaKm,
+				tipoEvento, nivelHabilidade, gratuito));
 	}
 
 	@PostMapping("/create")

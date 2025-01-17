@@ -43,16 +43,18 @@ public class EventoService {
 	}
 
 	public ListEventoResponse listarEventos(Long pagina, String nome, String descricao, String data, String cidade,
-			String estado, Long faixaKm, Long nivelHabilidade, Boolean gratuito) {
+			String estado, Long faixaKm, Long tipoEvento, Long nivelHabilidade, Boolean gratuito) {
 
 		Long limit = PaginationType.RESULTS_PER_PAGE.getValue();
 
 		Long offset = (pagina - 1) * limit;
 
-		List<Evento> eventos = eventoRepository.findAll(limit, offset, nome, descricao, DateUtil.fixFormattDate(data),
-				cidade, estado, faixaKm, nivelHabilidade, gratuito);
+		String dataAjustada = DateUtil.fixFormattDate(data);
 
-		Long count = eventoRepository.countAll(nome, descricao, DateUtil.fixFormattDate(data), cidade, estado, faixaKm,
+		List<Evento> eventos = eventoRepository.findAll(limit, offset, nome, descricao, dataAjustada, cidade, estado,
+				faixaKm, tipoEvento, nivelHabilidade, gratuito);
+
+		Long count = eventoRepository.countAll(nome, descricao, dataAjustada, cidade, estado, faixaKm, tipoEvento,
 				nivelHabilidade, gratuito);
 
 		Long totalPaginas = (long) Math.ceil(count / (double) limit);
@@ -66,10 +68,10 @@ public class EventoService {
 		eventoDto.getEndereco().setLatitude(coordenadas.get("lat"));
 		eventoDto.getEndereco().setLongitude(coordenadas.get("lon"));
 
-		return eventoRepository.save(
-				Evento.builder().nome(eventoDto.getNome()).descricao(eventoDto.getDescricao()).data(eventoDto.getData())
-						.dtAtualizacao(eventoDto.getDataAtualizacao()).endereco(eventoDto.getEndereco())
-						.tipoEvento(tipoEventoService.loadTipoEvento(eventoDto.getIdTipoEvento())).build());
+		return eventoRepository.save(Evento.builder().nome(eventoDto.getNome()).descricao(eventoDto.getDescricao())
+				.data(eventoDto.getData()).dtAtualizacao(eventoDto.getDataAtualizacao())
+				.endereco(eventoDto.getEndereco()).faixaKm(eventoDto.getFaixaKm()).gratuito(eventoDto.getGratuito())
+				.tipoEvento(tipoEventoService.loadTipoEvento(eventoDto.getIdTipoEvento())).build());
 	}
 
 	public Evento updateEvento(Long id, EventoDto eventoDto) {
@@ -86,6 +88,8 @@ public class EventoService {
 			evento.setDtAtualizacao(eventoDto.getDataAtualizacao());
 			evento.setEndereco(eventoDto.getEndereco());
 			evento.setTipoEvento(tipoEventoService.loadTipoEvento(eventoDto.getIdTipoEvento()));
+			evento.setFaixaKm(eventoDto.getFaixaKm());
+			evento.setGratuito(eventoDto.getGratuito());
 
 			return eventoRepository.save(evento);
 		}

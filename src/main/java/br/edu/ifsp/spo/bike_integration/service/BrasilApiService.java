@@ -28,7 +28,7 @@ public class BrasilApiService {
 
 	@PostConstruct
 	public void init() {
-		configuracao = configuracaoApiService.getConfiguracaoByNome(ConfiguracaoApiType.BRASIL_API);
+		configuracao = configuracaoApiService.getConfiguracaoByType(ConfiguracaoApiType.BRASIL_API);
 	}
 
 	Logger logger = LoggerFactory.getLogger(BrasilApiService.class);

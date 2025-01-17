@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import br.edu.ifsp.spo.bike_integration.hardcode.ConfiguracaoApiType;
+import br.edu.ifsp.spo.bike_integration.hardcode.OpenStreetMapApiType;
 import br.edu.ifsp.spo.bike_integration.model.ConfiguracaoApiExterna;
 import jakarta.annotation.PostConstruct;
 
@@ -28,7 +29,7 @@ public class OpenStreetMapApiService {
 
 	@PostConstruct
 	public void init() {
-		configuracao = configuracaoApiService.getConfiguracaoByNome(ConfiguracaoApiType.OPEN_STREET_MAP_API);
+		configuracao = configuracaoApiService.getConfiguracaoByType(ConfiguracaoApiType.OPEN_STREET_MAP_API);
 	}
 
 	Logger logger = LoggerFactory.getLogger(OpenStreetMapApiService.class);
@@ -39,8 +40,9 @@ public class OpenStreetMapApiService {
 
 		try {
 			ResponseEntity<Map<String, Object>[]> responseEntity = restTemplate.exchange(
-					configuracao.getUrl() + "?q=" + endereco + "&format=jsonv2", HttpMethod.GET, null,
-					new ParameterizedTypeReference<Map<String, Object>[]>() {
+					configuracao.getUrl() + OpenStreetMapApiType.SEARCH.getEndpoint() + "?q=" + endereco
+							+ "&format=jsonv2",
+					HttpMethod.GET, null, new ParameterizedTypeReference<Map<String, Object>[]>() {
 					});
 			Map<String, Object>[] response = responseEntity.getBody();
 			if (response != null && response.length > 0) {
@@ -55,4 +57,31 @@ public class OpenStreetMapApiService {
 			throw new IllegalArgumentException("Endereço não encontrado");
 		}
 	}
+
+	public Map<String, String> buscarCepPorCoordenadas(String latitude, String longitude) {
+		if (latitude == null || latitude.isEmpty() || longitude == null || longitude.isEmpty())
+			throw new IllegalArgumentException("Coordenadas inválidas.");
+
+		try {
+			ResponseEntity<Map<String, Object>> responseEntity = restTemplate.exchange(
+					configuracao.getUrl() + OpenStreetMapApiType.REVERSE.getEndpoint() + "?lat=" + latitude + "&lon="
+							+ longitude + "&format=jsonv2",
+					HttpMethod.GET, null, new ParameterizedTypeReference<Map<String, Object>>() {
+					});
+			Map<String, Object> response = responseEntity.getBody();
+			if (response != null) {
+				@SuppressWarnings("unchecked")
+				Map<String, Object> address = (Map<String, Object>) response.get("address");
+				if (address != null) {
+					String cep = (String) address.get("postcode");
+					return Map.of("cep", cep.replace("-", ""));
+				}
+			}
+			throw new IllegalArgumentException();
+		} catch (Exception e) {
+			logger.error("Erro ao buscar cep das coordenadas: " + latitude + ", " + longitude, e);
+			throw new IllegalArgumentException("Cep não encontrado");
+		}
+	}
+
 }

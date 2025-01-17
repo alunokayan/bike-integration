@@ -1,5 +1,7 @@
 package br.edu.ifsp.spo.bike_integration.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,14 +14,21 @@ public class ConfiguracaoApiExternaService {
 
 	@Autowired
 	private ConfiguracaoApiExternaRepository configuracaoApiRepository;
-	
-	public ConfiguracaoApiExterna getConfiguracaoByNome(ConfiguracaoApiType apiType) {
-		return this.getConfiguracaoByNome(apiType.getNome());
+
+	public List<ConfiguracaoApiExterna> getConfiguracaoByNome(String nome) {
+		return configuracaoApiRepository.findAllByNome(nome);
 	}
-	
-	private ConfiguracaoApiExterna getConfiguracaoByNome(String nome) {
-		return configuracaoApiRepository.findByNome(nome)
-				.orElseThrow(() -> new RuntimeException("API não encontrada"));
+
+	public ConfiguracaoApiExterna getConfiguracaoByType(ConfiguracaoApiType apiType) {
+		return configuracaoApiRepository.findByNome(apiType.getNome()).orElse(null);
 	}
-	
+
+	public ConfiguracaoApiExterna getConfiguracaoById(Long id) {
+		return configuracaoApiRepository.findById(id).orElse(null);
+	}
+
+	public List<ConfiguracaoApiExterna> listarConfiguracoes() {
+		return configuracaoApiRepository.findAll();
+	}
+
 }
