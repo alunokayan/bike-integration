@@ -30,7 +30,7 @@ public class EventoController {
 	@Autowired
 	private EventoService eventoService;
 
-	@GetMapping("/list/")
+	@GetMapping("/list")
 	@Operation(summary = "Lista todos os eventos cadastrados, limitando a um numero definido de resultados por pesquisa.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Eventos listados com sucesso."),
 			@ApiResponse(responseCode = "500", description = "Erro ao listar eventos.") })
