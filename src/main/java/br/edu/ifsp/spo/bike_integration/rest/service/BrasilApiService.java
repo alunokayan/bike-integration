@@ -29,7 +29,7 @@ public class BrasilApiService {
 	private ViaCepService viaCepService;
 
 	private ConfiguracaoApiExterna configuracao;
-	
+
 	private RestTemplate restTemplate;
 
 	@PostConstruct
@@ -57,15 +57,15 @@ public class BrasilApiService {
 					configuracao.getUrl() + BrasilApiType.CEP.getEndpoint() + FormatUtil.removeNonNumeric(cep),
 					BrasilApiCepResponse.class);
 		} catch (Exception e) {
-			return buscarEnderecoViaCep(cep, e);
+			return buscarEnderecoViaCep(cep);
 		}
 	}
 
-	private BrasilApiCepResponse buscarEnderecoViaCep(String cep, Exception e) throws NotFoundException {
+	private BrasilApiCepResponse buscarEnderecoViaCep(String cep) throws NotFoundException {
 		try {
 			return viaCepService.buscarEnderecoPorCep(cep);
-		} catch (Exception e2) {
-			logger.error("Erro ao buscar endereço pelo CEP: " + cep, e2);
+		} catch (Exception e) {
+			logger.error("Erro ao buscar endereço pelo CEP: " + cep, e);
 			throw new NotFoundException();
 		}
 	}
