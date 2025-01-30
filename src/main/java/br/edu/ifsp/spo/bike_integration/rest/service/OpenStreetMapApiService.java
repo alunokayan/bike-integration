@@ -1,4 +1,4 @@
-package br.edu.ifsp.spo.bike_integration.service;
+package br.edu.ifsp.spo.bike_integration.rest.service;
 
 import java.util.Map;
 
@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 import br.edu.ifsp.spo.bike_integration.hardcode.ConfiguracaoApiType;
 import br.edu.ifsp.spo.bike_integration.hardcode.OpenStreetMapApiType;
 import br.edu.ifsp.spo.bike_integration.model.ConfiguracaoApiExterna;
+import br.edu.ifsp.spo.bike_integration.service.ConfiguracaoApiExternaService;
 import jakarta.annotation.PostConstruct;
 
 @Service
@@ -81,6 +82,29 @@ public class OpenStreetMapApiService {
 		} catch (Exception e) {
 			logger.error("Erro ao buscar cep das coordenadas: " + latitude + ", " + longitude, e);
 			throw new IllegalArgumentException("Cep não encontrado");
+		}
+	}
+
+	public Map<String, String> buscaCoordenadasPorCep(String cep) {
+		if (cep == null || cep.isEmpty())
+			throw new IllegalArgumentException("CEP inválido.");
+
+		try {
+			ResponseEntity<Map<String, Object>[]> responseEntity = restTemplate.exchange(
+					configuracao.getUrl() + OpenStreetMapApiType.SEARCH.getEndpoint() + "?q=" + cep + "&format=jsonv2",
+					HttpMethod.GET, null, new ParameterizedTypeReference<Map<String, Object>[]>() {
+					});
+			Map<String, Object>[] response = responseEntity.getBody();
+			if (response != null && response.length > 0) {
+				Map<String, Object> firstResult = response[0];
+				Double lat = Double.valueOf((String) firstResult.get("lat"));
+				Double lon = Double.valueOf((String) firstResult.get("lon"));
+				return Map.of("lat", lat.toString(), "lon", lon.toString());
+			}
+			throw new IllegalArgumentException();
+		} catch (Exception e) {
+			logger.error("Erro ao buscar coordenadas do CEP: " + cep, e);
+			throw new IllegalArgumentException("Coordenadas não encontradas");
 		}
 	}
 

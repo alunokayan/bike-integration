@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import br.edu.ifsp.spo.bike_integration.service.BrasilApiService;
+import br.edu.ifsp.spo.bike_integration.rest.service.BrasilApiService;
 
 @Component
 public class CnpjValidate {

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import br.edu.ifsp.spo.bike_integration.dto.UsuarioDto;
 import br.edu.ifsp.spo.bike_integration.model.Usuario;
 import br.edu.ifsp.spo.bike_integration.repository.UsuarioRepository;
+import br.edu.ifsp.spo.bike_integration.rest.service.OpenStreetMapApiService;
 import br.edu.ifsp.spo.bike_integration.util.FormatUtil;
 import br.edu.ifsp.spo.bike_integration.util.validate.CpfValidate;
 

@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.edu.ifsp.spo.bike_integration.response.BrasilApiCepResponse;
-import br.edu.ifsp.spo.bike_integration.service.BrasilApiService;
-import br.edu.ifsp.spo.bike_integration.service.OpenStreetMapApiService;
+import br.edu.ifsp.spo.bike_integration.rest.service.BrasilApiService;
+import br.edu.ifsp.spo.bike_integration.rest.service.OpenStreetMapApiService;
 import br.edu.ifsp.spo.bike_integration.util.FormatUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

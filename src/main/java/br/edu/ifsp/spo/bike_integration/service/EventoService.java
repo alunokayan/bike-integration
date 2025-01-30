@@ -13,6 +13,7 @@ import br.edu.ifsp.spo.bike_integration.hardcode.PaginationType;
 import br.edu.ifsp.spo.bike_integration.model.Evento;
 import br.edu.ifsp.spo.bike_integration.repository.EventoRepository;
 import br.edu.ifsp.spo.bike_integration.response.ListEventoResponse;
+import br.edu.ifsp.spo.bike_integration.rest.service.OpenStreetMapApiService;
 import br.edu.ifsp.spo.bike_integration.util.DateUtil;
 import br.edu.ifsp.spo.bike_integration.util.FormatUtil;
 import br.edu.ifsp.spo.bike_integration.util.GeoJsonUtilFactory;

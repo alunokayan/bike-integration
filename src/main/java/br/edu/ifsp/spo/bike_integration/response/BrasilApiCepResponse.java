@@ -28,6 +28,7 @@ public class BrasilApiCepResponse {
 
     @Getter
     @Setter
+    @Builder
     public static class Location {
         private String type;
         private Coordinates coordinates;
