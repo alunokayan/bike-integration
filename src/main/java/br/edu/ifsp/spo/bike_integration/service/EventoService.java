@@ -39,8 +39,8 @@ public class EventoService {
 				.convertEventosToGeoJson(this.eventoRepository.findById(id).orElseThrow(NotFoundException::new));
 	}
 
-	public GeoJsonDto buscarEventosAsGeoJson(Double latitude, Double longitude, Double raio) {
-		return GeoJsonUtilFactory.convertEventosToGeoJson(this.getEventosProximosByLocation(latitude, longitude, raio));
+	public List<Evento> buscarEventosByRadius(Double latitude, Double longitude, Double raio) {
+		return this.getEventosProximosByLocation(latitude, longitude, raio);
 	}
 
 	public ListEventoResponse listarEventos(Long pagina, String nome, String descricao, String data, String cidade,

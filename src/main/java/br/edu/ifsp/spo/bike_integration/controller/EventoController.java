@@ -1,5 +1,7 @@
 package br.edu.ifsp.spo.bike_integration.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.ResponseEntity;
@@ -87,12 +89,12 @@ public class EventoController {
 		return ResponseEntity.ok(eventoService.buscarEventoAsGeoJsonById(id));
 	}
 
-	@GetMapping("/listAsGeoJson")
+	@GetMapping("/listByRadius")
 	@Operation(summary = "Busca eventos no raio estipulado com base na latitude e longitude informada.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Eventos encontrados com sucesso."),
 			@ApiResponse(responseCode = "500", description = "Erro ao buscar eventos.") })
-	public ResponseEntity<GeoJsonDto> buscarEventosAsGeoJson(@RequestParam(required = true) Double latitude,
+	public ResponseEntity<List<Evento>> buscarEventosAsGeoJson(@RequestParam(required = true) Double latitude,
 			@RequestParam(required = true) Double longitude, @RequestParam(required = true) Double raio) {
-		return ResponseEntity.ok(eventoService.buscarEventosAsGeoJson(latitude, longitude, raio));
+		return ResponseEntity.ok(eventoService.buscarEventosByRadius(latitude, longitude, raio));
 	}
 }
