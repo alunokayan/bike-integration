@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.edu.ifsp.spo.bike_integration.dto.GeoJsonDto;
 import br.edu.ifsp.spo.bike_integration.model.InfraestruturaCicloviaria;
-import br.edu.ifsp.spo.bike_integration.service.InfraestruturaService;
+import br.edu.ifsp.spo.bike_integration.service.InfraestruturaCicloviariaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -23,7 +23,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class InfraestruturaController {
 
 	@Autowired
-	private InfraestruturaService infraestruturaService;
+	private InfraestruturaCicloviariaService infraestruturaService;
 
 	@GetMapping("/list")
 	@Operation(summary = "Listar todas as infraestruturas cicloviárias")

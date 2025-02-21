@@ -12,7 +12,7 @@ import br.edu.ifsp.spo.bike_integration.repository.InfraestruturaCicloviariaRepo
 import br.edu.ifsp.spo.bike_integration.util.GeoJsonUtilFactory;
 
 @Service
-public class InfraestruturaService {
+public class InfraestruturaCicloviariaService {
 
 	@Autowired
 	private InfraestruturaCicloviariaRepository infraestruturaCicloviariaRepository;
@@ -47,5 +47,9 @@ public class InfraestruturaService {
 	private List<InfraestruturaCicloviaria> getInfraestruturasProximasByLocation(Double latitude, Double longitude,
 			Double raio) {
 		return infraestruturaCicloviariaRepository.findInfraestruturasProximasByLocation(latitude, longitude, raio);
+	}
+
+	public void atualizarNota(Long idInfraestruturaCicloviaria, Integer nota) {
+		infraestruturaCicloviariaRepository.atualizarNota(idInfraestruturaCicloviaria, nota);
 	}
 }

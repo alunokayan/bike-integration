@@ -22,4 +22,8 @@ public interface InfraestruturaCicloviariaRepository extends JpaRepository<Infra
 	List<InfraestruturaCicloviaria> findInfraestruturasProximasByLocation(@Param("latitude") double latitude,
 			@Param("longitude") double longitude, @Param("raio") double raio);
 
+	@Query("UPDATE InfraestruturaCicloviaria ic SET ic.nota = :nota WHERE ic.id = :idInfraestruturaCicloviaria")
+	void atualizarNota(@Param("idInfraestruturaCicloviaria") Long idInfraestruturaCicloviaria,
+			@Param("nota") Integer nota);
+
 }
