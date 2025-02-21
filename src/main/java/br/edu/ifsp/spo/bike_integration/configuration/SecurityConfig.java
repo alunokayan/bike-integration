@@ -3,7 +3,6 @@ package br.edu.ifsp.spo.bike_integration.configuration;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,15 +19,11 @@ import br.edu.ifsp.spo.bike_integration.filter.AuthenticationFilter;
 @EnableWebSecurity
 public class SecurityConfig {
 
-	@Autowired
-	private AuthenticationFilter tokenFilter;
-
 	@Bean
-	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+	SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationFilter tokenFilter) throws Exception {
 		http.csrf(csrf -> csrf.disable())
-				.authorizeHttpRequests(requests -> requests
-						.requestMatchers(getPublicRequestMatchersAsArray()).permitAll()
-						.anyRequest().authenticated())
+				.authorizeHttpRequests(requests -> requests.requestMatchers(getPublicRequestMatchersAsArray())
+						.permitAll().anyRequest().authenticated())
 				.addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class);
 		return http.build();
 	}
@@ -38,11 +33,7 @@ public class SecurityConfig {
 		List<RequestMatcher> matchers = new ArrayList<>();
 		matchers.add(new RegexRequestMatcher("/v3/api-docs.*", null));
 		matchers.add(new RegexRequestMatcher("/swagger.*", null));
-		matchers.add(new AntPathRequestMatcher("/"));
-		matchers.add(new AntPathRequestMatcher("/home"));
-		matchers.add(new AntPathRequestMatcher("/ping"));
-		matchers.add(new AntPathRequestMatcher("/version"));
-		matchers.add(new AntPathRequestMatcher("/detail"));
+		matchers.add(new AntPathRequestMatcher("/app/**"));
 		return matchers;
 	}
 

@@ -10,7 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping
+@RequestMapping("/app")
 @Tag(name = "Index", description = "Index Controller, com informações da API")
 public class IndexController {
 
@@ -18,7 +18,7 @@ public class IndexController {
 	BuildProperties buildProperties;
 
 	@Operation(summary = "versão da API", description = "Retorna a versão da API")
-	@GetMapping("version")
+	@GetMapping({ "/", "home", "ping", "version" })
 	public String version() {
 		return buildProperties.getVersion();
 	}
@@ -26,7 +26,7 @@ public class IndexController {
 	@Operation(summary = "detalhes da API", description = "Retorna os detalhes da API")
 	@GetMapping("detail")
 	public String details() {
-		return String.format("Name: %s%nGroup: %s%nVersion: %s%nTime: %s%nArtifact: %s",
+		return "Name: %s%nGroup: %s%nVersion: %s%nTime: %s%nArtifact: %s".formatted(
 				buildProperties.getName(),
 				buildProperties.getGroup(),
 				buildProperties.getVersion(),
