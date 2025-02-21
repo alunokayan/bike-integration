@@ -25,7 +25,7 @@ public class InfraestruturaController {
 	@Autowired
 	private InfraestruturaService infraestruturaService;
 
-	@GetMapping
+	@GetMapping("/list")
 	@Operation(summary = "Listar todas as infraestruturas cicloviárias")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Infraestruturas cicloviárias listadas com sucesso"),

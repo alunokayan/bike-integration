@@ -28,12 +28,6 @@ public class TipoEvento {
 	@Column(name = "nome")
 	private String nome;
 	
-	@Column(name = "faixa_km")
-	private String faixaKm;
-	
-	@Column(name = "gratuito")
-	private boolean gratuito;
-	
 	@ManyToOne
 	@JoinColumn(name = "id_nivel_habilidade")
 	private NivelHabilidade nivelHabilidade;

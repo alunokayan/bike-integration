@@ -24,12 +24,11 @@ public class TipoEventoService {
 
 	public TipoEvento cadastrarTipoEvento(TipoEventoDto tipoEvento) {
 		return tipoEventoRepository.save(TipoEvento.builder().nome(tipoEvento.getNome())
-				.faixaKm(tipoEvento.getFaixaKm()).gratuito(tipoEvento.isGratuito())
 				.nivelHabilidade(nivelHabilidadeService.loadNivelHabilidade(tipoEvento.getNivelHabilidade())).build());
 	}
-	
+
 	public TipoEvento loadTipoEvento(Long id) {
-		return tipoEventoRepository.findById(id).get();
+		return tipoEventoRepository.findById(id).orElse(null);
 	}
 
 }

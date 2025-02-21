@@ -46,6 +46,12 @@ public class Evento {
 	@Column(name = "endereco", nullable = false)
 	@Convert(converter = EnderecoConverter.class)
 	private EnderecoDto endereco;
+	
+	@Column(name = "faixa_km")
+	private Long faixaKm;
+	
+	@Column(name = "gratuito")
+	private boolean gratuito;
 
 	@ManyToOne
 	@JoinColumn(name = "id_tipo_evento")

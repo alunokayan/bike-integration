@@ -70,6 +70,12 @@ public class SwaggerConfig {
 	}
 
 	@Bean
+	GroupedOpenApi configuracaoApiExterna() {
+		return GroupedOpenApi.builder().group("ConfiguracaoApiExterna").pathsToMatch("/v1/configuracao-api-externa/**")
+				.build();
+	}
+
+	@Bean
 	OpenAPI customOpenAPI(BuildProperties buildProperties) {
 		return new OpenAPI()
 				.info(new Info().title(buildProperties.getName()).version(buildProperties.getVersion())

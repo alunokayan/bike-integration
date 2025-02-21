@@ -12,7 +12,5 @@ import lombok.NoArgsConstructor;
 public class TipoEventoDto {
 	
 	private String nome;
-	private String faixaKm;
-	private boolean gratuito;
 	private Long nivelHabilidade;
 }

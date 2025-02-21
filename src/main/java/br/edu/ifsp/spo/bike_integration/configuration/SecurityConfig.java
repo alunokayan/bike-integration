@@ -22,9 +22,8 @@ public class SecurityConfig {
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationFilter tokenFilter) throws Exception {
 		http.csrf(csrf -> csrf.disable())
-				.authorizeHttpRequests(requests -> requests
-						.requestMatchers(getPublicRequestMatchersAsArray()).permitAll()
-						.anyRequest().authenticated())
+				.authorizeHttpRequests(requests -> requests.requestMatchers(getPublicRequestMatchersAsArray())
+						.permitAll().anyRequest().authenticated())
 				.addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class);
 		return http.build();
 	}
@@ -34,11 +33,7 @@ public class SecurityConfig {
 		List<RequestMatcher> matchers = new ArrayList<>();
 		matchers.add(new RegexRequestMatcher("/v3/api-docs.*", null));
 		matchers.add(new RegexRequestMatcher("/swagger.*", null));
-		matchers.add(new AntPathRequestMatcher("/"));
-		matchers.add(new AntPathRequestMatcher("/home"));
-		matchers.add(new AntPathRequestMatcher("/ping"));
-		matchers.add(new AntPathRequestMatcher("/version"));
-		matchers.add(new AntPathRequestMatcher("/detail"));
+		matchers.add(new AntPathRequestMatcher("/app/**"));
 		return matchers;
 	}
 

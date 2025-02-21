@@ -9,8 +9,12 @@ import org.springframework.stereotype.Service;
 
 import br.edu.ifsp.spo.bike_integration.dto.EventoDto;
 import br.edu.ifsp.spo.bike_integration.dto.GeoJsonDto;
+import br.edu.ifsp.spo.bike_integration.hardcode.PaginationType;
 import br.edu.ifsp.spo.bike_integration.model.Evento;
 import br.edu.ifsp.spo.bike_integration.repository.EventoRepository;
+import br.edu.ifsp.spo.bike_integration.response.ListEventoResponse;
+import br.edu.ifsp.spo.bike_integration.rest.service.OpenStreetMapApiService;
+import br.edu.ifsp.spo.bike_integration.util.DateUtil;
 import br.edu.ifsp.spo.bike_integration.util.FormatUtil;
 import br.edu.ifsp.spo.bike_integration.util.GeoJsonUtilFactory;
 
@@ -35,12 +39,28 @@ public class EventoService {
 				.convertEventosToGeoJson(this.eventoRepository.findById(id).orElseThrow(NotFoundException::new));
 	}
 
-	public GeoJsonDto buscarEventosAsGeoJson(Double latitude, Double longitude, Double raio) {
-		return GeoJsonUtilFactory.convertEventosToGeoJson(this.getEventosProximosByLocation(latitude, longitude, raio));
+	public List<Evento> buscarEventosByRadius(Double latitude, Double longitude, Double raio) {
+		return this.getEventosProximosByLocation(latitude, longitude, raio);
 	}
 
-	public List<Evento> listarEventos() {
-		return eventoRepository.findAll();
+	public ListEventoResponse listarEventos(Long pagina, String nome, String descricao, String data, String cidade,
+			String estado, Long faixaKm, Long tipoEvento, Long nivelHabilidade, Boolean gratuito) {
+
+		Long limit = PaginationType.RESULTS_PER_PAGE.getValue();
+
+		Long offset = (pagina - 1) * limit;
+
+		String dataAjustada = DateUtil.fixFormattDate(data);
+
+		List<Evento> eventos = eventoRepository.findAll(limit, offset, nome, descricao, dataAjustada, cidade, estado,
+				faixaKm, tipoEvento, nivelHabilidade, gratuito);
+
+		Long count = eventoRepository.countAll(nome, descricao, dataAjustada, cidade, estado, faixaKm, tipoEvento,
+				nivelHabilidade, gratuito);
+
+		Long totalPaginas = (long) Math.ceil(count / (double) limit);
+
+		return ListEventoResponse.builder().eventos(eventos).totalRegistros(count).totalPaginas(totalPaginas).build();
 	}
 
 	public Evento createEvento(EventoDto eventoDto) {
@@ -49,10 +69,10 @@ public class EventoService {
 		eventoDto.getEndereco().setLatitude(coordenadas.get("lat"));
 		eventoDto.getEndereco().setLongitude(coordenadas.get("lon"));
 
-		return eventoRepository.save(
-				Evento.builder().nome(eventoDto.getNome()).descricao(eventoDto.getDescricao()).data(eventoDto.getData())
-						.dtAtualizacao(eventoDto.getDataAtualizacao()).endereco(eventoDto.getEndereco())
-						.tipoEvento(tipoEventoService.loadTipoEvento(eventoDto.getIdTipoEvento())).build());
+		return eventoRepository.save(Evento.builder().nome(eventoDto.getNome()).descricao(eventoDto.getDescricao())
+				.data(eventoDto.getData()).dtAtualizacao(eventoDto.getDataAtualizacao())
+				.endereco(eventoDto.getEndereco()).faixaKm(eventoDto.getFaixaKm()).gratuito(eventoDto.getGratuito())
+				.tipoEvento(tipoEventoService.loadTipoEvento(eventoDto.getIdTipoEvento())).build());
 	}
 
 	public Evento updateEvento(Long id, EventoDto eventoDto) {
@@ -69,6 +89,8 @@ public class EventoService {
 			evento.setDtAtualizacao(eventoDto.getDataAtualizacao());
 			evento.setEndereco(eventoDto.getEndereco());
 			evento.setTipoEvento(tipoEventoService.loadTipoEvento(eventoDto.getIdTipoEvento()));
+			evento.setFaixaKm(eventoDto.getFaixaKm());
+			evento.setGratuito(eventoDto.getGratuito());
 
 			return eventoRepository.save(evento);
 		}
