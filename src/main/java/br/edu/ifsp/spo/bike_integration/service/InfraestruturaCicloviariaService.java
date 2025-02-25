@@ -17,10 +17,6 @@ public class InfraestruturaCicloviariaService {
 	@Autowired
 	private InfraestruturaCicloviariaRepository infraestruturaCicloviariaRepository;
 
-	public List<InfraestruturaCicloviaria> findAll() {
-		return infraestruturaCicloviariaRepository.findAll();
-	}
-
 	public InfraestruturaCicloviaria findById(Long id) {
 		InfraestruturaCicloviaria infra = infraestruturaCicloviariaRepository.findById(id).orElse(null);
 		infra.getTrechos().forEach(trecho -> {

@@ -13,8 +13,6 @@ public interface InfraestruturaCicloviariaRepository extends JpaRepository<Infra
 
 	Optional<InfraestruturaCicloviaria> findById(Long id);
 
-	List<InfraestruturaCicloviaria> findAll();
-
 	@Query("SELECT ic " + "FROM InfraestruturaCicloviaria ic " + "JOIN ic.trechos t "
 			+ "WHERE ST_Distance_Sphere(POINT(t.latitude, t.longitude), POINT(:latitude, :longitude)) <= :raio "
 			+ "GROUP BY ic.id "

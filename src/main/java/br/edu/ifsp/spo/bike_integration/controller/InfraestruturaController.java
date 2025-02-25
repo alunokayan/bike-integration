@@ -1,7 +1,5 @@
 package br.edu.ifsp.spo.bike_integration.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.ResponseEntity;
@@ -24,15 +22,6 @@ public class InfraestruturaController {
 
 	@Autowired
 	private InfraestruturaCicloviariaService infraestruturaService;
-
-	@GetMapping("/list")
-	@Operation(summary = "Listar todas as infraestruturas cicloviárias")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "Infraestruturas cicloviárias listadas com sucesso"),
-			@ApiResponse(responseCode = "500", description = "Erro interno no servidor") })
-	public ResponseEntity<List<InfraestruturaCicloviaria>> findAll() {
-		return ResponseEntity.ok(infraestruturaService.findAll());
-	}
 
 	@GetMapping("/get")
 	@Operation(summary = "Buscar uma infraestrutura cicloviária por ID")
