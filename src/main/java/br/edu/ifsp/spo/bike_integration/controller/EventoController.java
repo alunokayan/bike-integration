@@ -64,7 +64,7 @@ public class EventoController {
 		return ResponseEntity.ok(eventoService.updateEvento(id, evento));
 	}
 
-	@PutMapping(name = "/updateFotoEvento", consumes = "multipart/form-data")
+	@PutMapping(path = "/updateFotoEvento", consumes = "multipart/form-data")
 	@Operation(summary = "Atualiza a foto de um evento.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Foto do evento atualizada com sucesso."),
 			@ApiResponse(responseCode = "500", description = "Erro ao atualizar foto do evento.") })
