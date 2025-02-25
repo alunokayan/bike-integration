@@ -22,7 +22,11 @@ public class InfraestruturaCicloviariaService {
 	}
 
 	public InfraestruturaCicloviaria findById(Long id) {
-		return infraestruturaCicloviariaRepository.findById(id).orElse(null);
+		InfraestruturaCicloviaria infra = infraestruturaCicloviariaRepository.findById(id).orElse(null);
+		infra.getTrechos().forEach(trecho -> {
+			trecho.setInfraestruturaCicloviaria(null);
+		});
+		return infra;
 	}
 
 	public List<InfraestruturaCicloviaria> findInfraestruturasProximasByLocation(double latitude, double longitude,
