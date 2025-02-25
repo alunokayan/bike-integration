@@ -1,11 +1,13 @@
 package br.edu.ifsp.spo.bike_integration.service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import br.edu.ifsp.spo.bike_integration.dto.EventoDto;
 import br.edu.ifsp.spo.bike_integration.dto.GeoJsonDto;
@@ -17,6 +19,7 @@ import br.edu.ifsp.spo.bike_integration.rest.service.OpenStreetMapApiService;
 import br.edu.ifsp.spo.bike_integration.util.DateUtil;
 import br.edu.ifsp.spo.bike_integration.util.FormatUtil;
 import br.edu.ifsp.spo.bike_integration.util.GeoJsonUtilFactory;
+import jakarta.transaction.Transactional;
 
 @Service
 public class EventoService {
@@ -26,6 +29,9 @@ public class EventoService {
 
 	@Autowired
 	private TipoEventoService tipoEventoService;
+
+	@Autowired
+	private UsuarioService usuarioService;
 
 	@Autowired
 	private OpenStreetMapApiService openStreetMapApiService;
@@ -72,7 +78,8 @@ public class EventoService {
 		return eventoRepository.save(Evento.builder().nome(eventoDto.getNome()).descricao(eventoDto.getDescricao())
 				.data(eventoDto.getData()).dtAtualizacao(eventoDto.getDataAtualizacao())
 				.endereco(eventoDto.getEndereco()).faixaKm(eventoDto.getFaixaKm()).gratuito(eventoDto.getGratuito())
-				.tipoEvento(tipoEventoService.loadTipoEvento(eventoDto.getIdTipoEvento())).build());
+				.tipoEvento(tipoEventoService.loadTipoEvento(eventoDto.getIdTipoEvento()))
+				.usuario(usuarioService.loadUsuarioById(eventoDto.getIdUsuario())).build());
 	}
 
 	public Evento updateEvento(Long id, EventoDto eventoDto) {
@@ -89,6 +96,7 @@ public class EventoService {
 			evento.setDtAtualizacao(eventoDto.getDataAtualizacao());
 			evento.setEndereco(eventoDto.getEndereco());
 			evento.setTipoEvento(tipoEventoService.loadTipoEvento(eventoDto.getIdTipoEvento()));
+			evento.setUsuario(usuarioService.loadUsuarioById(eventoDto.getIdUsuario()));
 			evento.setFaixaKm(eventoDto.getFaixaKm());
 			evento.setGratuito(eventoDto.getGratuito());
 
@@ -99,6 +107,15 @@ public class EventoService {
 
 	public void deleteEvento(Long id) {
 		eventoRepository.deleteById(id);
+	}
+
+	@Transactional
+	public void updateFotoEvento(Long id, MultipartFile file) {
+		try {
+			eventoRepository.saveFoto(id, file.getBytes());
+		} catch (IOException e) {
+			throw new RuntimeException("Erro ao atualizar foto do evento.");
+		}
 	}
 
 	/*

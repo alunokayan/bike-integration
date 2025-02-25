@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import br.edu.ifsp.spo.bike_integration.dto.EventoDto;
 import br.edu.ifsp.spo.bike_integration.dto.GeoJsonDto;
@@ -61,6 +62,16 @@ public class EventoController {
 	public ResponseEntity<Evento> atualizarEvento(@RequestParam(required = true) Long id,
 			@RequestBody EventoDto evento) {
 		return ResponseEntity.ok(eventoService.updateEvento(id, evento));
+	}
+
+	@PutMapping(name = "/updateFotoEvento", consumes = "multipart/form-data")
+	@Operation(summary = "Atualiza a foto de um evento.")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Foto do evento atualizada com sucesso."),
+			@ApiResponse(responseCode = "500", description = "Erro ao atualizar foto do evento.") })
+	public ResponseEntity<?> atualizarFotoEvento(@RequestParam(required = true) Long id,
+			@RequestParam(required = true) MultipartFile file) {
+		eventoService.updateFotoEvento(id, file);
+		return ResponseEntity.noContent().build();
 	}
 
 	@DeleteMapping("/delete")

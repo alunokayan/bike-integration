@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -18,9 +19,8 @@ public interface EventoRepository extends JpaRepository<Evento, Long> {
 			+ "AND (:data IS NULL OR DATE(e.data) = DATE(:data)) "
 			+ "AND (:cidade IS NULL OR LOWER(JSON_EXTRACT(e.endereco, '$.cidade')) LIKE LOWER(CONCAT('%', :cidade, '%'))) "
 			+ "AND (:estado IS NULL OR LOWER(JSON_EXTRACT(e.endereco, '$.estado')) LIKE LOWER(CONCAT('%', :estado, '%'))) "
-			+ "AND (:faixaKm IS NULL OR e.faixa_km = :faixaKm) "
-			+ "AND (:gratuito IS NULL OR e.gratuito = :gratuito) "
-			+ "AND (:tipoEvento IS NULL OR te.id = :tipoEvento) " 
+			+ "AND (:faixaKm IS NULL OR e.faixa_km = :faixaKm) " + "AND (:gratuito IS NULL OR e.gratuito = :gratuito) "
+			+ "AND (:tipoEvento IS NULL OR te.id = :tipoEvento) "
 			+ "AND (:nivelHabilidade IS NULL OR te.id_nivel_habilidade = :nivelHabilidade) "
 			+ "ORDER BY e.data DESC LIMIT :limit OFFSET :offset";
 
@@ -31,9 +31,8 @@ public interface EventoRepository extends JpaRepository<Evento, Long> {
 			+ "AND (:data IS NULL OR DATE(e.data) = DATE(:data)) "
 			+ "AND (:cidade IS NULL OR LOWER(JSON_EXTRACT(e.endereco, '$.cidade')) LIKE LOWER(CONCAT('%', :cidade, '%'))) "
 			+ "AND (:estado IS NULL OR LOWER(JSON_EXTRACT(e.endereco, '$.estado')) LIKE LOWER(CONCAT('%', :estado, '%'))) "
-			+ "AND (:faixaKm IS NULL OR e.faixa_km = :faixaKm) "
-			+ "AND (:gratuito IS NULL OR e.gratuito = :gratuito) "
-			+ "AND (:tipoEvento IS NULL OR te.id = :tipoEvento) " 
+			+ "AND (:faixaKm IS NULL OR e.faixa_km = :faixaKm) " + "AND (:gratuito IS NULL OR e.gratuito = :gratuito) "
+			+ "AND (:tipoEvento IS NULL OR te.id = :tipoEvento) "
 			+ "AND (:nivelHabilidade IS NULL OR te.id_nivel_habilidade = :nivelHabilidade) ";
 
 	Optional<Evento> findById(Long id);
@@ -58,4 +57,9 @@ public interface EventoRepository extends JpaRepository<Evento, Long> {
 			+ "POINT(:longitude, :latitude)) <= :raio", nativeQuery = true)
 	List<Evento> findEventosProximosByLocation(@Param("latitude") double latitude, @Param("longitude") double longitude,
 			@Param("raio") double raio);
+
+	@Modifying
+	@Query("UPDATE Evento e SET e.foto = :foto WHERE e.id = :id")
+	void saveFoto(@Param("id") Long id, @Param("foto") byte[] foto);
+
 }
