@@ -43,4 +43,10 @@ public class AvaliacaoInfraestruturaCicloviariaService {
 
 	}
 
+	public List<AvaliacaoInfraestruturaCicloviaria> getAllByInfraestruturaCicloviariaId(
+			Long idInfraestruturaCicloviaria) {
+		return avaliacaoInfraestruturaCicloviariaRepository
+				.findAllByInfraestruturaCicloviariaId(idInfraestruturaCicloviaria);
+	}
+
 }
