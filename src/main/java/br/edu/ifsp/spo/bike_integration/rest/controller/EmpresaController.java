@@ -15,7 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping("/v1/empresa")
+@RequestMapping("v1/empresa")
 @Tag(name = "Empresa", description = "Controller para operações relacioadas a empresa.")
 public class EmpresaController {
 

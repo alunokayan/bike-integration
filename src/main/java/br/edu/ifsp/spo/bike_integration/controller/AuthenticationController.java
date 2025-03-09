@@ -38,11 +38,11 @@ public class AuthenticationController {
 				this.service.create(JwtSubjectDTO.builder().accessKey(accessKey).secretKey(secretKey).build()));
 	}
 
+	@GetMapping
 	@Operation(summary = "Endpoint simples para verificar se está autenticado", description = "Endpoint simples para verificar se está autenticado")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@GetMapping
 	public void isAuthenticated() {
-
+		// NO-OP
 	}
 
 }

@@ -19,7 +19,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping("/v1/endereco")
+@RequestMapping("v1/endereco")
 @Tag(name = "Endereço", description = "Controller para operações relacionadas a endereços.")
 public class EnderecoController {
 

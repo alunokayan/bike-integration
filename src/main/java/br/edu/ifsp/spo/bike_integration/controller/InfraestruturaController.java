@@ -16,8 +16,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping("/v1/infraestrutura")
-@Tag(name = "Infraestrutura", description = "API de Infraestrutura Cicloviária")
+@RequestMapping("v1/infraestrutura")
+@Tag(name = "Infraestrutura", description = "Controller para operações relacionadas a infraestrutura cicloviária.")
 public class InfraestruturaController {
 
 	@Autowired
@@ -25,9 +25,6 @@ public class InfraestruturaController {
 
 	@GetMapping("/get")
 	@Operation(summary = "Buscar uma infraestrutura cicloviária por ID")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "Infraestrutura cicloviária encontrada com sucesso"),
-			@ApiResponse(responseCode = "404", description = "Infraestrutura cicloviária não encontrada") })
 	public ResponseEntity<InfraestruturaCicloviaria> findById(Long id) {
 		return ResponseEntity.ok(infraestruturaService.findById(id));
 	}
