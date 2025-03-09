@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TipoEventoDto {
+public class TipoEventoDTO {
 	
 	private String nome;
 	private Long nivelHabilidade;

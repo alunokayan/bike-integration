@@ -21,41 +21,41 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(IllegalArgumentException.class)
 	public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request) {
-		logger.error(ex.getMessage());
+		logger.error("IllegalArgumentException caught: ", ex);
 		return ResponseUtil.createResponse(new ErrorResponse("Erro: \n" + ex.getMessage()), HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler(CryptoException.class)
 	public ResponseEntity<Object> handleCryptoException(CryptoException ex, WebRequest request) {
-		logger.error(ex.getMessage());
+		logger.error("CryptoException caught: ", ex);
 		return ResponseUtil.createResponse(new ErrorResponse("Erro de criptografia: \n" + ex.getMessage()),
 				HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler(NotFoundException.class)
 	public ResponseEntity<Object> handleNotFoundException(NotFoundException ex, WebRequest request) {
-		logger.error(ex.getMessage());
+		logger.error("NotFoundException caught: ", ex);
 		return ResponseUtil.createResponse(new ErrorResponse("Erro: \n" + "não encontrado."), HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
 	public ResponseEntity<Object> handleAccessDeniedException(
 			org.springframework.security.access.AccessDeniedException ex, WebRequest request) {
-		logger.error(ex.getMessage());
+		logger.error("AccessDeniedException caught: ", ex);
 		return ResponseUtil.createResponse(new ErrorResponse("Erro de acesso: \n" + ex.getMessage()),
 				HttpStatus.FORBIDDEN);
 	}
 
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<Object> handleGeneralException(Exception ex, WebRequest request) {
-		logger.error(ex.getMessage());
+		logger.error("General Exception caught: ", ex);
 		return ResponseUtil.createResponse(new ErrorResponse("Erro interno: \n" + ex.getMessage()),
 				HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ExceptionHandler(RuntimeException.class)
 	public ResponseEntity<Object> handleRuntimeException(RuntimeException ex, WebRequest request) {
-		logger.error(ex.getMessage());
+		logger.error("RuntimeException caught: ", ex);
 		return ResponseUtil.createResponse(new ErrorResponse("Erro interno: \n" + ex.getMessage()),
 				HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -63,7 +63,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(InvalidDataAccessApiUsageException.class)
 	public ResponseEntity<Object> handleInvalidDataAccessApiUsageException(InvalidDataAccessApiUsageException ex,
 			WebRequest request) {
-		logger.error(ex.getMessage());
+		logger.error("InvalidDataAccessApiUsageException caught: ", ex);
 		return ResponseUtil.createResponse(new ErrorResponse("Erro: \n" + ex.getMessage()),
 				HttpStatus.INTERNAL_SERVER_ERROR);
 	}

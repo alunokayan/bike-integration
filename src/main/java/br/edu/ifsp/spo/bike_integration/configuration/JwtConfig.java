@@ -19,7 +19,7 @@ public class JwtConfig {
 	private Long expiration;
 
 	@Bean
-	public JwtConfigDTO jwtConfigDto() {
+	JwtConfigDTO jwtConfigDto() {
 		return JwtConfigDTO.builder().accessKey(this.accessKey).secretKey(this.secretKey)
 				.expiration(this.expiration * 1000).build();
 	}

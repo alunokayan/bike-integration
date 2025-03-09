@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Component
-public class EnderecoDto {
+public class EnderecoDTO {
 
  @Schema(example = "89010025")
  private String cep;

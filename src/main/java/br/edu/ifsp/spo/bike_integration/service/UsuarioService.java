@@ -1,16 +1,20 @@
 package br.edu.ifsp.spo.bike_integration.service;
 
+import java.io.IOException;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import br.edu.ifsp.spo.bike_integration.dto.UsuarioDto;
+import br.edu.ifsp.spo.bike_integration.dto.UsuarioDTO;
 import br.edu.ifsp.spo.bike_integration.model.Usuario;
 import br.edu.ifsp.spo.bike_integration.repository.UsuarioRepository;
 import br.edu.ifsp.spo.bike_integration.rest.service.OpenStreetMapApiService;
 import br.edu.ifsp.spo.bike_integration.util.FormatUtil;
 import br.edu.ifsp.spo.bike_integration.util.validate.CpfValidate;
+import jakarta.transaction.Transactional;
 
 @Service
 public class UsuarioService {
@@ -28,7 +32,7 @@ public class UsuarioService {
 		return usuarioRepository.findById(id).orElse(null);
 	}
 
-	public Usuario createUsuario(UsuarioDto usuarioDto) {
+	public Usuario createUsuario(UsuarioDTO usuarioDto) {
 		// Busca as coordenadas do endereço
 		Map<String, Double> coordenadas = openStreetMapApiService
 				.buscarCoordenadasPorEndereco(FormatUtil.formatEnderecoToOpenStreetMapApi(usuarioDto.getEndereco()));
@@ -44,7 +48,9 @@ public class UsuarioService {
 
 	}
 
-	public Usuario updateUsuario(Long id, UsuarioDto usuarioDto) {
+	@Modifying
+	@Transactional
+	public Usuario updateUsuario(Long id, UsuarioDTO usuarioDto) {
 		Usuario usuario = usuarioRepository.findById(id).orElse(null);
 		if (usuario == null) {
 			return null;
@@ -58,6 +64,14 @@ public class UsuarioService {
 		usuario.setCnpj(usuarioDto.getCnpj());
 		usuario.setNivelHabilidade(nivelHabilidadeService.loadNivelHabilidade(usuarioDto.getNivelHabilidade()));
 		return usuarioRepository.save(usuario);
+	}
+
+	public void updateFotoUsuario(Long id, MultipartFile file) {
+		try {
+			usuarioRepository.saveFoto(id, file.getBytes());
+		} catch (IOException e) {
+			throw new RuntimeException("Erro ao atualizar foto do evento.");
+		}
 	}
 
 	public void deleteUsuario(Long id) {

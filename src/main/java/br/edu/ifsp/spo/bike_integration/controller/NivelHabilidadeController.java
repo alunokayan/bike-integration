@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.edu.ifsp.spo.bike_integration.dto.NivelHabilidadeDto;
+import br.edu.ifsp.spo.bike_integration.dto.NivelHabilidadeDTO;
 import br.edu.ifsp.spo.bike_integration.model.NivelHabilidade;
 import br.edu.ifsp.spo.bike_integration.service.NivelHabilidadeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,7 +34,7 @@ public class NivelHabilidadeController {
 
 	@PostMapping(path = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Cadastra um novo nível de habilidade.")
-	public ResponseEntity<NivelHabilidade> cadastrarNivelHabilidade(@RequestBody NivelHabilidadeDto nivelHabilidade) {
+	public ResponseEntity<NivelHabilidade> cadastrarNivelHabilidade(@RequestBody NivelHabilidadeDTO nivelHabilidade) {
 		return ResponseEntity.status(HttpStatus.CREATED)
 				.body(nivelHabilidadeService.cadastrarNivelHabilidade(nivelHabilidade));
 	}

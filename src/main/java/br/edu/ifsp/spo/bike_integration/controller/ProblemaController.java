@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.edu.ifsp.spo.bike_integration.dto.ProblemaDto;
+import br.edu.ifsp.spo.bike_integration.dto.ProblemaDTO;
 import br.edu.ifsp.spo.bike_integration.service.ProblemaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,7 +25,7 @@ public class ProblemaController {
 	@PostMapping(path = "/do", consumes = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Registra um problema.")
 	@ResponseStatus(HttpStatus.CREATED)
-	public void registrar(@RequestBody ProblemaDto problema) {
+	public void registrar(@RequestBody ProblemaDTO problema) {
 		problemaService.registrar(problema);
 	}
 

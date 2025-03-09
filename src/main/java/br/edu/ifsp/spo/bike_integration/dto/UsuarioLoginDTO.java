@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UsuarioLoginDto {
+public class UsuarioLoginDTO {
 	
 	@Schema(example = "JoãoSilva1")
 	private String nomeUsuario;

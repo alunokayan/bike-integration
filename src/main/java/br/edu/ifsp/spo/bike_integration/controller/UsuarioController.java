@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import br.edu.ifsp.spo.bike_integration.dto.UsuarioDto;
+import br.edu.ifsp.spo.bike_integration.dto.UsuarioDTO;
 import br.edu.ifsp.spo.bike_integration.model.Usuario;
+import br.edu.ifsp.spo.bike_integration.service.EventoService;
 import br.edu.ifsp.spo.bike_integration.service.UsuarioService;
 import br.edu.ifsp.spo.bike_integration.util.validate.CpfValidate;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,6 +31,9 @@ public class UsuarioController {
 	@Autowired
 	private UsuarioService usuarioService;
 
+	@Autowired
+	private EventoService eventoService;
+
 	@GetMapping(path = "/get", produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Retorna um usuário pelo seu ID.")
 	public ResponseEntity<Usuario> get(@RequestParam Long id) {
@@ -37,20 +42,29 @@ public class UsuarioController {
 
 	@PostMapping(path = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Cria um novo usuário.")
-	public ResponseEntity<Usuario> create(@RequestBody UsuarioDto usuarioDto) {
+	public ResponseEntity<Usuario> create(@RequestBody UsuarioDTO usuarioDto) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.createUsuario(usuarioDto));
 	}
 
 	@PutMapping(path = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Atualiza um usuário.")
-	public ResponseEntity<Usuario> update(@RequestParam Long id, @RequestBody UsuarioDto usuarioDto) {
+	public ResponseEntity<Usuario> update(@RequestParam Long id, @RequestBody UsuarioDTO usuarioDto) {
 		return ResponseEntity.ok(usuarioService.updateUsuario(id, usuarioDto));
+	}
+
+	@PutMapping(path = "/updateFotoUsuario", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@Operation(summary = "Atualiza a foto de um usuario.")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void atualizarFotoUsuario(@RequestParam(required = true) Long id,
+			@RequestParam(required = true) MultipartFile file) {
+		usuarioService.updateFotoUsuario(id, file);
 	}
 
 	@DeleteMapping(path = "/delete")
 	@Operation(summary = "Deleta um usuário.")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void delete(@RequestParam Long id) {
+		eventoService.deleteEventosByUsuario(id);
 		usuarioService.deleteUsuario(id);
 	}
 

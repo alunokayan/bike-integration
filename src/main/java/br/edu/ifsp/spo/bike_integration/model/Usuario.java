@@ -1,9 +1,9 @@
 package br.edu.ifsp.spo.bike_integration.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import br.edu.ifsp.spo.bike_integration.converter.EnderecoConverter;
-import br.edu.ifsp.spo.bike_integration.dto.EnderecoDto;
+import br.edu.ifsp.spo.bike_integration.dto.EnderecoDTO;
 import br.edu.ifsp.spo.bike_integration.exception.CryptoException;
 import br.edu.ifsp.spo.bike_integration.util.CryptoUtil;
 import jakarta.persistence.Column;
@@ -45,7 +45,7 @@ public class Usuario {
 
 	@Column(name = "endereco", nullable = false)
 	@Convert(converter = EnderecoConverter.class)
-	private EnderecoDto endereco;
+	private EnderecoDTO endereco;
 
 	@Column(name = "e-mail", nullable = false)
 	private String email;
@@ -63,15 +63,18 @@ public class Usuario {
 	private String cnpj;
 
 	@Column(name = "dt_criacao", nullable = false)
-	private Date dtCriacao;
+	private LocalDateTime dtCriacao;
 
 	@ManyToOne
 	@JoinColumn(name = "id_nivel_habilidade", nullable = false)
 	private NivelHabilidade nivelHabilidade;
 
+	@Column(name = "foto")
+	private byte[] foto;
+
 	@PrePersist
 	public void prePersist() throws CryptoException {
-		this.dtCriacao = new Date();
+		this.dtCriacao = LocalDateTime.now();
 		this.hash = CryptoUtil.generateKeyAsString();
 		this.senha = CryptoUtil.encrypt(this.senha, this.hash);
 	}

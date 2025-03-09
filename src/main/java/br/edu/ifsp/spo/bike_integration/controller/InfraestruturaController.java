@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.edu.ifsp.spo.bike_integration.dto.GeoJsonDto;
+import br.edu.ifsp.spo.bike_integration.dto.GeoJsonDTO;
 import br.edu.ifsp.spo.bike_integration.model.InfraestruturaCicloviaria;
 import br.edu.ifsp.spo.bike_integration.service.InfraestruturaCicloviariaService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,7 +34,7 @@ public class InfraestruturaController {
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Infraestrutura cicloviária encontrada com sucesso"),
 			@ApiResponse(responseCode = "404", description = "Infraestrutura cicloviária não encontrada") })
-	public ResponseEntity<GeoJsonDto> buscarInfraestruturaAsGeoJsonById(Long id) throws NotFoundException {
+	public ResponseEntity<GeoJsonDTO> buscarInfraestruturaAsGeoJsonById(Long id) throws NotFoundException {
 		return ResponseEntity.ok(infraestruturaService.buscarInfraestruturaAsGeoJsonById(id));
 	}
 
@@ -43,7 +43,7 @@ public class InfraestruturaController {
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Infraestruturas cicloviárias listadas com sucesso"),
 			@ApiResponse(responseCode = "500", description = "Erro interno no servidor") })
-	public ResponseEntity<GeoJsonDto> buscarInfraestruturasAsGeoJson(Double latitude, Double longitude, Double raio) {
+	public ResponseEntity<GeoJsonDTO> buscarInfraestruturasAsGeoJson(Double latitude, Double longitude, Double raio) {
 		return ResponseEntity.ok(infraestruturaService.buscarInfraestruturasAsGeoJson(latitude, longitude, raio));
 	}
 

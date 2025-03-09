@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UsuarioDto {
+public class UsuarioDTO {
 
 	@Schema(example = "João da Silva")
 	private String nome;
@@ -18,7 +18,7 @@ public class UsuarioDto {
 	@Schema(example = "joaosilva")
 	private String nomeUsuario;
 
-	private EnderecoDto endereco;
+	private EnderecoDTO endereco;
 
 	@Schema(example = "joaosilva@gmail.com")
 	private String email;

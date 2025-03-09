@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import br.edu.ifsp.spo.bike_integration.dto.EventoDto;
-import br.edu.ifsp.spo.bike_integration.dto.GeoJsonDto;
+import br.edu.ifsp.spo.bike_integration.dto.EventoDTO;
+import br.edu.ifsp.spo.bike_integration.dto.GeoJsonDTO;
 import br.edu.ifsp.spo.bike_integration.model.Evento;
 import br.edu.ifsp.spo.bike_integration.response.ListEventoResponse;
 import br.edu.ifsp.spo.bike_integration.service.EventoService;
@@ -48,15 +48,15 @@ public class EventoController {
 
 	@PostMapping(path = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Cadastra um novo evento.")
-	public ResponseEntity<Evento> cadastrarEvento(@RequestBody EventoDto evento) {
-		return ResponseEntity.status(201).body(eventoService.createEvento(evento));
+	public ResponseEntity<Evento> cadastrarEvento(@RequestBody EventoDTO evento) {
+		return ResponseEntity.status(HttpStatus.CREATED).body(eventoService.createEvento(evento));
 	}
 
 	@PutMapping(path = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Atualiza um evento.")
-	public ResponseEntity<Evento> atualizarEvento(@RequestParam(required = true) Long id,
-			@RequestBody EventoDto evento) {
-		return ResponseEntity.ok(eventoService.updateEvento(id, evento));
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void atualizarEvento(@RequestParam(required = true) Long id, @RequestBody EventoDTO evento) {
+		eventoService.updateEvento(id, evento);
 	}
 
 	@PutMapping(path = "/updateFotoEvento", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -82,7 +82,7 @@ public class EventoController {
 
 	@GetMapping(path = "/getAsGeoJson", produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Busca um evento pelo id e retorna como GeoJson.")
-	public ResponseEntity<GeoJsonDto> buscarEventoAsGeoJson(@RequestParam(required = false) Long id)
+	public ResponseEntity<GeoJsonDTO> buscarEventoAsGeoJson(@RequestParam(required = false) Long id)
 			throws NotFoundException {
 		return ResponseEntity.ok(eventoService.buscarEventoAsGeoJsonById(id));
 	}

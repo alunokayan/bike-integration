@@ -7,8 +7,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.edu.ifsp.spo.bike_integration.model.Evento;
+import br.edu.ifsp.spo.bike_integration.model.Usuario;
 
 public interface EventoRepository extends JpaRepository<Evento, Long> {
 
@@ -59,7 +61,12 @@ public interface EventoRepository extends JpaRepository<Evento, Long> {
 			@Param("raio") double raio);
 
 	@Modifying
+	@Transactional
 	@Query("UPDATE Evento e SET e.foto = :foto WHERE e.id = :id")
 	void saveFoto(@Param("id") Long id, @Param("foto") byte[] foto);
 
+	@Modifying
+	@Transactional
+	@Query("DELETE FROM Evento e WHERE e.usuario = :usuario")
+	void deleteByUsuario(Usuario usuario);
 }

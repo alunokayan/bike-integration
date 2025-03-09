@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class GeoJsonDto {
+public class GeoJsonDTO {
 	private String type;
 	private List<FeatureDto> features;
 

@@ -1,8 +1,6 @@
 package br.edu.ifsp.spo.bike_integration.dto;
 
-import java.util.Date;
-
-import org.springframework.web.multipart.MultipartFile;
+import java.time.LocalDateTime;
 
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EventoDto {
+public class EventoDTO {
 
 	@Schema(example = "Evento de lançamento do novo produto")
 	private String nome;
@@ -24,13 +22,13 @@ public class EventoDto {
 	private String descricao;
 
 	@Schema(example = "2021-10-10T10:00:00.000")
-	private Date data;
+	private String data;
 
 	@Hidden
 	@Builder.Default
-	private Date dataAtualizacao = new Date();
+	private LocalDateTime dataAtualizacao = LocalDateTime.now();
 
-	private EnderecoDto endereco;
+	private EnderecoDTO endereco;
 
 	@Schema(example = "10")
 	private Long faixaKm;
@@ -43,8 +41,5 @@ public class EventoDto {
 
 	@Schema(example = "1")
 	private Long idUsuario;
-
-	@Hidden
-	private MultipartFile foto;
 
 }

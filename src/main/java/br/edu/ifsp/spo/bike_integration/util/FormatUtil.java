@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import br.edu.ifsp.spo.bike_integration.dto.EnderecoDto;
+import br.edu.ifsp.spo.bike_integration.dto.EnderecoDTO;
 import br.edu.ifsp.spo.bike_integration.response.BrasilApiCepResponse;
 
 public class FormatUtil {
@@ -41,20 +41,20 @@ public class FormatUtil {
 		return str.replaceAll("\\D", "");
 	}
 
-	public static String formatEnderecoToOpenStreetMapApi(EnderecoDto endereco) {
+	public static String formatEnderecoToOpenStreetMapApi(EnderecoDTO endereco) {
 		return endereco.getRua() + ", " + endereco.getNumero() + " - " + endereco.getCidade() + " - "
 				+ endereco.getEstado();
 	}
 
-	public static EnderecoDto convertToDto(BrasilApiCepResponse endereco, Long numero) {
-		return EnderecoDto.builder().cep(endereco.getCep()).estado(endereco.getState()).cidade(endereco.getCity())
+	public static EnderecoDTO convertToDto(BrasilApiCepResponse endereco, Long numero) {
+		return EnderecoDTO.builder().cep(endereco.getCep()).estado(endereco.getState()).cidade(endereco.getCity())
 				.bairro(endereco.getNeighborhood()).rua(endereco.getStreet()).numero(numero).build();
 	}
 	
-	public static EnderecoDto convertToDto(String endereco) throws JsonProcessingException {
+	public static EnderecoDTO convertToDto(String endereco) throws JsonProcessingException {
 		JsonNode json = new ObjectMapper().readTree(endereco);
 		
-		return EnderecoDto.builder().cep(json.get("cep").asText()).estado(json.get("estado").asText())
+		return EnderecoDTO.builder().cep(json.get("cep").asText()).estado(json.get("estado").asText())
 				.cidade(json.get("cidade").asText()).bairro(json.get("bairro").asText())
 				.rua(json.get("logradouro").asText()).numero(json.get("numero").asLong()).build();
 	}

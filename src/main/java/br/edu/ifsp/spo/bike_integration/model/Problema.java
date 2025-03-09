@@ -1,7 +1,6 @@
 package br.edu.ifsp.spo.bike_integration.model;
 
-import java.sql.Timestamp;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -39,20 +38,20 @@ public class Problema {
     private byte[] foto;
 
     @Column(name = "dt_criacao", nullable = false, updatable = false)
-    private Date dtCriacao;
+    private LocalDateTime dtCriacao;
 
     @Column(name = "validado", nullable = false)
     private Boolean validado;
 
     @Column(name = "ativo", nullable = false)
     private Boolean ativo;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_trecho", nullable = false)
     private Trecho trecho;
 
     @PrePersist
     public void prePersist() {
-        this.dtCriacao = new Timestamp(System.currentTimeMillis());
+        this.dtCriacao = LocalDateTime.now();
     }
 }

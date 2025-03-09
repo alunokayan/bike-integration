@@ -1,5 +1,7 @@
 package br.edu.ifsp.spo.bike_integration.controller;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +32,15 @@ public class IndexController {
 	@Operation(summary = "detalhes da API", description = "Retorna os detalhes da API")
 	public Map<String, Object> details() {
 		return Map.of("name", buildProperties.getName(), "group", buildProperties.getGroup(), "version",
-				buildProperties.getVersion(), "time", buildProperties.getTime(), "artifact",
+				buildProperties.getVersion(), "time", getBuildTime(), "artifact",
 				buildProperties.getArtifact());
+	}
+
+	/*
+	 * PRIVATE METHODS
+	 */
+
+	private LocalDateTime getBuildTime() {
+		return LocalDateTime.ofInstant(buildProperties.getTime(), ZoneId.systemDefault());
 	}
 }

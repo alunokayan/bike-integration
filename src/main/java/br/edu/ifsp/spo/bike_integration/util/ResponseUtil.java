@@ -19,7 +19,7 @@ public interface ResponseUtil {
 	 */
 
 	private static Map<String, Object> createMap(String message, HttpStatus status) {
-		return Map.of("message", reduceMessage(message), "status", status, "time", LocalDateTime.now());
+		return Map.of("status", status.value(), "timestamp", LocalDateTime.now(), "message", reduceMessage(message));
 	}
 
 	private static String reduceMessage(String message) {

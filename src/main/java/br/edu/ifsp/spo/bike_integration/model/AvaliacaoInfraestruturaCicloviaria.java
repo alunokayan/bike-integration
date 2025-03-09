@@ -1,6 +1,6 @@
 package br.edu.ifsp.spo.bike_integration.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -42,6 +42,6 @@ public class AvaliacaoInfraestruturaCicloviaria {
 	private String comentario;
 
 	@Column(name = "dt_criacao")
-	private Date dtCriacao;
+	private LocalDateTime dtCriacao;
 
 }

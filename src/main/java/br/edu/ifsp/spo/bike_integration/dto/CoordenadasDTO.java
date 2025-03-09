@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CoordenadasDto {
+public class CoordenadasDTO {
 
 	@Schema(example = "-49.0629788")
 	private double latitude;

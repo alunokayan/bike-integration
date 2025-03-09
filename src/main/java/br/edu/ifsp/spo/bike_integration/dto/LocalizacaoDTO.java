@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class LocalizacaoDto {
+public class LocalizacaoDTO {
 	
-	private CoordenadasDto coordenadas;
+	private CoordenadasDTO coordenadas;
 }

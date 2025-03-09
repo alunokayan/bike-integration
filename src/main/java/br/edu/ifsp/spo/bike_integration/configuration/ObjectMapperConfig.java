@@ -22,7 +22,7 @@ public class ObjectMapperConfig {
 	public static final String DATETIME_PATTERN = DATE_PATTERN.concat(" ").concat("HH:mm:ss");
 
 	@Bean
-	public ObjectMapper objectMapper() {
+	ObjectMapper objectMapper() {
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.registerModule(this.javaTimeModule());
 		objectMapper.findAndRegisterModules();
@@ -32,7 +32,7 @@ public class ObjectMapperConfig {
 	}
 
 	@Bean
-	public JavaTimeModule javaTimeModule() {
+	JavaTimeModule javaTimeModule() {
 		JavaTimeModule javaTimeModule = new JavaTimeModule();
 		javaTimeModule.addSerializer(LocalDate.class,
 				new LocalDateSerializer(DateTimeFormatter.ofPattern(DATE_PATTERN)));

@@ -3,7 +3,7 @@ package br.edu.ifsp.spo.bike_integration.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.edu.ifsp.spo.bike_integration.dto.UsuarioLoginDto;
+import br.edu.ifsp.spo.bike_integration.dto.UsuarioLoginDTO;
 import br.edu.ifsp.spo.bike_integration.exception.CryptoException;
 import br.edu.ifsp.spo.bike_integration.model.Usuario;
 import br.edu.ifsp.spo.bike_integration.repository.UsuarioRepository;
@@ -22,7 +22,7 @@ public class LoginService {
 	@Autowired
 	private EmailService emailService;
 
-	public Usuario login(UsuarioLoginDto usuario) throws CryptoException, MessagingException {
+	public Usuario login(UsuarioLoginDTO usuario) throws CryptoException, MessagingException {
 		Usuario usuarioLogado;
 
 		if (usuario.getNomeUsuario() != null) {

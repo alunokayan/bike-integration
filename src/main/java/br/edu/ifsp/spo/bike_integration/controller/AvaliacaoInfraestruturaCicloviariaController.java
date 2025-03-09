@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.edu.ifsp.spo.bike_integration.dto.AvaliacaoDto;
+import br.edu.ifsp.spo.bike_integration.dto.AvaliacaoDTO;
 import br.edu.ifsp.spo.bike_integration.model.AvaliacaoInfraestruturaCicloviaria;
 import br.edu.ifsp.spo.bike_integration.service.AvaliacaoInfraestruturaCicloviariaService;
 import br.edu.ifsp.spo.bike_integration.service.InfraestruturaCicloviariaService;
@@ -34,7 +34,7 @@ public class AvaliacaoInfraestruturaCicloviariaController {
 	@PostMapping(path = "/do", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Avalia um trecho.")
 	@ResponseStatus(HttpStatus.CREATED)
-	public void avaliar(@RequestBody AvaliacaoDto avaliacao) {
+	public void avaliar(@RequestBody AvaliacaoDTO avaliacao) {
 		Integer nota = avaliacaoInfraestruturaCicloviariaService.avaliar(avaliacao);
 		infraestruturaCicloviariaService.atualizarNota(avaliacao.getIdInfraestruturaCicloviaria(), nota);
 	}

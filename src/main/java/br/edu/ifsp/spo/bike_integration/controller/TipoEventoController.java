@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.edu.ifsp.spo.bike_integration.dto.TipoEventoDto;
+import br.edu.ifsp.spo.bike_integration.dto.TipoEventoDTO;
 import br.edu.ifsp.spo.bike_integration.model.TipoEvento;
 import br.edu.ifsp.spo.bike_integration.service.TipoEventoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,7 +34,7 @@ public class TipoEventoController {
 
 	@PostMapping(path = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Cadastra um novo tipo de evento.")
-	public ResponseEntity<TipoEvento> cadastrarTipoEvento(@RequestBody TipoEventoDto tipoEvento) {
+	public ResponseEntity<TipoEvento> cadastrarTipoEvento(@RequestBody TipoEventoDTO tipoEvento) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(tipoEventoService.cadastrarTipoEvento(tipoEvento));
 	}
 

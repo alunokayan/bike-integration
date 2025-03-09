@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.edu.ifsp.spo.bike_integration.dto.UsuarioLoginDto;
+import br.edu.ifsp.spo.bike_integration.dto.UsuarioLoginDTO;
 import br.edu.ifsp.spo.bike_integration.exception.CryptoException;
 import br.edu.ifsp.spo.bike_integration.model.Usuario;
 import br.edu.ifsp.spo.bike_integration.service.LoginService;
@@ -29,7 +29,7 @@ public class LoginController {
 
 	@PostMapping(path = "/do", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Realiza o login.")
-	public ResponseEntity<Usuario> login(@RequestBody UsuarioLoginDto usuario)
+	public ResponseEntity<Usuario> login(@RequestBody UsuarioLoginDTO usuario)
 			throws CryptoException, MessagingException {
 		return ResponseEntity.ok(loginService.login(usuario));
 	}
