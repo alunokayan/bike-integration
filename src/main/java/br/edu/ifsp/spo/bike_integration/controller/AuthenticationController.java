@@ -20,7 +20,7 @@ import jakarta.validation.constraints.NotBlank;
 
 @RestController
 @RequestMapping("v1/auth")
-@Tag(name = "Autenticação", description = "Autenticação DPESP para o EPROC 3.0")
+@Tag(name = "Autenticação", description = "Controller para operações relacionadas a autenticação")
 public class AuthenticationController {
 
 	private final JwtService service;
