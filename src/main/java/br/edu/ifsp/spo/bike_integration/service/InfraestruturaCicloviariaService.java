@@ -40,6 +40,10 @@ public class InfraestruturaCicloviariaService {
 				.convertInfraestruturasToGeoJson(this.getInfraestruturasProximasByLocation(latitude, longitude, raio));
 	}
 
+	public void atualizarNota(Long idInfraestruturaCicloviaria, Integer nota) {
+		infraestruturaCicloviariaRepository.atualizarNota(idInfraestruturaCicloviaria, nota);
+	}
+
 	/*
 	 * PRIVATE METHODS
 	 */
@@ -49,7 +53,4 @@ public class InfraestruturaCicloviariaService {
 		return infraestruturaCicloviariaRepository.findInfraestruturasProximasByLocation(latitude, longitude, raio);
 	}
 
-	public void atualizarNota(Long idInfraestruturaCicloviaria, Integer nota) {
-		infraestruturaCicloviariaRepository.atualizarNota(idInfraestruturaCicloviaria, nota);
-	}
 }

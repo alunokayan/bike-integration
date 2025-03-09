@@ -1,23 +1,28 @@
 package br.edu.ifsp.spo.bike_integration.util;
 
+import java.time.LocalDateTime;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-public class ResponseUtil {
-	
-	private ResponseUtil() {
-		
+import br.edu.ifsp.spo.bike_integration.response.ErrorResponse;
+
+public interface ResponseUtil {
+
+	public static ResponseEntity<Object> createResponse(ErrorResponse errorResponse, HttpStatus badRequest) {
+		return new ResponseEntity<>(createMap(errorResponse.getMessage(), badRequest), badRequest);
 	}
 
-	public static ResponseEntity<Object> createResponse(String message, HttpStatus status) {
-		return new ResponseEntity<>(message, status);
+	/*
+	 * PRIVATE METHODS
+	 */
+
+	private static Map<String, Object> createMap(String message, HttpStatus status) {
+		return Map.of("message", reduceMessage(message), "status", status, "time", LocalDateTime.now());
 	}
-	
-	public static ResponseEntity<Object> createResponse(HttpStatus status) {
-		return new ResponseEntity<>(status);
-	}
-	
-	public static ResponseEntity<Object> createResponse(Object object, HttpStatus status) {
-		return new ResponseEntity<>(object, status);
+
+	private static String reduceMessage(String message) {
+		return message.substring(0, 100).concat("...");
 	}
 }
