@@ -1,0 +1,89 @@
+const { createApp } = Vue;
+const baseUrl = window.location.origin + "/bike-integration";
+
+createApp({
+  data() {
+    return {
+      events: [],
+      eventError: '',
+      currentPage: 1,
+      totalPages: 0,
+      filters: {
+        nome: '',
+        descricao: '',
+        data: '',
+        cidade: '',
+        estado: '',
+        faixaKm: '',
+        tipoEvento: '',
+        nivelHabilidade: '',
+        gratuito: '' // pode ser 'true' ou 'false'
+      }
+    };
+  },
+  mounted() {
+    this.loadEvents();
+  },
+  methods: {
+    async loadEvents() {
+      const token = getCookie('token');
+      const params = new URLSearchParams();
+      params.append('pagina', this.currentPage);
+      
+      // Adiciona os filtros, se preenchidos
+      if (this.filters.nome) params.append('nome', this.filters.nome);
+      if (this.filters.descricao) params.append('descricao', this.filters.descricao);
+      if (this.filters.data) params.append('data', this.filters.data);
+      if (this.filters.cidade) params.append('cidade', this.filters.cidade);
+      if (this.filters.estado) params.append('estado', this.filters.estado);
+      if (this.filters.faixaKm) params.append('faixaKm', this.filters.faixaKm);
+      if (this.filters.tipoEvento) params.append('tipoEvento', this.filters.tipoEvento);
+      if (this.filters.nivelHabilidade) params.append('nivelHabilidade', this.filters.nivelHabilidade);
+      if (this.filters.gratuito) params.append('gratuito', this.filters.gratuito);
+      
+      try {
+        const response = await fetch(`${baseUrl}/v1/evento/list?${params.toString()}`, {
+          method: 'GET',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (response.status === 403) {
+          setCookie('token', null, -1);
+          window.location.href = 'login?expired=true';
+        }
+        if (response.ok) {
+          const data = await response.json();
+          this.events = data.eventos;
+          this.totalPages = data.totalPages; // supondo que a resposta traga essa informação
+        } else {
+          this.eventError = 'Erro ao carregar eventos.';
+        }
+      } catch (error) {
+        console.error(error);
+        this.eventError = 'Erro na requisição para carregar eventos.';
+      }
+    },
+    logout() {
+      setCookie('token', null, -1);
+      window.location.href = 'home';
+    },
+    goToCreateEvent() {
+      window.location.href = 'eventoForm';
+    },
+    nextPage() {
+      if (this.currentPage < this.totalPages) {
+        this.currentPage++;
+        this.loadEvents();
+      }
+    },
+    prevPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+        this.loadEvents();
+      }
+    },
+    applyFilters() {
+      this.currentPage = 1;
+      this.loadEvents();
+    }
+  }
+}).mount("#app");

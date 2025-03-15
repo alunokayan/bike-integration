@@ -101,6 +101,10 @@ public class WebSecurityConfig {
 		matchers.add(new RegexRequestMatcher("/swagger.*", null));
 		matchers.add(new RegexRequestMatcher("/v1/app.*", null));
 		matchers.add(new AntPathRequestMatcher("/v1/auth", HttpMethod.POST.name()));
+
+		// Public web app resources
+		matchers.add(new RegexRequestMatcher("/app.*", null));
+
 		return matchers;
 	}
 
