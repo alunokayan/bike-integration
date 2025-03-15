@@ -18,11 +18,15 @@ createApp({
         tipoEvento: '',
         nivelHabilidade: '',
         gratuito: '' // pode ser 'true' ou 'false'
-      }
+      },
+      tiposEvento: [],
+      niveisHabilidade: []
     };
   },
   mounted() {
     this.loadEvents();
+    this.loadNivelHabilidade();
+    this.loadTipoEvento();
   },
   methods: {
     async loadEvents() {
@@ -61,6 +65,50 @@ createApp({
         console.error(error);
         this.eventError = 'Erro na requisição para carregar eventos.';
       }
+    },
+    async loadNivelHabilidade() {
+      const token = getCookie('token');
+      try {
+        const response = await fetch(`${baseUrl}/v1/nivel-habilidade/list`, {
+          method: 'GET',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (response.status === 403) {
+          setCookie('token', null, -1);
+          window.location.href = 'login?expired=true';
+        }
+        if (response.ok) {
+          this.niveisHabilidade = await response.json();
+        } else {
+          this.eventError = 'Erro ao carregar níveis de habilidade.';
+        }
+      } catch (error) {
+        console.error(error);
+        this.eventError = 'Erro na requisição para carregar níveis de habilidade.';
+      }
+    },
+    async loadTipoEvento() {
+      const token = getCookie('token');
+      try {
+        const response = await fetch(`${baseUrl}/v1/tipo-evento/list`, {
+          method: 'GET',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (response.status === 403) {
+          setCookie('token', null, -1);
+          window.location.href = 'login?expired=true';
+        }
+        if (response.ok) {
+          this.tiposEvento = await response.json();
+        } else {
+          this.eventError = 'Erro ao carregar tipos de evento.';
+        }
+      }
+      catch (error) {
+        console.error(error);
+        this.eventError = 'Erro na requisição para carregar tipos de evento.';
+      }
+
     },
     logout() {
       setCookie('token', null, -1);

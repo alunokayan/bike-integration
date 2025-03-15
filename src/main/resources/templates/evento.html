@@ -59,15 +59,27 @@
         <div class="col-md-3">
           <input type="number" v-model="filters.faixaKm" class="form-control" placeholder="Filtrar por faixa (km)">
         </div>
+        <!-- Para TipoEvento -->
         <div class="col-md-3">
-          <input type="number" v-model="filters.tipoEvento" class="form-control" placeholder="Tipo do evento">
+          <select v-model="filters.tipoEvento" class="form-control">
+            <option value="" style="background-color:rgb(140, 150, 160);">Tipo do evento</option>
+            <option v-for="tipo in tiposEvento" :key="tipo.id" :value="tipo.id">
+              {{ tipo.nome }}
+            </option>
+          </select>
         </div>
+        <!-- Para NivelHabilidade -->
         <div class="col-md-3">
-          <input type="number" v-model="filters.nivelHabilidade" class="form-control" placeholder="Nível de habilidade">
+          <select v-model="filters.nivelHabilidade" class="form-control">
+            <option value="" style="background-color:rgb(140, 150, 160);">Nível de habilidade</option>
+            <option v-for="nivel in niveisHabilidade" :key="nivel.id" :value="nivel.id">
+              {{ nivel.nome }}
+            </option>
+          </select>
         </div>
         <div class="col-md-3">
           <select v-model="filters.gratuito" class="form-control">
-            <option value="">Gratuito?</option>
+            <option value="" style="background-color:rgb(140, 150, 160);">Gratuito?</option>
             <option value="true">Sim</option>
             <option value="false">Não</option>
           </select>
