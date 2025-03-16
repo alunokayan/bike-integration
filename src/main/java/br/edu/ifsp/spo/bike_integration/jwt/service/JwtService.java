@@ -1,4 +1,4 @@
-package br.edu.ifsp.spo.bike_integration.service;
+package br.edu.ifsp.spo.bike_integration.jwt.service;
 
 import java.util.Date;
 

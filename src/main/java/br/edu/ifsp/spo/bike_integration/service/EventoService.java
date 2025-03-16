@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import br.edu.ifsp.spo.bike_integration.aws.service.S3Service;
 import br.edu.ifsp.spo.bike_integration.dto.EventoDTO;
 import br.edu.ifsp.spo.bike_integration.dto.GeoJsonDTO;
 import br.edu.ifsp.spo.bike_integration.hardcode.PaginationType;
@@ -19,6 +21,7 @@ import br.edu.ifsp.spo.bike_integration.rest.service.OpenStreetMapApiService;
 import br.edu.ifsp.spo.bike_integration.util.DateUtil;
 import br.edu.ifsp.spo.bike_integration.util.FormatUtil;
 import br.edu.ifsp.spo.bike_integration.util.GeoJsonUtilFactory;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 @Service
 public class EventoService {
@@ -34,6 +37,12 @@ public class EventoService {
 
 	@Autowired
 	private OpenStreetMapApiService openStreetMapApiService;
+
+	@Autowired
+	private S3Service s3Service;
+
+	@Value("${aws.s3.bucket-name}")
+	private String bucketName;
 
 	public Evento buscarEvento(Long id) {
 		return eventoRepository.findById(id).orElse(null);
@@ -119,7 +128,11 @@ public class EventoService {
 
 	public void updateFotoEvento(Long id, MultipartFile file) {
 		try {
-			eventoRepository.saveFoto(id, file.getBytes());
+			Evento evento = eventoRepository.findById(id).orElse(null);
+			if (evento != null) {
+				s3Service.put(PutObjectRequest.builder().bucket(bucketName).key(createKeyFotoEvento(id))
+						.contentType(file.getContentType()).build(), file.getBytes());
+			}
 		} catch (IOException e) {
 			throw new RuntimeException("Erro ao atualizar foto do evento.");
 		}
@@ -131,5 +144,9 @@ public class EventoService {
 
 	private List<Evento> getEventosProximosByLocation(Double latitude, Double longitude, Double raio) {
 		return eventoRepository.findEventosProximosByLocation(latitude, longitude, raio);
+	}
+
+	private String createKeyFotoEvento(Long id) {
+		return "evento_" + id + "_" + System.currentTimeMillis();
 	}
 }

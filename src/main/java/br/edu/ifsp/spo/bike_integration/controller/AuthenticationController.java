@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.edu.ifsp.spo.bike_integration.dto.JwtSubjectDTO;
 import br.edu.ifsp.spo.bike_integration.exception.BikeException;
-import br.edu.ifsp.spo.bike_integration.service.JwtService;
+import br.edu.ifsp.spo.bike_integration.jwt.service.JwtService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;

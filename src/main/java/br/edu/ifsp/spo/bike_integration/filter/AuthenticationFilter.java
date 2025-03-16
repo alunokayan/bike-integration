@@ -13,7 +13,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import br.edu.ifsp.spo.bike_integration.configuration.WebSecurityConfig;
 import br.edu.ifsp.spo.bike_integration.dto.JwtSubjectDTO;
 import br.edu.ifsp.spo.bike_integration.dto.StandardErrorDTO;
-import br.edu.ifsp.spo.bike_integration.service.JwtService;
+import br.edu.ifsp.spo.bike_integration.jwt.service.JwtService;
 import br.edu.ifsp.spo.bike_integration.util.RequestUtils;
 import br.edu.ifsp.spo.bike_integration.util.ResponseUtils;
 import jakarta.servlet.FilterChain;
