@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import br.edu.ifsp.spo.bike_integration.aws.service.S3Service;
-import br.edu.ifsp.spo.bike_integration.exception.BikeException;
+import br.edu.ifsp.spo.bike_integration.exception.BikeIntegrationCustomException;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.core.sync.ResponseTransformer;
@@ -30,38 +30,39 @@ public class S3ServiceImpl implements S3Service {
 
     @Override
     public <T> T get(GetObjectRequest request, ResponseTransformer<GetObjectResponse, T> transfomer)
-            throws BikeException {
+            throws BikeIntegrationCustomException {
         try {
             return this.client.getObject(request, transfomer);
         } catch (Exception e) {
-            throw new BikeException(e);
+            throw new BikeIntegrationCustomException(e);
         }
     }
 
     @Override
-    public ResponseInputStream<GetObjectResponse> get(GetObjectRequest request) throws BikeException {
+    public ResponseInputStream<GetObjectResponse> get(GetObjectRequest request) throws BikeIntegrationCustomException {
         try {
             return this.client.getObject(request);
         } catch (Exception e) {
-            throw new BikeException(e);
+            throw new BikeIntegrationCustomException(e);
         }
     }
 
     @Override
-    public PutObjectResponse put(PutObjectRequest request, RequestBody requestBody) throws BikeException {
+    public PutObjectResponse put(PutObjectRequest request, RequestBody requestBody)
+            throws BikeIntegrationCustomException {
         try {
             return this.client.putObject(request, requestBody);
         } catch (Exception e) {
-            throw new BikeException(e);
+            throw new BikeIntegrationCustomException(e);
         }
     }
 
     @Override
-    public HeadObjectResponse getHead(HeadObjectRequest request) throws BikeException {
+    public HeadObjectResponse getHead(HeadObjectRequest request) throws BikeIntegrationCustomException {
         try {
             return this.client.headObject(request);
         } catch (Exception e) {
-            throw new BikeException(e);
+            throw new BikeIntegrationCustomException(e);
         }
     }
 

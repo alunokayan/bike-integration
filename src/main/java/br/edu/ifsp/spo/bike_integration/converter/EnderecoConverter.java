@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.edu.ifsp.spo.bike_integration.dto.EnderecoDTO;
+import br.edu.ifsp.spo.bike_integration.exception.BikeIntegrationCustomException;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
@@ -17,7 +18,7 @@ public class EnderecoConverter implements AttributeConverter<EnderecoDTO, String
 		try {
 			return objectMapper.writeValueAsString(endereco);
 		} catch (JsonProcessingException e) {
-			throw new IllegalArgumentException("Erro ao converter Endereco para JSON", e);
+			throw new BikeIntegrationCustomException("Erro ao converter Endereco para JSON", e);
 		}
 	}
 
@@ -26,7 +27,7 @@ public class EnderecoConverter implements AttributeConverter<EnderecoDTO, String
 		try {
 			return objectMapper.readValue(json, EnderecoDTO.class);
 		} catch (JsonProcessingException e) {
-			throw new IllegalArgumentException("Erro ao converter JSON para Endereco", e);
+			throw new BikeIntegrationCustomException("Erro ao converter JSON para Endereco", e);
 		}
 	}
 }

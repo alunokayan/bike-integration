@@ -14,7 +14,7 @@ import software.amazon.awssdk.services.s3.S3Configuration;
 @Configuration
 public class S3Config {
 
-    @Value("${spring.cloud.aws.sqs.endpoint}")
+    @Value("${spring.cloud.aws.endpoint}")
     private String endpoint;
 
     @Bean

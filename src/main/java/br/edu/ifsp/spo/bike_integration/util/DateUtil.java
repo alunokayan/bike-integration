@@ -3,6 +3,8 @@ package br.edu.ifsp.spo.bike_integration.util;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 
+import br.edu.ifsp.spo.bike_integration.exception.BikeIntegrationCustomException;
+
 public interface DateUtil {
 
 	public static String getFormattedHyphenStringDate(LocalDateTime date) {
@@ -19,7 +21,7 @@ public interface DateUtil {
 		try {
 			return LocalDateTime.parse(date);
 		} catch (Exception e) {
-			return null;
+			throw new BikeIntegrationCustomException("Error parsing date", e);
 		}
 	}
 

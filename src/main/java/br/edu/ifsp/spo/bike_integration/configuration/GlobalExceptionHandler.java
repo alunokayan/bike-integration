@@ -2,6 +2,7 @@ package br.edu.ifsp.spo.bike_integration.configuration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import br.edu.ifsp.spo.bike_integration.exception.CryptoException;
 import br.edu.ifsp.spo.bike_integration.response.ErrorResponse;
@@ -66,5 +68,19 @@ public class GlobalExceptionHandler {
 		logger.error("InvalidDataAccessApiUsageException caught: ", ex);
 		return ResponseUtil.createResponse(new ErrorResponse("Erro: \n" + ex.getMessage()),
 				HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@ExceptionHandler(MaxUploadSizeExceededException.class)
+	public ResponseEntity<Object> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException ex,
+			WebRequest request) {
+		logger.error("MaxUploadSizeExceededException caught: ", ex);
+		return ResponseUtil.createResponse(new ErrorResponse("Erro: \n" + ex.getMessage()), HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	public ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex,
+			WebRequest request) {
+		logger.error("DataIntegrityViolationException caught: ", ex);
+		return ResponseUtil.createResponse(new ErrorResponse("Erro: \n" + ex.getMessage()), HttpStatus.BAD_REQUEST);
 	}
 }

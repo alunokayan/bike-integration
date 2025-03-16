@@ -17,7 +17,7 @@ import com.auth0.jwt.interfaces.JWTVerifier;
 
 import br.edu.ifsp.spo.bike_integration.dto.JwtConfigDTO;
 import br.edu.ifsp.spo.bike_integration.dto.JwtSubjectDTO;
-import br.edu.ifsp.spo.bike_integration.exception.BikeException;
+import br.edu.ifsp.spo.bike_integration.exception.BikeIntegrationCustomException;
 import br.edu.ifsp.spo.bike_integration.util.ObjectMapperUtils;
 
 @Service
@@ -39,16 +39,16 @@ public class JwtService {
 		this.config = config;
 	}
 
-	public String create(JwtSubjectDTO subject) throws BikeException {
+	public String create(JwtSubjectDTO subject) throws BikeIntegrationCustomException {
 		this.validateSubject(subject);
 		return JWT.create().withSubject(ObjectMapperUtils.toJsonString(subject)).withIssuedAt(new Date())
 				.withExpiresAt(new Date(System.currentTimeMillis() + (this.config.expiration())))
 				.sign(this.createAlgorithm());
 	}
 
-	public void validateSubject(JwtSubjectDTO subject) throws BikeException {
+	public void validateSubject(JwtSubjectDTO subject) throws BikeIntegrationCustomException {
 		if (!this.isValidSubject(subject)) {
-			throw new BikeException(DEFAULT_NULL_SUBJECT_MESSAGE, HttpStatus.FORBIDDEN);
+			throw new BikeIntegrationCustomException(DEFAULT_NULL_SUBJECT_MESSAGE, HttpStatus.FORBIDDEN);
 		}
 	}
 
@@ -63,9 +63,9 @@ public class JwtService {
 		}
 	}
 
-	public void validate(String token) throws BikeException {
+	public void validate(String token) throws BikeIntegrationCustomException {
 		if (!this.isValid(token)) {
-			throw new BikeException(DEFAULT_NULL_SUBJECT_MESSAGE, HttpStatus.FORBIDDEN);
+			throw new BikeIntegrationCustomException(DEFAULT_NULL_SUBJECT_MESSAGE, HttpStatus.FORBIDDEN);
 		}
 	}
 
@@ -99,11 +99,11 @@ public class JwtService {
 		return this.createVerifier().verify(token);
 	}
 
-	private JWTVerifier createVerifier() throws BikeException {
+	private JWTVerifier createVerifier() throws BikeIntegrationCustomException {
 		return JWT.require(this.createAlgorithm()).build();
 	}
 
-	private Algorithm createAlgorithm() throws BikeException {
+	private Algorithm createAlgorithm() throws BikeIntegrationCustomException {
 		return Algorithm.HMAC512(this.config.secretKey().getBytes());
 	}
 

@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import br.edu.ifsp.spo.bike_integration.exception.BikeIntegrationCustomException;
 import br.edu.ifsp.spo.bike_integration.hardcode.ConfiguracaoApiType;
 import br.edu.ifsp.spo.bike_integration.hardcode.OpenStreetMapApiType;
 import br.edu.ifsp.spo.bike_integration.model.ConfiguracaoApiExterna;
@@ -55,7 +56,7 @@ public class OpenStreetMapApiService {
 			throw new IllegalArgumentException();
 		} catch (Exception e) {
 			logger.error("Erro ao buscar coordenadas do endereço: " + endereco, e);
-			throw new IllegalArgumentException("Endereço não encontrado");
+			throw new BikeIntegrationCustomException("Erro ao buscar coordenadas do endereço: " + endereco, e);
 		}
 	}
 
@@ -81,7 +82,8 @@ public class OpenStreetMapApiService {
 			throw new IllegalArgumentException();
 		} catch (Exception e) {
 			logger.error("Erro ao buscar cep das coordenadas: " + latitude + ", " + longitude, e);
-			throw new IllegalArgumentException("Cep não encontrado");
+			throw new BikeIntegrationCustomException(
+					"Erro ao buscar cep das coordenadas: " + latitude + ", " + longitude, e);
 		}
 	}
 
@@ -104,7 +106,7 @@ public class OpenStreetMapApiService {
 			throw new IllegalArgumentException();
 		} catch (Exception e) {
 			logger.error("Erro ao buscar coordenadas do CEP: " + cep, e);
-			throw new IllegalArgumentException("Coordenadas não encontradas");
+			throw new BikeIntegrationCustomException("Erro ao buscar coordenadas do CEP: " + cep, e);
 		}
 	}
 

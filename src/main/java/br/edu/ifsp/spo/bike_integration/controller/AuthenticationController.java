@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.edu.ifsp.spo.bike_integration.dto.JwtSubjectDTO;
-import br.edu.ifsp.spo.bike_integration.exception.BikeException;
+import br.edu.ifsp.spo.bike_integration.exception.BikeIntegrationCustomException;
 import br.edu.ifsp.spo.bike_integration.jwt.service.JwtService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,7 +33,8 @@ public class AuthenticationController {
 	@PostMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Map<String, Object> authenticate(
 			@NotBlank(message = "Access Key é obrigatório") @RequestParam String accessKey,
-			@NotBlank(message = "Secret Key é obrigatório") @RequestParam String secretKey) throws BikeException {
+			@NotBlank(message = "Secret Key é obrigatório") @RequestParam String secretKey)
+			throws BikeIntegrationCustomException {
 		return Map.of("token",
 				this.service.create(JwtSubjectDTO.builder().accessKey(accessKey).secretKey(secretKey).build()));
 	}

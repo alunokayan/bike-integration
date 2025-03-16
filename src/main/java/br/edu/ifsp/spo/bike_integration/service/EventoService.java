@@ -1,6 +1,5 @@
 package br.edu.ifsp.spo.bike_integration.service;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import br.edu.ifsp.spo.bike_integration.aws.service.S3Service;
 import br.edu.ifsp.spo.bike_integration.dto.EventoDTO;
 import br.edu.ifsp.spo.bike_integration.dto.GeoJsonDTO;
+import br.edu.ifsp.spo.bike_integration.exception.BikeIntegrationCustomException;
 import br.edu.ifsp.spo.bike_integration.hardcode.PaginationType;
 import br.edu.ifsp.spo.bike_integration.model.Evento;
 import br.edu.ifsp.spo.bike_integration.model.Usuario;
@@ -133,8 +133,9 @@ public class EventoService {
 				s3Service.put(PutObjectRequest.builder().bucket(bucketName).key(createKeyFotoEvento(id))
 						.contentType(file.getContentType()).build(), file.getBytes());
 			}
-		} catch (IOException e) {
-			throw new RuntimeException("Erro ao atualizar foto do evento.");
+		} catch (Exception | Error e) {
+			throw new BikeIntegrationCustomException(
+					"Erro ao atualizar a foto do evento: " + e.getCause().getMessage());
 		}
 	}
 

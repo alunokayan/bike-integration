@@ -5,7 +5,7 @@ import java.io.InputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import br.edu.ifsp.spo.bike_integration.exception.BikeException;
+import br.edu.ifsp.spo.bike_integration.exception.BikeIntegrationCustomException;
 import software.amazon.awssdk.core.ResponseBytes;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.sync.RequestBody;
@@ -21,13 +21,14 @@ public interface S3Service extends AwsService {
 
     Logger LOGGER = LoggerFactory.getLogger(S3Service.class);
 
-    <T> T get(GetObjectRequest request, ResponseTransformer<GetObjectResponse, T> transfomer) throws BikeException;
+    <T> T get(GetObjectRequest request, ResponseTransformer<GetObjectResponse, T> transfomer)
+            throws BikeIntegrationCustomException;
 
-    ResponseInputStream<GetObjectResponse> get(GetObjectRequest request) throws BikeException;
+    ResponseInputStream<GetObjectResponse> get(GetObjectRequest request) throws BikeIntegrationCustomException;
 
-    PutObjectResponse put(PutObjectRequest request, RequestBody requestBody) throws BikeException;
+    PutObjectResponse put(PutObjectRequest request, RequestBody requestBody) throws BikeIntegrationCustomException;
 
-    HeadObjectResponse getHead(HeadObjectRequest request) throws BikeException;
+    HeadObjectResponse getHead(HeadObjectRequest request) throws BikeIntegrationCustomException;
 
     default HeadObjectResponse getHeadSafe(HeadObjectRequest request) {
         try {
@@ -38,33 +39,34 @@ public interface S3Service extends AwsService {
         }
     }
 
-    default byte[] getAsByteArray(GetObjectRequest request) throws BikeException {
+    default byte[] getAsByteArray(GetObjectRequest request) throws BikeIntegrationCustomException {
         try {
             ResponseBytes<?> responseBytes = this.get(request, ResponseTransformer.toBytes());
             return (responseBytes != null) ? responseBytes.asByteArray() : null;
         } catch (Exception e) {
-            throw new BikeException(e);
+            throw new BikeIntegrationCustomException(e);
         }
     }
 
-    default PutObjectResponse put(PutObjectRequest request, InputStream inputStream) throws BikeException {
+    default PutObjectResponse put(PutObjectRequest request, InputStream inputStream)
+            throws BikeIntegrationCustomException {
         return this.put(request, inputStream, 0L);
     }
 
     default PutObjectResponse put(PutObjectRequest request, InputStream inputStream, long contentLength)
-            throws BikeException {
+            throws BikeIntegrationCustomException {
         try {
             return this.put(request, RequestBody.fromInputStream(inputStream, contentLength));
         } catch (Exception e) {
-            throw new BikeException(e);
+            throw new BikeIntegrationCustomException(e);
         }
     }
 
-    default PutObjectResponse put(PutObjectRequest request, byte[] bytes) throws BikeException {
+    default PutObjectResponse put(PutObjectRequest request, byte[] bytes) throws BikeIntegrationCustomException {
         try {
             return this.put(request, RequestBody.fromBytes(bytes));
         } catch (Exception e) {
-            throw new BikeException(e);
+            throw new BikeIntegrationCustomException(e);
         }
     }
 

@@ -10,6 +10,7 @@ import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import br.edu.ifsp.spo.bike_integration.exception.BikeIntegrationCustomException;
 import br.edu.ifsp.spo.bike_integration.hardcode.BrasilApiType;
 import br.edu.ifsp.spo.bike_integration.hardcode.ConfiguracaoApiType;
 import br.edu.ifsp.spo.bike_integration.model.ConfiguracaoApiExterna;
@@ -49,7 +50,7 @@ public class BrasilApiService {
 
 	public BrasilApiCepResponse buscarEnderecoPorCep(String cep) throws NotFoundException {
 		if (!cep.matches("\\d{5}-?\\d{3}")) {
-			throw new IllegalArgumentException("CEP inválido.");
+			throw new BikeIntegrationCustomException("CEP inválido: " + cep);
 		}
 
 		try {
@@ -66,7 +67,7 @@ public class BrasilApiService {
 			return viaCepService.buscarEnderecoPorCep(cep);
 		} catch (Exception e) {
 			logger.error("Erro ao buscar endereço pelo CEP: " + cep, e);
-			throw new NotFoundException();
+			throw new BikeIntegrationCustomException("Erro ao buscar endereço pelo CEP: " + cep, e);
 		}
 	}
 
@@ -81,7 +82,7 @@ public class BrasilApiService {
 					BrasilApiCnpjResponse.class);
 		} catch (Exception e) {
 			logger.error("Erro ao buscar empresa pelo CNPJ: " + cnpj, e);
-			throw new NotFoundException();
+			throw new BikeIntegrationCustomException("Erro ao buscar empresa pelo CNPJ: " + cnpj, e);
 		}
 	}
 }

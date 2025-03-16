@@ -10,7 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import br.edu.ifsp.spo.bike_integration.exception.BikeException;
+import br.edu.ifsp.spo.bike_integration.exception.BikeIntegrationCustomException;
 import jakarta.servlet.http.HttpServletResponse;
 
 public interface ResponseUtils {
@@ -24,12 +24,12 @@ public interface ResponseUtils {
 	 *
 	 */
 	public static void putJsonOnResponse(HttpServletResponse response, Object object, HttpStatus httpStatus)
-			throws BikeException {
+			throws BikeIntegrationCustomException {
 		putJsonOnResponse(response, ObjectMapperUtils.toJsonString(object), httpStatus);
 	}
 
 	public static void putJsonOnResponse(HttpServletResponse response, String json, HttpStatus httpStatus)
-			throws BikeException {
+			throws BikeIntegrationCustomException {
 		try {
 			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 			response.setCharacterEncoding(Charset.defaultCharset().displayName());
@@ -38,7 +38,7 @@ public interface ResponseUtils {
 			}
 			response.setStatus(httpStatus.value());
 		} catch (Exception e) {
-			throw new BikeException(e);
+			throw new BikeIntegrationCustomException("Erro ao escrever resposta JSON", e);
 		}
 	}
 

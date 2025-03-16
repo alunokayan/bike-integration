@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import br.edu.ifsp.spo.bike_integration.dto.UsuarioDTO;
+import br.edu.ifsp.spo.bike_integration.exception.BikeIntegrationCustomException;
 import br.edu.ifsp.spo.bike_integration.model.Usuario;
 import br.edu.ifsp.spo.bike_integration.repository.UsuarioRepository;
 import br.edu.ifsp.spo.bike_integration.rest.service.OpenStreetMapApiService;
@@ -70,7 +71,7 @@ public class UsuarioService {
 		try {
 			usuarioRepository.saveFoto(id, file.getBytes());
 		} catch (IOException e) {
-			throw new RuntimeException("Erro ao atualizar foto do evento.");
+			throw new BikeIntegrationCustomException("Erro ao salvar foto do usuário", e);
 		}
 	}
 

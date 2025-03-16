@@ -9,6 +9,7 @@ import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import br.edu.ifsp.spo.bike_integration.exception.BikeIntegrationCustomException;
 import br.edu.ifsp.spo.bike_integration.hardcode.ConfiguracaoApiType;
 import br.edu.ifsp.spo.bike_integration.hardcode.ViaCepApiType;
 import br.edu.ifsp.spo.bike_integration.model.ConfiguracaoApiExterna;
@@ -51,7 +52,7 @@ public class ViaCepService {
 					ViaCepApiResponse.class));
 		} catch (Exception e) {
 			logger.error("Erro ao buscar endereço pelo CEP: " + cep, e);
-			throw new NotFoundException();
+			throw new BikeIntegrationCustomException("Erro ao buscar endereço pelo CEP: " + cep, e);
 		}
 	}
 
