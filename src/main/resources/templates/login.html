@@ -10,37 +10,58 @@
   <script src="login.js" defer></script>
   <style>
     body {
-      background-color: #e0e0e0; /* fundo menos branco */
+      background-color: #1a1a1a; /* Fundo escuro */
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #ddd;
+      margin: 0;
+      padding: 0;
     }
     #app {
-      background-color: #f0f0f0; /* container com tom de cinza suave */
-      padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      max-inline-width: 400px;
+      background-color: #2a2a2a; /* Container mais claro que o fundo */
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      max-width: 400px;
       margin: 80px auto;
     }
     h2 {
       text-align: center;
-      color: #333;
+      color: #f0f0f0;
+      margin-bottom: 20px;
     }
     .form-label {
       font-weight: 500;
+      color: #ccc;
+    }
+    .form-control {
+      background-color: #3a3a3a;
+      border: 1px solid #555;
+      color: #ddd;
     }
     .form-control:focus {
       box-shadow: none;
       border-color: #888;
+      background-color: #444;
     }
     .btn-primary {
-      background-color: #5a5a5a;
-      border-color: #5a5a5a;
+      background-color: #444;
+      border-color: #444;
+      color: #fff;
     }
     .btn-primary:hover {
-      background-color: #484848;
-      border-color: #484848;
+      background-color: #555;
+      border-color: #555;
     }
-    .error { color: #d9534f; }
+    .error { 
+      color: #ff6b6b; 
+      text-align: center;
+      margin-top: 10px;
+    }
+    .alert {
+      background-color: #555;
+      border-color: #666;
+      color: #f0f0f0;
+    }
   </style>
 </head>
 <body>
@@ -58,7 +79,7 @@
         <label for="secretKey" class="form-label">Secret Key:</label>
         <input type="password" v-model="loginData.secretKey" id="secretKey" class="form-control" required>
       </div>
-      <button type="submit" class="btn btn-primary">Login</button>
+      <button type="submit" class="btn btn-primary w-100">Login</button>
     </form>
     <div class="error" v-if="loginError">{{ loginError }}</div>
   </div>
