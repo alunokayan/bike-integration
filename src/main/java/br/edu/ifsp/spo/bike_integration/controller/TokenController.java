@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.edu.ifsp.spo.bike_integration.annotation.JwtSecretKey;
+import br.edu.ifsp.spo.bike_integration.annotation.Role;
+import br.edu.ifsp.spo.bike_integration.hardcode.RoleType;
 import br.edu.ifsp.spo.bike_integration.model.Token;
 import br.edu.ifsp.spo.bike_integration.service.EmailService;
 import br.edu.ifsp.spo.bike_integration.service.TokenService;
@@ -31,20 +34,26 @@ public class TokenController {
 	@Autowired
 	private EmailService emailService;
 
-	@GetMapping(path = "/isValidToken", produces = MediaType.APPLICATION_JSON_VALUE)
+	@Role(RoleType.ADMIN)
+	@JwtSecretKey
+	@GetMapping(path = "/is/valid", produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Valida o token.")
 	public ResponseEntity<Boolean> isValidateToken(@RequestParam String token, @RequestParam String email) {
 		return ResponseEntity.status(HttpStatus.OK).body(tokenService.isValidToken(token, email));
 	}
 
-	@PostMapping(path = "/sendToken")
+	@Role(RoleType.ADMIN)
+	@JwtSecretKey
+	@PostMapping(path = "/send")
 	@Operation(summary = "Envia um novo token.")
 	@ResponseStatus(HttpStatus.OK)
 	public void sendTokenEmail(@RequestParam String email) throws MessagingException {
 		emailService.sendCadastroTokenEmail(email, tokenService.generateToken(email).getTokenGerado());
 	}
 
-	@GetMapping(path = "/listByUser", produces = MediaType.APPLICATION_JSON_VALUE)
+	@Role(RoleType.ADMIN)
+	@JwtSecretKey
+	@GetMapping(path = "/list/by/user", produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Lista os tokens de um usuário.")
 	public ResponseEntity<List<Token>> listTokensByUser(@RequestParam String email) {
 		return ResponseEntity.status(HttpStatus.OK).body(tokenService.listTokensByEmail(email));

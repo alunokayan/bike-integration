@@ -9,7 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.edu.ifsp.spo.bike_integration.annotation.BearerAuthentication;
+import br.edu.ifsp.spo.bike_integration.annotation.Role;
 import br.edu.ifsp.spo.bike_integration.dto.ProblemaDTO;
+import br.edu.ifsp.spo.bike_integration.hardcode.RoleType;
 import br.edu.ifsp.spo.bike_integration.service.ProblemaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,6 +25,8 @@ public class ProblemaController {
 	@Autowired
 	private ProblemaService problemaService;
 
+	@Role(RoleType.PF)
+	@BearerAuthentication
 	@PostMapping(path = "/do", consumes = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Registra um problema.")
 	@ResponseStatus(HttpStatus.CREATED)

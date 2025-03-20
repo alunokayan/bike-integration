@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.edu.ifsp.spo.bike_integration.annotation.BearerAuthentication;
+import br.edu.ifsp.spo.bike_integration.annotation.Role;
 import br.edu.ifsp.spo.bike_integration.dto.AvaliacaoDTO;
+import br.edu.ifsp.spo.bike_integration.hardcode.RoleType;
 import br.edu.ifsp.spo.bike_integration.model.AvaliacaoInfraestruturaCicloviaria;
 import br.edu.ifsp.spo.bike_integration.service.AvaliacaoInfraestruturaCicloviariaService;
 import br.edu.ifsp.spo.bike_integration.service.InfraestruturaCicloviariaService;
@@ -31,6 +34,8 @@ public class AvaliacaoInfraestruturaCicloviariaController {
 	@Autowired
 	private InfraestruturaCicloviariaService infraestruturaCicloviariaService;
 
+	@Role(RoleType.PF)
+	@BearerAuthentication
 	@PostMapping(path = "/do", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Avalia um trecho.")
 	@ResponseStatus(HttpStatus.CREATED)
@@ -39,7 +44,9 @@ public class AvaliacaoInfraestruturaCicloviariaController {
 		infraestruturaCicloviariaService.atualizarNota(avaliacao.getIdInfraestruturaCicloviaria(), nota);
 	}
 
-	@GetMapping(path = "/getAllByInfraestruturaCicloviariaId", produces = MediaType.APPLICATION_JSON_VALUE)
+	@Role(RoleType.PF)
+	@BearerAuthentication
+	@GetMapping(path = "/get/all/by/infraestrutura/cicloviaria/id", produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Recupera todas as avaliações de um trecho.")
 	public ResponseEntity<List<AvaliacaoInfraestruturaCicloviaria>> getAllByInfraestruturaCicloviariaId(
 			Long idInfraestruturaCicloviaria) {

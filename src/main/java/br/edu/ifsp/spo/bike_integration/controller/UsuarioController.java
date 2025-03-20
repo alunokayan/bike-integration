@@ -15,7 +15,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import br.edu.ifsp.spo.bike_integration.annotation.BearerAuthentication;
+import br.edu.ifsp.spo.bike_integration.annotation.JwtSecretKey;
+import br.edu.ifsp.spo.bike_integration.annotation.Role;
 import br.edu.ifsp.spo.bike_integration.dto.UsuarioDTO;
+import br.edu.ifsp.spo.bike_integration.hardcode.RoleType;
 import br.edu.ifsp.spo.bike_integration.model.Usuario;
 import br.edu.ifsp.spo.bike_integration.service.EventoService;
 import br.edu.ifsp.spo.bike_integration.service.UsuarioService;
@@ -34,24 +38,31 @@ public class UsuarioController {
 	@Autowired
 	private EventoService eventoService;
 
+	@Role()
+	@BearerAuthentication
 	@GetMapping(path = "/get", produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Retorna um usuário pelo seu ID.")
 	public ResponseEntity<Usuario> get(@RequestParam Long id) {
 		return ResponseEntity.ok(usuarioService.loadUsuarioById(id));
 	}
 
+	@Role(RoleType.ADMIN)
+	@JwtSecretKey
 	@PostMapping(path = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Cria um novo usuário.")
 	public ResponseEntity<Usuario> create(@RequestBody UsuarioDTO usuarioDto) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.createUsuario(usuarioDto));
 	}
 
+	@Role(RoleType.ADMIN)
+	@BearerAuthentication
 	@PutMapping(path = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Atualiza um usuário.")
 	public ResponseEntity<Usuario> update(@RequestParam Long id, @RequestBody UsuarioDTO usuarioDto) {
 		return ResponseEntity.ok(usuarioService.updateUsuario(id, usuarioDto));
 	}
 
+	@BearerAuthentication
 	@PutMapping(path = "/updateFotoUsuario", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@Operation(summary = "Atualiza a foto de um usuario.")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
@@ -60,6 +71,7 @@ public class UsuarioController {
 		usuarioService.updateFotoUsuario(id, file);
 	}
 
+	@BearerAuthentication
 	@DeleteMapping(path = "/delete")
 	@Operation(summary = "Deleta um usuário.")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
@@ -68,6 +80,7 @@ public class UsuarioController {
 		usuarioService.deleteUsuario(id);
 	}
 
+	@BearerAuthentication
 	@GetMapping(path = "/validate/cpf")
 	@Operation(summary = "Valida um CPF.")
 	public ResponseEntity<String> validateCpf(@RequestParam String cpf) {

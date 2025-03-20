@@ -12,26 +12,33 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.edu.ifsp.spo.bike_integration.annotation.BearerAuthentication;
+import br.edu.ifsp.spo.bike_integration.annotation.Role;
 import br.edu.ifsp.spo.bike_integration.dto.NivelHabilidadeDTO;
+import br.edu.ifsp.spo.bike_integration.hardcode.RoleType;
 import br.edu.ifsp.spo.bike_integration.model.NivelHabilidade;
 import br.edu.ifsp.spo.bike_integration.service.NivelHabilidadeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping("v1/nivel-habilidade")
+@RequestMapping("v1/nivel/habilidade")
 @Tag(name = "Nivel Habilidade", description = "Controller para operações relacionadas a níveis de habilidade.")
 public class NivelHabilidadeController {
 
 	@Autowired
 	private NivelHabilidadeService nivelHabilidadeService;
 
+	@Role
+	@BearerAuthentication
 	@GetMapping(path = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Lista todos os níveis de habilidade cadastrados.")
 	public List<NivelHabilidade> listarNiveisHabilidade() {
 		return nivelHabilidadeService.listarNiveisHabilidade();
 	}
 
+	@Role(RoleType.ADMIN)
+	@BearerAuthentication
 	@PostMapping(path = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Cadastra um novo nível de habilidade.")
 	public ResponseEntity<NivelHabilidade> cadastrarNivelHabilidade(@RequestBody NivelHabilidadeDTO nivelHabilidade) {

@@ -33,6 +33,10 @@ public class UsuarioService {
 		return usuarioRepository.findById(id).orElse(null);
 	}
 
+	public Usuario loadUsuarioByEmail(String email) {
+		return usuarioRepository.findByEmail(email).orElse(null);
+	}
+
 	public Usuario createUsuario(UsuarioDTO usuarioDto) {
 		// Busca as coordenadas do endereço
 		Map<String, Double> coordenadas = openStreetMapApiService

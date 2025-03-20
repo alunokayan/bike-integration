@@ -5,7 +5,7 @@ import java.util.Date;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +16,10 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 
 import br.edu.ifsp.spo.bike_integration.dto.JwtConfigDTO;
-import br.edu.ifsp.spo.bike_integration.dto.JwtSubjectDTO;
+import br.edu.ifsp.spo.bike_integration.dto.JwtUserDTO;
 import br.edu.ifsp.spo.bike_integration.exception.BikeIntegrationCustomException;
+import br.edu.ifsp.spo.bike_integration.service.SessaoService;
+import br.edu.ifsp.spo.bike_integration.service.UsuarioService;
 import br.edu.ifsp.spo.bike_integration.util.ObjectMapperUtils;
 
 @Service
@@ -25,64 +27,74 @@ public class JwtService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(JwtService.class);
 
-	public static final String DEFAULT_NULL_SUBJECT_MESSAGE = "Token inválido ou expirado";
+	public static final String DEFAULT_NULL_USER_MESSAGE = "Usuário inválido";
 
-	@Value("${jwt.subject.access-key}")
-	private String subjectAccessKey;
+	public static final String DEFAULT_NULL_TOKEN_MESSAGE = "Token inválido ou expirado";
 
-	@Value("${jwt.subject.secret-key}")
-	private String subjectSecretKey;
+	@Autowired
+	private JwtConfigDTO config;
 
-	private final JwtConfigDTO config;
+	@Autowired
+	private UsuarioService usuarioService;
 
-	public JwtService(final JwtConfigDTO config) {
-		this.config = config;
-	}
+	@Autowired
+	private SessaoService sessaoService;
 
-	public String create(JwtSubjectDTO subject) throws BikeIntegrationCustomException {
-		this.validateSubject(subject);
+	public String create(JwtUserDTO subject) throws BikeIntegrationCustomException {
+		this.validateUser(subject);
 		return JWT.create().withSubject(ObjectMapperUtils.toJsonString(subject)).withIssuedAt(new Date())
 				.withExpiresAt(new Date(System.currentTimeMillis() + (this.config.expiration())))
 				.sign(this.createAlgorithm());
 	}
 
-	public void validateSubject(JwtSubjectDTO subject) throws BikeIntegrationCustomException {
-		if (!this.isValidSubject(subject)) {
-			throw new BikeIntegrationCustomException(DEFAULT_NULL_SUBJECT_MESSAGE, HttpStatus.FORBIDDEN);
+	public void validateUser(JwtUserDTO subject) throws BikeIntegrationCustomException {
+		if (!this.isValidUser(subject)) {
+			throw new BikeIntegrationCustomException(DEFAULT_NULL_USER_MESSAGE, HttpStatus.FORBIDDEN);
 		}
 	}
 
-	public boolean isValidSubject(JwtSubjectDTO subject) {
+	public boolean isValidUser(JwtUserDTO subject) {
 		try {
-			return subject != null && StringUtils.isNotBlank(subject.accessKey())
-					&& StringUtils.isNotBlank(subject.secretKey()) && subject.accessKey().equals(this.subjectAccessKey)
-					&& subject.secretKey().equals(this.subjectSecretKey);
+			return subject != null
+					&& StringUtils.isNotBlank(subject.nickname())
+					&& StringUtils.isNotBlank(subject.email())
+					&& StringUtils.isNotBlank(subject.password())
+					&& StringUtils.isNotBlank(subject.role())
+					&& this.usuarioService.loadUsuarioByEmail(subject.email()) != null;
 		} catch (Exception e) {
-			LOGGER.debug("Error on isValidSubject: ", e);
+			LOGGER.debug("Error on isValidUser: ", e);
 			return false;
 		}
 	}
 
 	public void validate(String token) throws BikeIntegrationCustomException {
 		if (!this.isValid(token)) {
-			throw new BikeIntegrationCustomException(DEFAULT_NULL_SUBJECT_MESSAGE, HttpStatus.FORBIDDEN);
+			throw new BikeIntegrationCustomException(DEFAULT_NULL_TOKEN_MESSAGE, HttpStatus.FORBIDDEN);
 		}
 	}
 
 	public boolean isValid(String token) {
 		try {
-			JwtSubjectDTO subject = this.getSubject(token);
-			return subject != null && StringUtils.isNotBlank(subject.accessKey())
-					&& StringUtils.isNotBlank(subject.secretKey());
+			JwtUserDTO subject = this.getSubject(token);
+			return subject != null
+					&& StringUtils.isNotBlank(subject.nickname())
+					&& StringUtils.isNotBlank(subject.email())
+					&& StringUtils.isNotBlank(subject.password())
+					&& StringUtils.isNotBlank(subject.role())
+					&& this.sessaoService.isValid(token);
 		} catch (Exception e) {
 			LOGGER.debug("Error on isValid: ", e);
 			return false;
 		}
 	}
 
-	public JwtSubjectDTO getSubject(String token) {
+	public boolean isValidSecretKey(String secretKey) {
+		return StringUtils.isNotBlank(secretKey) && secretKey.equals(this.config.secretKey());
+	}
+
+	public JwtUserDTO getSubject(String token) {
 		try {
-			return ObjectMapperUtils.toPojo(this.createDecoded(token).getSubject(), JwtSubjectDTO.class);
+			return ObjectMapperUtils.toPojo(this.createDecoded(token).getSubject(), JwtUserDTO.class);
 		} catch (Exception e) {
 			LOGGER.debug("Error on getSubject: ", e);
 			return null;

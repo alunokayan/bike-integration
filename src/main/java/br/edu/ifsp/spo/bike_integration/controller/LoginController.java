@@ -11,8 +11,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.edu.ifsp.spo.bike_integration.annotation.BearerAuthentication;
+import br.edu.ifsp.spo.bike_integration.annotation.JwtSecretKey;
+import br.edu.ifsp.spo.bike_integration.annotation.Role;
 import br.edu.ifsp.spo.bike_integration.dto.UsuarioLoginDTO;
 import br.edu.ifsp.spo.bike_integration.exception.CryptoException;
+import br.edu.ifsp.spo.bike_integration.hardcode.RoleType;
 import br.edu.ifsp.spo.bike_integration.model.Usuario;
 import br.edu.ifsp.spo.bike_integration.service.LoginService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,6 +31,8 @@ public class LoginController {
 	@Autowired
 	private LoginService loginService;
 
+	@Role(RoleType.ADMIN)
+	@JwtSecretKey
 	@PostMapping(path = "/do", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Realiza o login.")
 	public ResponseEntity<Usuario> login(@RequestBody UsuarioLoginDTO usuario)
@@ -34,6 +40,8 @@ public class LoginController {
 		return ResponseEntity.ok(loginService.login(usuario));
 	}
 
+	@Role({ RoleType.PF, RoleType.PJ })
+	@BearerAuthentication
 	@PostMapping(path = "/recover")
 	@Operation(summary = "Recupera a senha.")
 	@ResponseStatus(HttpStatus.NO_CONTENT)

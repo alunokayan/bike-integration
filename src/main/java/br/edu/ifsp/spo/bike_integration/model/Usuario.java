@@ -47,8 +47,11 @@ public class Usuario {
 	@Convert(converter = EnderecoConverter.class)
 	private EnderecoDTO endereco;
 
-	@Column(name = "e-mail", nullable = false)
+	@Column(name = "e-mail", nullable = false, unique = true)
 	private String email;
+
+	@Column(name = "role", nullable = false)
+	private String role;
 
 	@Column(name = "senha", nullable = false)
 	private String senha;

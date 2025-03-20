@@ -32,7 +32,7 @@ public interface ResponseUtils {
 			throws BikeIntegrationCustomException {
 		try {
 			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-			response.setCharacterEncoding(Charset.defaultCharset().displayName());
+			response.setCharacterEncoding(Charset.forName("UTF-8").name());
 			if (StringUtils.isNotBlank(json)) {
 				response.getWriter().write(json);
 			}

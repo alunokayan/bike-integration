@@ -14,7 +14,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
@@ -22,7 +21,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import br.edu.ifsp.spo.bike_integration.filter.AuthenticationFilter;
 import io.netty.handler.codec.http.HttpMethod;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -45,21 +43,14 @@ public class WebSecurityConfig {
 	@Value("${app.cors.allowCredentials:true}")
 	private boolean corsAllowCredentials;
 
-	private final AuthenticationFilter authenticationFilter;
-
-	public WebSecurityConfig(final AuthenticationFilter authenticationFilter) {
-		this.authenticationFilter = authenticationFilter;
-	}
-
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		return http.csrf(AbstractHttpConfigurer::disable)
 				.cors(customizer -> customizer.configurationSource(this.corsConfigurationSource()))
-				.authorizeHttpRequests(customizer -> customizer.requestMatchers(getPublicRequestMatchersAsArray())
-						.permitAll().anyRequest().authenticated())
+				.authorizeHttpRequests(customizer -> customizer.anyRequest().permitAll())
 				.formLogin(AbstractHttpConfigurer::disable)
 				.sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-				.addFilterBefore(this.authenticationFilter, UsernamePasswordAuthenticationFilter.class).build();
+				.build();
 	}
 
 	@Bean

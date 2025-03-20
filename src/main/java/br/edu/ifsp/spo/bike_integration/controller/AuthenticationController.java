@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.edu.ifsp.spo.bike_integration.dto.JwtSubjectDTO;
+import br.edu.ifsp.spo.bike_integration.annotation.BearerAuthentication;
+import br.edu.ifsp.spo.bike_integration.annotation.Role;
+import br.edu.ifsp.spo.bike_integration.dto.JwtUserDTO;
 import br.edu.ifsp.spo.bike_integration.exception.BikeIntegrationCustomException;
 import br.edu.ifsp.spo.bike_integration.jwt.service.JwtService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,13 +34,18 @@ public class AuthenticationController {
 	@Operation(summary = "Efetua a autenticação", description = "Efetua a autenticação no serviço, devolvendo o token JWT")
 	@PostMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Map<String, Object> authenticate(
-			@NotBlank(message = "Access Key é obrigatório") @RequestParam String accessKey,
-			@NotBlank(message = "Secret Key é obrigatório") @RequestParam String secretKey)
+			@NotBlank(message = "nickname é obrigatório") @RequestParam String nickname,
+			@NotBlank(message = "email é obrigatório") @RequestParam String email,
+			@NotBlank(message = "senha é obrigatório") @RequestParam String password,
+			@NotBlank(message = "role é obrigatório") @RequestParam String role)
 			throws BikeIntegrationCustomException {
 		return Map.of("token",
-				this.service.create(JwtSubjectDTO.builder().accessKey(accessKey).secretKey(secretKey).build()));
+				this.service.create(
+						JwtUserDTO.builder().nickname(nickname).email(email).password(password).role(role).build()));
 	}
 
+	@Role
+	@BearerAuthentication
 	@GetMapping
 	@Operation(summary = "Endpoint simples para verificar se está autenticado", description = "Endpoint simples para verificar se está autenticado")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
