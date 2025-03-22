@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.edu.ifsp.spo.bike_integration.annotation.BearerAuthentication;
+import br.edu.ifsp.spo.bike_integration.annotation.BearerToken;
 import br.edu.ifsp.spo.bike_integration.annotation.Role;
 import br.edu.ifsp.spo.bike_integration.dto.GeoJsonDTO;
 import br.edu.ifsp.spo.bike_integration.hardcode.RoleType;
@@ -27,7 +27,7 @@ public class InfraestruturaController {
 	private InfraestruturaCicloviariaService infraestruturaService;
 
 	@Role(RoleType.PF)
-	@BearerAuthentication
+	@BearerToken
 	@GetMapping("/get")
 	@Operation(summary = "Buscar uma infraestrutura cicloviária por ID")
 	public ResponseEntity<InfraestruturaCicloviaria> findById(Long id) {
@@ -35,7 +35,7 @@ public class InfraestruturaController {
 	}
 
 	@Role(RoleType.PF)
-	@BearerAuthentication
+	@BearerToken
 	@GetMapping("/get/as/geoJson")
 	@Operation(summary = "Buscar uma infraestrutura cicloviária por ID no formato GeoJson")
 	@ApiResponses(value = {
@@ -46,7 +46,7 @@ public class InfraestruturaController {
 	}
 
 	@Role(RoleType.PF)
-	@BearerAuthentication
+	@BearerToken
 	@GetMapping("/list/as/geoJson")
 	@Operation(summary = "Listar todas as infraestruturas cicloviárias no formato GeoJson")
 	@ApiResponses(value = {

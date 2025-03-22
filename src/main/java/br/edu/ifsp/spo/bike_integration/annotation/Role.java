@@ -11,6 +11,6 @@ import br.edu.ifsp.spo.bike_integration.hardcode.RoleType;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Role {
 
-    RoleType[] value() default RoleType.ALL;
+    RoleType[] value();
 
 }

@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.edu.ifsp.spo.bike_integration.annotation.BearerAuthentication;
+import br.edu.ifsp.spo.bike_integration.annotation.BearerToken;
 import br.edu.ifsp.spo.bike_integration.annotation.Role;
+import br.edu.ifsp.spo.bike_integration.hardcode.RoleType;
 import br.edu.ifsp.spo.bike_integration.response.BrasilApiCepResponse;
 import br.edu.ifsp.spo.bike_integration.rest.service.BrasilApiService;
 import br.edu.ifsp.spo.bike_integration.rest.service.OpenStreetMapApiService;
@@ -31,8 +32,8 @@ public class EnderecoController {
 	@Autowired
 	private OpenStreetMapApiService openStreetMapApiService;
 
-	@Role
-	@BearerAuthentication
+	@Role({ RoleType.PF, RoleType.PJ })
+	@BearerToken
 	@GetMapping("/get/by/cep")
 	@Operation(summary = "Busca endereço completo pelo cep.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Endereço encontrado com sucesso."),
@@ -41,8 +42,8 @@ public class EnderecoController {
 		return brasilApiService.buscarEnderecoPorCep(FormatUtil.formatCep(cep));
 	}
 
-	@Role
-	@BearerAuthentication
+	@Role({ RoleType.PF, RoleType.PJ })
+	@BearerToken
 	@GetMapping("/get/latAndLon/by/cepAndNumber")
 	@Operation(summary = "Busca latitude e longitude pelo cep e número.")
 	@ApiResponses(value = {
@@ -54,8 +55,8 @@ public class EnderecoController {
 				FormatUtil.convertToDto(brasilApiService.buscarEnderecoPorCep(cep), numero)));
 	}
 
-	@Role
-	@BearerAuthentication
+	@Role({ RoleType.PF, RoleType.PJ })
+	@BearerToken
 	@GetMapping("/get/cep/by/LatAndLon")
 	@Operation(summary = "Busca cep pelo latitude e longitude.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Cep encontrado com sucesso."),

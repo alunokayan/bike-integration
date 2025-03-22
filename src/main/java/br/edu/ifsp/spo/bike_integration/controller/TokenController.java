@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.edu.ifsp.spo.bike_integration.annotation.JwtSecretKey;
+import br.edu.ifsp.spo.bike_integration.annotation.XAccessKey;
 import br.edu.ifsp.spo.bike_integration.annotation.Role;
 import br.edu.ifsp.spo.bike_integration.hardcode.RoleType;
 import br.edu.ifsp.spo.bike_integration.model.Token;
@@ -35,7 +35,7 @@ public class TokenController {
 	private EmailService emailService;
 
 	@Role(RoleType.ADMIN)
-	@JwtSecretKey
+	@XAccessKey
 	@GetMapping(path = "/is/valid", produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Valida o token.")
 	public ResponseEntity<Boolean> isValidateToken(@RequestParam String token, @RequestParam String email) {
@@ -43,7 +43,7 @@ public class TokenController {
 	}
 
 	@Role(RoleType.ADMIN)
-	@JwtSecretKey
+	@XAccessKey
 	@PostMapping(path = "/send")
 	@Operation(summary = "Envia um novo token.")
 	@ResponseStatus(HttpStatus.OK)
@@ -52,7 +52,7 @@ public class TokenController {
 	}
 
 	@Role(RoleType.ADMIN)
-	@JwtSecretKey
+	@XAccessKey
 	@GetMapping(path = "/list/by/user", produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Lista os tokens de um usuário.")
 	public ResponseEntity<List<Token>> listTokensByUser(@RequestParam String email) {

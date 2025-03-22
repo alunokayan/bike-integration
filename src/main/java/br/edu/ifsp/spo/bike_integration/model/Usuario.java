@@ -5,15 +5,19 @@ import java.time.LocalDateTime;
 import br.edu.ifsp.spo.bike_integration.converter.EnderecoConverter;
 import br.edu.ifsp.spo.bike_integration.dto.EnderecoDTO;
 import br.edu.ifsp.spo.bike_integration.exception.CryptoException;
+import br.edu.ifsp.spo.bike_integration.hardcode.RoleType;
 import br.edu.ifsp.spo.bike_integration.util.CryptoUtil;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -50,8 +54,9 @@ public class Usuario {
 	@Column(name = "e-mail", nullable = false, unique = true)
 	private String email;
 
+	@Enumerated(EnumType.STRING)
 	@Column(name = "role", nullable = false)
-	private String role;
+	private RoleType role;
 
 	@Column(name = "senha", nullable = false)
 	private String senha;

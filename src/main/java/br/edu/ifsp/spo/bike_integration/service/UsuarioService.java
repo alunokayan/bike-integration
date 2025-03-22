@@ -10,6 +10,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import br.edu.ifsp.spo.bike_integration.dto.UsuarioDTO;
 import br.edu.ifsp.spo.bike_integration.exception.BikeIntegrationCustomException;
+import br.edu.ifsp.spo.bike_integration.hardcode.RoleType;
+import br.edu.ifsp.spo.bike_integration.model.Sessao;
 import br.edu.ifsp.spo.bike_integration.model.Usuario;
 import br.edu.ifsp.spo.bike_integration.repository.UsuarioRepository;
 import br.edu.ifsp.spo.bike_integration.rest.service.OpenStreetMapApiService;
@@ -29,12 +31,19 @@ public class UsuarioService {
 	@Autowired
 	private NivelHabilidadeService nivelHabilidadeService;
 
+	@Autowired
+	private SessaoService sessaoService;
+
 	public Usuario loadUsuarioById(Long id) {
 		return usuarioRepository.findById(id).orElse(null);
 	}
 
 	public Usuario loadUsuarioByEmail(String email) {
 		return usuarioRepository.findByEmail(email).orElse(null);
+	}
+
+	public Usuario loadUsuarioByNomeUsuario(String nomeUsuario) {
+		return usuarioRepository.findByNomeUsuario(nomeUsuario).orElse(null);
 	}
 
 	public Usuario createUsuario(UsuarioDTO usuarioDto) {
@@ -45,11 +54,19 @@ public class UsuarioService {
 		usuarioDto.getEndereco().setLongitude(coordenadas.get("lon"));
 
 		// Salva o usuário
-		return usuarioRepository.save(Usuario.builder().nome(usuarioDto.getNome())
+		Usuario usuario = usuarioRepository.save(Usuario.builder().nome(usuarioDto.getNome())
 				.nomeUsuario(usuarioDto.getNomeUsuario()).endereco(usuarioDto.getEndereco())
 				.email(usuarioDto.getEmail()).senha(usuarioDto.getSenha()).cpf(usuarioDto.getCpf())
 				.cnpj(usuarioDto.getCnpj())
-				.nivelHabilidade(nivelHabilidadeService.loadNivelHabilidade(usuarioDto.getNivelHabilidade())).build());
+				.nivelHabilidade(nivelHabilidadeService.loadNivelHabilidade(usuarioDto.getNivelHabilidade()))
+				.role(usuarioDto.getCpf() != null ? RoleType.PF
+						: usuarioDto.getCnpj() != null ? RoleType.PJ : RoleType.ADMIN)
+				.build());
+
+		// Salva sessão
+		sessaoService.create(usuario);
+
+		return usuario;
 
 	}
 

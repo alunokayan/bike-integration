@@ -34,27 +34,35 @@ public class OpenApiConfig {
 	}
 
 	@Bean
-	GroupedOpenApi auth() {
-		return GroupedOpenApi.builder().group("auth").pathsToMatch("/v1/auth/**")
-				.addOpenApiCustomizer(openApi -> openApi.info(createInfo("1.0"))).build();
-	}
-
-	@Bean
 	GroupedOpenApi v1Api() {
-		return GroupedOpenApi.builder().group("v1").pathsToMatch("/v1/**").pathsToExclude("/v1/auth/**")
-				.addOpenApiCustomizer(openApi -> openApi.info(createInfo("1.0"))).build();
+		return GroupedOpenApi.builder().group("v1")
+				.pathsToMatch("/v1/**")
+				.addOpenApiCustomizer(openApi -> openApi.info(createInfo("1.0")))
+				.build();
 	}
 
 	@Bean
 	OpenAPI configOpenApi() {
-		final String securitySchemeName = "bearerAuth";
+		final String bearerSchemeName = "bearerAuth";
+		final String apiKeySchemeName = "X-Access-Key";
 		return new OpenAPI()
-				.info(new Info().title(API_TITLE).version(this.buildProperties.getVersion())
-						.description(API_DESCRIPTION).license(new License().name(LICENSE_NAME).url(LICENSE_URL)))
-				.addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
-				.components(new Components().addSecuritySchemes(securitySchemeName,
-						new SecurityScheme().name(securitySchemeName).type(SecurityScheme.Type.HTTP).scheme("bearer")
-								.bearerFormat("JWT")))
+				.info(new Info().title(API_TITLE)
+						.version(this.buildProperties.getVersion())
+						.description(API_DESCRIPTION)
+						.license(new License().name(LICENSE_NAME).url(LICENSE_URL)))
+				.addSecurityItem(new SecurityRequirement()
+						.addList(bearerSchemeName)
+						.addList(apiKeySchemeName))
+				.components(new Components()
+						.addSecuritySchemes(bearerSchemeName,
+								new SecurityScheme().name(bearerSchemeName)
+										.type(SecurityScheme.Type.HTTP)
+										.scheme("bearer")
+										.bearerFormat("JWT"))
+						.addSecuritySchemes(apiKeySchemeName,
+								new SecurityScheme().name(apiKeySchemeName)
+										.type(SecurityScheme.Type.APIKEY)
+										.in(SecurityScheme.In.HEADER)))
 				.servers(Arrays.asList(new Server().url(this.contextPath).description("Servidor Atual")));
 	}
 

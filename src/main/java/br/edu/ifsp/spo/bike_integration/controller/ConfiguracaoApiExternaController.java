@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.edu.ifsp.spo.bike_integration.annotation.BearerAuthentication;
+import br.edu.ifsp.spo.bike_integration.annotation.BearerToken;
 import br.edu.ifsp.spo.bike_integration.annotation.Role;
 import br.edu.ifsp.spo.bike_integration.hardcode.RoleType;
 import br.edu.ifsp.spo.bike_integration.model.ConfiguracaoApiExterna;
@@ -27,7 +27,7 @@ public class ConfiguracaoApiExternaController {
 	private ConfiguracaoApiExternaService configuracaoApiExternaService;
 
 	@Role(RoleType.ADMIN)
-	@BearerAuthentication
+	@BearerToken
 	@GetMapping(path = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Lista as API's Externa.")
 	public ResponseEntity<List<ConfiguracaoApiExterna>> listarConfiguracaoApiExterna() {
@@ -35,7 +35,7 @@ public class ConfiguracaoApiExternaController {
 	}
 
 	@Role(RoleType.ADMIN)
-	@BearerAuthentication
+	@BearerToken
 	@GetMapping(path = "/get", produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Retorna a configuração da API Externa.")
 	public ResponseEntity<ConfiguracaoApiExterna> getConfiguracaoApiExterna(@RequestParam(required = true) Long id) {
@@ -43,7 +43,7 @@ public class ConfiguracaoApiExternaController {
 	}
 
 	@Role(RoleType.ADMIN)
-	@BearerAuthentication
+	@BearerToken
 	@GetMapping(path = "/get/all/by/nome", produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Retorna a configuração da API Externa.")
 	public ResponseEntity<List<ConfiguracaoApiExterna>> getConfiguracaoApiExterna(

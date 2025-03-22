@@ -22,6 +22,9 @@ public class LoginService {
 	@Autowired
 	private EmailService emailService;
 
+	@Autowired
+	private SessaoService sessaoService;
+
 	public Usuario login(UsuarioLoginDTO usuario) throws CryptoException, MessagingException {
 		Usuario usuarioLogado;
 
@@ -44,11 +47,14 @@ public class LoginService {
 			throw new IllegalArgumentException("Usuário não encontrado!");
 		}
 
-		// Gerar token
+		// Gerar token email
 		this.tokenService.generateToken(usuarioLogado.getEmail());
 
 		// Enviar email com token
 		this.emailService.sendLoginTokenEmail(usuarioLogado);
+
+		// Criar sessão
+		this.sessaoService.create(usuarioLogado);
 
 		return usuarioLogado;
 	}

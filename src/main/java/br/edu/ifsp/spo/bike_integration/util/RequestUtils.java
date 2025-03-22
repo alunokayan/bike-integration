@@ -40,6 +40,22 @@ public interface RequestUtils {
 
 	/**
 	 *
+	 * getAccessKey
+	 *
+	 *
+	 */
+	public static Optional<String> getAccessKey(HttpServletRequest req) {
+		try {
+			final String headerName = "X-Access-Key";
+			return getHeader(req, headerName);
+		} catch (Exception e) {
+			LOGGER.error("Error on getAccessKey: ", e);
+			return Optional.empty();
+		}
+	}
+
+	/**
+	 *
 	 * getHeader
 	 *
 	 *

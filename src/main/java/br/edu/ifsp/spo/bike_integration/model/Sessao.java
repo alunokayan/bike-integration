@@ -25,11 +25,11 @@ public class Sessao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "token")
+    @Column(name = "token", nullable = false, unique = true)
     private String token;
 
     @OneToOne
-    @JoinColumn(name = "id_usuario")
+    @JoinColumn(name = "id_usuario", nullable = false, unique = true)
     private Usuario usuario;
 
 }

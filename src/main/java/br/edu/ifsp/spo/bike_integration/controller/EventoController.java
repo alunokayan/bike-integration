@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import br.edu.ifsp.spo.bike_integration.annotation.BearerAuthentication;
+import br.edu.ifsp.spo.bike_integration.annotation.BearerToken;
 import br.edu.ifsp.spo.bike_integration.annotation.Role;
 import br.edu.ifsp.spo.bike_integration.dto.EventoDTO;
 import br.edu.ifsp.spo.bike_integration.dto.GeoJsonDTO;
@@ -37,8 +37,8 @@ public class EventoController {
 	@Autowired
 	private EventoService eventoService;
 
-	@Role
-	@BearerAuthentication
+	@Role({ RoleType.PF, RoleType.PJ })
+	@BearerToken
 	@GetMapping(path = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Lista todos os eventos cadastrados, limitando a um numero definido de resultados por pesquisa.")
 	public ResponseEntity<ListEventoResponse> listarEventos(@RequestParam(required = true) Long pagina,
@@ -52,7 +52,7 @@ public class EventoController {
 	}
 
 	@Role(RoleType.PJ)
-	@BearerAuthentication
+	@BearerToken
 	@PostMapping(path = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Cadastra um novo evento.")
 	public ResponseEntity<Evento> cadastrarEvento(@RequestBody EventoDTO evento) {
@@ -60,7 +60,7 @@ public class EventoController {
 	}
 
 	@Role(RoleType.PJ)
-	@BearerAuthentication
+	@BearerToken
 	@PutMapping(path = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Atualiza um evento.")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
@@ -69,7 +69,7 @@ public class EventoController {
 	}
 
 	@Role(RoleType.PJ)
-	@BearerAuthentication
+	@BearerToken
 	@PutMapping(path = "/update/foto/evento", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@Operation(summary = "Atualiza a foto de um evento.")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
@@ -79,7 +79,7 @@ public class EventoController {
 	}
 
 	@Role(RoleType.ADMIN)
-	@BearerAuthentication
+	@BearerToken
 	@DeleteMapping(path = "/delete", produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Deleta um evento.")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
@@ -88,7 +88,7 @@ public class EventoController {
 	}
 
 	@Role({ RoleType.PF, RoleType.PJ })
-	@BearerAuthentication
+	@BearerToken
 	@GetMapping(path = "/get", produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Busca um evento pelo id.")
 	public ResponseEntity<Evento> buscarEvento(@RequestParam(required = true) Long id) {
@@ -96,7 +96,7 @@ public class EventoController {
 	}
 
 	@Role({ RoleType.PF, RoleType.PJ })
-	@BearerAuthentication
+	@BearerToken
 	@GetMapping(path = "/get/as/geoJson", produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Busca um evento pelo id e retorna como GeoJson.")
 	public ResponseEntity<GeoJsonDTO> buscarEventoAsGeoJson(@RequestParam(required = false) Long id)
@@ -105,7 +105,7 @@ public class EventoController {
 	}
 
 	@Role({ RoleType.PF, RoleType.PJ })
-	@BearerAuthentication
+	@BearerToken
 	@GetMapping(path = "/list/by/radius", produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Busca eventos no raio estipulado com base na latitude e longitude informada.")
 	public ResponseEntity<List<Evento>> buscarEventosAsGeoJson(@RequestParam(required = true) Double latitude,

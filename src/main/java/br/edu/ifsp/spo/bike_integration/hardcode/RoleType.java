@@ -2,7 +2,7 @@ package br.edu.ifsp.spo.bike_integration.hardcode;
 
 public enum RoleType {
 
-    ADMIN("ADMIN"), PJ("PJ"), PF("PF"), ALL("ALL");
+    ADMIN("ADMIN"), PJ("PJ"), PF("PF");
 
     private String value;
 

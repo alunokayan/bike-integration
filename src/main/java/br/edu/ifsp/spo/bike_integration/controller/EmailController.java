@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.edu.ifsp.spo.bike_integration.annotation.JwtSecretKey;
+import br.edu.ifsp.spo.bike_integration.annotation.XAccessKey;
 import br.edu.ifsp.spo.bike_integration.annotation.Role;
 import br.edu.ifsp.spo.bike_integration.hardcode.RoleType;
 import br.edu.ifsp.spo.bike_integration.service.EmailService;
@@ -26,7 +26,7 @@ public class EmailController {
 	private EmailService emailService;
 
 	@Role(RoleType.ADMIN)
-	@JwtSecretKey
+	@XAccessKey
 	@PostMapping(path = "/sendAnyMessage", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.OK)
 	public void sendEmail(@RequestParam String message, @RequestParam String to) throws MessagingException {

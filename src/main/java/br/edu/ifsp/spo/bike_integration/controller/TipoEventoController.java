@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.edu.ifsp.spo.bike_integration.annotation.BearerAuthentication;
+import br.edu.ifsp.spo.bike_integration.annotation.BearerToken;
 import br.edu.ifsp.spo.bike_integration.annotation.Role;
 import br.edu.ifsp.spo.bike_integration.dto.TipoEventoDTO;
 import br.edu.ifsp.spo.bike_integration.hardcode.RoleType;
@@ -30,7 +30,7 @@ public class TipoEventoController {
 	private TipoEventoService tipoEventoService;
 
 	@Role({ RoleType.PF, RoleType.PJ })
-	@BearerAuthentication
+	@BearerToken
 	@GetMapping(path = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Lista todos os tipos de eventos cadastrados.")
 	public List<TipoEvento> listarTiposEventos() {
@@ -38,7 +38,7 @@ public class TipoEventoController {
 	}
 
 	@Role(RoleType.ADMIN)
-	@BearerAuthentication
+	@BearerToken
 	@PostMapping(path = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Cadastra um novo tipo de evento.")
 	public ResponseEntity<TipoEvento> cadastrarTipoEvento(@RequestBody TipoEventoDTO tipoEvento) {

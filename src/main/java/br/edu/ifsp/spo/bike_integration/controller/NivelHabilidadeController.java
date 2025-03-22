@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.edu.ifsp.spo.bike_integration.annotation.BearerAuthentication;
+import br.edu.ifsp.spo.bike_integration.annotation.BearerToken;
 import br.edu.ifsp.spo.bike_integration.annotation.Role;
 import br.edu.ifsp.spo.bike_integration.dto.NivelHabilidadeDTO;
 import br.edu.ifsp.spo.bike_integration.hardcode.RoleType;
@@ -29,8 +29,8 @@ public class NivelHabilidadeController {
 	@Autowired
 	private NivelHabilidadeService nivelHabilidadeService;
 
-	@Role
-	@BearerAuthentication
+	@Role({ RoleType.PF, RoleType.PJ })
+	@BearerToken
 	@GetMapping(path = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Lista todos os níveis de habilidade cadastrados.")
 	public List<NivelHabilidade> listarNiveisHabilidade() {
@@ -38,7 +38,7 @@ public class NivelHabilidadeController {
 	}
 
 	@Role(RoleType.ADMIN)
-	@BearerAuthentication
+	@BearerToken
 	@PostMapping(path = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Cadastra um novo nível de habilidade.")
 	public ResponseEntity<NivelHabilidade> cadastrarNivelHabilidade(@RequestBody NivelHabilidadeDTO nivelHabilidade) {
