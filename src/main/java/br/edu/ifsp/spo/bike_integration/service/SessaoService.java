@@ -39,6 +39,7 @@ public class SessaoService {
         Sessao sessao = sessaoRepository.findByUsuario(usuario).orElse(new Sessao());
         sessao.setToken(token);
         sessao.setUsuario(usuario);
+        sessaoRepository.save(sessao);
     }
 
 }

@@ -18,11 +18,7 @@ public class InfraestruturaCicloviariaService {
 	private InfraestruturaCicloviariaRepository infraestruturaCicloviariaRepository;
 
 	public InfraestruturaCicloviaria findById(Long id) {
-		InfraestruturaCicloviaria infra = infraestruturaCicloviariaRepository.findById(id).orElse(null);
-		infra.getTrechos().forEach(trecho -> {
-			trecho.setInfraestruturaCicloviaria(null);
-		});
-		return infra;
+		return infraestruturaCicloviariaRepository.findById(id).orElse(null);
 	}
 
 	public List<InfraestruturaCicloviaria> findInfraestruturasProximasByLocation(double latitude, double longitude,

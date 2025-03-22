@@ -1,5 +1,7 @@
 package br.edu.ifsp.spo.bike_integration.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -32,6 +34,7 @@ public class Trecho {
 	@Column(name = "longitude")
 	private Double longitude;
 
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_infraestrutura_cicloviaria", nullable = false)
 	private InfraestruturaCicloviaria infraestruturaCicloviaria;

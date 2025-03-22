@@ -12,6 +12,7 @@ import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -76,6 +77,9 @@ public class Usuario {
 	@ManyToOne
 	@JoinColumn(name = "id_nivel_habilidade", nullable = false)
 	private NivelHabilidade nivelHabilidade;
+
+	@OneToOne(mappedBy = "usuario", fetch = FetchType.EAGER)
+	private Sessao sessao;
 
 	@Column(name = "foto")
 	private byte[] foto;

@@ -1,7 +1,10 @@
 package br.edu.ifsp.spo.bike_integration.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -28,6 +31,7 @@ public class Sessao {
     @Column(name = "token", nullable = false, unique = true)
     private String token;
 
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "id_usuario", nullable = false, unique = true)
     private Usuario usuario;

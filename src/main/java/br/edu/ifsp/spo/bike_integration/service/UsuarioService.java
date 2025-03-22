@@ -66,7 +66,7 @@ public class UsuarioService {
 		// Salva sessão
 		sessaoService.create(usuario);
 
-		return usuario;
+		return this.loadUsuarioById(usuario.getId());
 
 	}
 
