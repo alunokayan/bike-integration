@@ -9,7 +9,10 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.springframework.security.crypto.codec.Hex;
+
 import br.edu.ifsp.spo.bike_integration.exception.CryptoException;
+import io.netty.handler.codec.DecoderException;
 
 public class CryptoUtil {
 
@@ -28,27 +31,27 @@ public class CryptoUtil {
 			throw new CryptoException("Error generating key", e);
 		}
 	}
-	
+
 	public static String generateKeyAsString() throws CryptoException {
 		return getSecretKeyAsString(generateKey());
 	}
-	
+
 	public static String getSecretKeyAsString(SecretKey secretKey) {
-        byte[] encodedKey = secretKey.getEncoded();
-        return Base64.getEncoder().encodeToString(encodedKey);
-    }
-	
+		byte[] encodedKey = secretKey.getEncoded();
+		return Base64.getEncoder().encodeToString(encodedKey);
+	}
+
 	public static SecretKey getSecretKeyFromString(String secretKey) {
 		byte[] decodedKey = Base64.getDecoder().decode(secretKey);
 		return new SecretKeySpec(decodedKey, 0, decodedKey.length, "AES");
 	}
 
 	public static String encrypt(String value, String key) throws CryptoException {
-		return encrypt(value, getSecretKeyFromString(key));		
+		return encrypt(value, getSecretKeyFromString(key));
 	}
-	
+
 	public static String encrypt(String value, SecretKey key) throws CryptoException {
-		try {	
+		try {
 			Cipher cipher = Cipher.getInstance(ALGORITHM);
 			byte[] iv = new byte[12];
 			SecureRandom random = new SecureRandom();
@@ -80,5 +83,26 @@ public class CryptoUtil {
 		} catch (Exception e) {
 			throw new CryptoException("Error decrypting value", e);
 		}
+	}
+
+	public static String decryptFromHex(String value, String key) throws CryptoException {
+		return decrypt(value, getSecretKeyFromHex(key));
+	}
+
+	public static SecretKey getSecretKeyFromHex(String hexKey) throws CryptoException {
+		try {
+			byte[] decodedKey = Hex.decode(hexKey);
+			return new SecretKeySpec(decodedKey, "AES");
+		} catch (DecoderException e) {
+			throw new CryptoException("Error converting Hex to key", e);
+		}
+	}
+
+	public static String encryptWithHexKey(String value, String hexKey) throws CryptoException {
+		return encrypt(value, getSecretKeyFromHex(hexKey));
+	}
+
+	public static Boolean isEquals(String value, String encryptedValue, String hash) throws CryptoException {
+		return value.equals(decrypt(encryptedValue, getSecretKeyFromString(hash)));
 	}
 }

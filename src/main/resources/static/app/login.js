@@ -21,14 +21,9 @@ createApp({
   methods: {
     async login() {
       this.loginError = '';
-      const formData = new URLSearchParams();
-      formData.append('accessKey', this.loginData.accessKey);
-      formData.append('secretKey', this.loginData.secretKey);
       try {
-        const response = await fetch(`${baseUrl}/v1/auth`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: formData
+        const response = await fetch(`${baseUrl}/app/do/login?username=${this.loginData.accessKey}&password=${this.loginData.secretKey}`, {
+          method: 'POST'
         });
         if (response.ok) {
           const token = await response.json().then(data => data.token);

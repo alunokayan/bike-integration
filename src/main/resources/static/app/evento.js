@@ -24,11 +24,36 @@ createApp({
     };
   },
   mounted() {
+    this.hasAccess();
     this.loadEvents();
     this.loadNivelHabilidade();
     this.loadTipoEvento();
   },
   methods: {
+    hasAccess() {
+      const token = getCookie('token');
+      if (token) {
+        fetch(`${baseUrl}/app/isUsuarioValido`, {
+          method: 'GET',
+          headers: { 'Authorization': `Bearer ${token}` }
+        })
+          .then(response => {
+            console.log(response);
+            if (response.status === 204) {
+              // usuário logado e válido
+            } else if (response.status === 403) {
+              setCookie('token', null, -1);
+              // window.location.href = 'login?expired=true';
+            }
+          })
+          .catch(error => {
+            console.error(error);
+            this.eventError = 'Erro na requisição de login.';
+          });
+      } else {
+        window.location.href = 'login';
+      }
+    },
     async loadEvents() {
       const token = getCookie('token');
       const params = new URLSearchParams();
@@ -57,7 +82,7 @@ createApp({
         if (response.ok) {
           const data = await response.json();
           this.events = data.eventos;
-          this.totalPages = data.totalPages; // supondo que a resposta traga essa informação
+          this.totalPages = data.totalPages;
         } else {
           this.eventError = 'Erro ao carregar eventos.';
         }
@@ -69,7 +94,7 @@ createApp({
     async loadNivelHabilidade() {
       const token = getCookie('token');
       try {
-        const response = await fetch(`${baseUrl}/v1/nivel-habilidade/list`, {
+        const response = await fetch(`${baseUrl}/v1/nivel/habilidade/list`, {
           method: 'GET',
           headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -90,7 +115,7 @@ createApp({
     async loadTipoEvento() {
       const token = getCookie('token');
       try {
-        const response = await fetch(`${baseUrl}/v1/tipo-evento/list`, {
+        const response = await fetch(`${baseUrl}/v1/tipo/evento/list`, {
           method: 'GET',
           headers: { 'Authorization': `Bearer ${token}` }
         });
