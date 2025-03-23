@@ -16,8 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import br.edu.ifsp.spo.bike_integration.annotation.BearerToken;
-import br.edu.ifsp.spo.bike_integration.annotation.XAccessKey;
 import br.edu.ifsp.spo.bike_integration.annotation.Role;
+import br.edu.ifsp.spo.bike_integration.annotation.XAccessKey;
+import br.edu.ifsp.spo.bike_integration.dto.UsuarioAdmDTO;
 import br.edu.ifsp.spo.bike_integration.dto.UsuarioDTO;
 import br.edu.ifsp.spo.bike_integration.hardcode.RoleType;
 import br.edu.ifsp.spo.bike_integration.model.Usuario;
@@ -52,6 +53,14 @@ public class UsuarioController {
 	@Operation(summary = "Cria um novo usuário.")
 	public ResponseEntity<Usuario> create(@RequestBody UsuarioDTO usuarioDto) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.createUsuario(usuarioDto));
+	}
+
+	@Role(RoleType.ADMIN)
+	@XAccessKey
+	@PostMapping(path = "/create/adm", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@Operation(summary = "Cria um novo usuário administrador.")
+	public ResponseEntity<Usuario> createAdm(@RequestBody UsuarioAdmDTO usuarioAdmDto) {
+		return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.createUsuarioAdm(usuarioAdmDto));
 	}
 
 	@Role({ RoleType.PF, RoleType.PJ })

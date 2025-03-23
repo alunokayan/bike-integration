@@ -8,10 +8,10 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import br.edu.ifsp.spo.bike_integration.dto.UsuarioAdmDTO;
 import br.edu.ifsp.spo.bike_integration.dto.UsuarioDTO;
 import br.edu.ifsp.spo.bike_integration.exception.BikeIntegrationCustomException;
 import br.edu.ifsp.spo.bike_integration.hardcode.RoleType;
-import br.edu.ifsp.spo.bike_integration.model.Sessao;
 import br.edu.ifsp.spo.bike_integration.model.Usuario;
 import br.edu.ifsp.spo.bike_integration.repository.UsuarioRepository;
 import br.edu.ifsp.spo.bike_integration.rest.service.OpenStreetMapApiService;
@@ -68,6 +68,19 @@ public class UsuarioService {
 
 		return this.loadUsuarioById(usuario.getId());
 
+	}
+
+	public Usuario createUsuarioAdm(UsuarioAdmDTO usuarioAdmoDto) {
+		// Salva o usuário
+		Usuario usuario = usuarioRepository.save(Usuario.builder().nome(usuarioAdmoDto.getNome())
+				.nomeUsuario(usuarioAdmoDto.getNomeUsuario()).email(usuarioAdmoDto.getEmail())
+				.senha(usuarioAdmoDto.getSenha())
+				.role(RoleType.ADMIN).build());
+
+		// Salva sessão
+		sessaoService.create(usuario);
+
+		return this.loadUsuarioById(usuario.getId());
 	}
 
 	@Modifying

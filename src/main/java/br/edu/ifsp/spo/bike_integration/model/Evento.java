@@ -61,6 +61,9 @@ public class Evento {
 	@JoinColumn(name = "id_usuario")
 	private Usuario usuario;
 
+	@Column(name = "aprovado", nullable = false)
+	private boolean aprovado;
+
 	@Column(name = "foto")
 	private byte[] foto;
 

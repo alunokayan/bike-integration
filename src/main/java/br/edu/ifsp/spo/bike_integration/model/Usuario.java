@@ -75,7 +75,7 @@ public class Usuario {
 	private LocalDateTime dtCriacao;
 
 	@ManyToOne
-	@JoinColumn(name = "id_nivel_habilidade", nullable = false)
+	@JoinColumn(name = "id_nivel_habilidade", nullable = true)
 	private NivelHabilidade nivelHabilidade;
 
 	@OneToOne(mappedBy = "usuario", fetch = FetchType.EAGER)
