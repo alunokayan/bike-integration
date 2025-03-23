@@ -97,6 +97,7 @@ public class WebSecurityConfig {
 		matchers.add(new RegexRequestMatcher("/app/images.*", null));
 		matchers.add(new AntPathRequestMatcher("/app/utils*", null));
 		matchers.add(new AntPathRequestMatcher("/app/home*", null));
+		matchers.add(new AntPathRequestMatcher("/app/", null));
 		matchers.add(new AntPathRequestMatcher("/app/login*", null));
 		matchers.add(new AntPathRequestMatcher("/app/do/login/**", HttpMethod.POST.name()));
 		matchers.add(new AntPathRequestMatcher("/app/logout*", null));

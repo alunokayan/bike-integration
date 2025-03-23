@@ -48,10 +48,10 @@ public class LoginService {
 		}
 
 		// Gerar token email
-		this.tokenService.generateToken(usuarioLogado.getEmail());
+		// this.tokenService.generateToken(usuarioLogado.getEmail());
 
 		// Enviar email com token
-		this.emailService.sendLoginTokenEmail(usuarioLogado);
+		// this.emailService.sendLoginTokenEmail(usuarioLogado);
 
 		// Criar sessão
 		this.sessaoService.create(usuarioLogado);

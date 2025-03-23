@@ -38,12 +38,11 @@ createApp({
           headers: { 'Authorization': `Bearer ${token}` }
         })
           .then(response => {
-            console.log(response);
             if (response.status === 204) {
               // usuário logado e válido
             } else if (response.status === 403) {
               setCookie('token', null, -1);
-              // window.location.href = 'login?expired=true';
+              window.location.href = 'login?expired=true';
             }
           })
           .catch(error => {

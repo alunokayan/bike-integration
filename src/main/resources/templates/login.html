@@ -68,7 +68,7 @@
   <div id="app" class="container mt-4">
     <h2 class="mb-3">Login</h2>
     <div v-if="loginExpired" class="alert alert-warning" role="alert">
-      Seu login expirou. Por favor, faça login novamente.
+      Seu login expirou ou foi revogado por falta de acesso. Faça login novamente.
     </div>
     <form @submit.prevent="login" class="mb-3">
       <div class="mb-3">
