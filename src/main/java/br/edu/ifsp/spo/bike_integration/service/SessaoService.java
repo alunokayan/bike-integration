@@ -28,7 +28,8 @@ public class SessaoService {
     }
 
     public void create(Usuario usuario) {
-        RoleType role = usuario.getCpf() != null ? RoleType.PF : usuario.getCnpj() != null ? RoleType.PJ : null;
+        RoleType role = usuario.getRole() != null ? usuario.getRole()
+                : usuario.getCpf() != null ? RoleType.PF : usuario.getCnpj() != null ? RoleType.PJ : RoleType.ADMIN;
         String token = jwtService.create(JwtUserDTO.builder()
                 .nickname(usuario.getNomeUsuario())
                 .email(usuario.getEmail())

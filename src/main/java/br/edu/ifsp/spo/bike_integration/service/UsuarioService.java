@@ -72,7 +72,7 @@ public class UsuarioService {
 
 	public Usuario createUsuarioAdm(UsuarioAdmDTO usuarioAdmoDto) {
 		// Salva o usuário
-		Usuario usuario = usuarioRepository.save(Usuario.builder().nome(usuarioAdmoDto.getNome())
+		Usuario usuario = usuarioRepository.saveAndFlush(Usuario.builder().nome(usuarioAdmoDto.getNome())
 				.nomeUsuario(usuarioAdmoDto.getNomeUsuario()).email(usuarioAdmoDto.getEmail())
 				.senha(usuarioAdmoDto.getSenha())
 				.role(RoleType.ADMIN).build());
