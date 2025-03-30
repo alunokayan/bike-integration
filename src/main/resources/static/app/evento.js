@@ -8,6 +8,7 @@ createApp({
       eventError: '',
       currentPage: 1,
       totalPages: 0,
+      totalEvents: 1,
       filters: {
         nome: '',
         descricao: '',
@@ -17,7 +18,8 @@ createApp({
         faixaKm: '',
         tipoEvento: '',
         nivelHabilidade: '',
-        gratuito: '' // pode ser 'true' ou 'false'
+        gratuito: '',
+        aprovado: ''
       },
       tiposEvento: [],
       niveisHabilidade: []
@@ -68,9 +70,10 @@ createApp({
       if (this.filters.tipoEvento) params.append('tipoEvento', this.filters.tipoEvento);
       if (this.filters.nivelHabilidade) params.append('nivelHabilidade', this.filters.nivelHabilidade);
       if (this.filters.gratuito) params.append('gratuito', this.filters.gratuito);
+      if (this.filters.aprovado) params.append('aprovado', this.filters.aprovado);
       
       try {
-        const response = await fetch(`${baseUrl}/v1/evento/list?${params.toString()}`, {
+        const response = await fetch(`${baseUrl}/v1/evento/?${params.toString()}`, {
           method: 'GET',
           headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -81,7 +84,8 @@ createApp({
         if (response.ok) {
           const data = await response.json();
           this.events = data.eventos;
-          this.totalPages = data.totalPages;
+          this.totalPages = data.totalPaginas;
+          this.totalEvents = data.totalRegistros;
         } else {
           this.eventError = 'Erro ao carregar eventos.';
         }
@@ -93,7 +97,7 @@ createApp({
     async loadNivelHabilidade() {
       const token = getCookie('token');
       try {
-        const response = await fetch(`${baseUrl}/v1/nivel/habilidade/list`, {
+        const response = await fetch(`${baseUrl}/v1/nivel/habilidade/`, {
           method: 'GET',
           headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -114,7 +118,7 @@ createApp({
     async loadTipoEvento() {
       const token = getCookie('token');
       try {
-        const response = await fetch(`${baseUrl}/v1/tipo/evento/list`, {
+        const response = await fetch(`${baseUrl}/v1/tipo/evento/`, {
           method: 'GET',
           headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -134,12 +138,110 @@ createApp({
       }
 
     },
+    async aprovarEvento(id) {
+      const token = getCookie('token');
+      try {
+        const response = await fetch(`${baseUrl}/v1/evento/${id}/${true}`, {
+          method: 'PUT',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (response.status === 403) {
+          setCookie('token', null, -1);
+          window.location.href = 'login?expired=true';
+        }
+        if (response.ok) {
+          this.loadEvents();
+        } else {
+          this.eventError = 'Erro ao aprovar evento.';
+        }
+      } catch (error) {
+        console.error(error);
+        this.eventError = 'Erro na requisição para aprovar evento.';
+      }
+    },
+    async reprovarEvento(id) {
+      const token = getCookie('token');
+      try {
+        const response = await fetch(`${baseUrl}/v1/evento/${id}/${false}`, {
+          method: 'PUT',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (response.status === 403) {
+          setCookie('token', null, -1);
+          window.location.href = 'login?expired=true';
+        }
+        if (response.ok) {
+          this.loadEvents();
+        } else {
+          this.eventError = 'Erro ao reprovar evento.';
+        }
+      } catch (error) {
+        console.error(error);
+        this.eventError = 'Erro na requisição para reprovar evento.';
+      }
+    },
+    async deleteEvento(id) {
+      const token = getCookie('token');
+      try {
+        const response = await fetch(`${baseUrl}/v1/evento/${id}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (response.status === 403) {
+          setCookie('token', null, -1);
+          window.location.href = 'login?expired=true';
+        }
+        if (response.ok) {
+          this.loadEvents();
+        } else {
+          this.eventError = 'Erro ao deletar evento.';
+        }
+      } catch (error) {
+        console.error(error);
+        this.eventError = 'Erro na requisição para deletar evento.';
+      }
+    },
     logout() {
       setCookie('token', null, -1);
       window.location.href = 'home';
     },
     goToCreateEvent() {
-      window.location.href = 'eventoForm';
+      const modalElement = document.getElementById('createEventModal');
+      const modalInstance = new bootstrap.Modal(modalElement);
+      modalInstance.show();
+    },
+    submitEvent() {
+      const jsonText = document.getElementById('jsonEventInput').value;
+      let eventData;
+      try {
+          eventData = JSON.parse(jsonText);
+      } catch (error) {
+          this.eventError = 'JSON inválido. Verifique a sintaxe.';
+          return;
+      }
+      const token = getCookie('token');
+      fetch(`${baseUrl}/v1/evento/`, {
+          method: 'POST',
+          headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(eventData)
+      })
+      .then(response => {
+          if (response.ok) {
+              this.loadEvents();
+              const modalElement = document.getElementById('createEventModal');
+              const modalInstance = bootstrap.Modal.getInstance(modalElement);
+              modalInstance.hide();
+          } else {
+              this.eventError = 'Erro ao criar evento.';
+          }
+      })
+      .catch(error => {
+          console.error(error);
+          this.eventError = 'Erro na requisição para criar evento.';
+      });
     },
     nextPage() {
       if (this.currentPage < this.totalPages) {

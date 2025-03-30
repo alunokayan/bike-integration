@@ -53,7 +53,7 @@ public class AppController {
         return "evento.html";
     }
 
-    @RequestMapping(path = "/do/login", method = RequestMethod.POST)
+    @RequestMapping(path = "/login", method = RequestMethod.POST)
     public ResponseEntity<Map<String, String>> doLogin(HttpServletResponse response, String username, String password)
             throws BikeIntegrationCustomException, CryptoException {
         Usuario usuario = usuarioService.loadUsuarioByNomeUsuario(username);

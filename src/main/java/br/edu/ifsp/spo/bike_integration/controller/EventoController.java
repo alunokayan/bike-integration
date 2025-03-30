@@ -52,9 +52,10 @@ public class EventoController {
 			@RequestParam(required = false) Long faixaKm,
 			@RequestParam(required = false) Long tipoEvento,
 			@RequestParam(required = false) Long nivelHabilidade,
-			@RequestParam(required = false) Boolean gratuito) {
+			@RequestParam(required = false) Boolean gratuito,
+			@RequestParam(required = false) Boolean aprovado) {
 		return ResponseEntity.ok(eventoService.listarEventos(pagina, nome, descricao, data, cidade, estado, faixaKm,
-				tipoEvento, nivelHabilidade, gratuito));
+				tipoEvento, nivelHabilidade, gratuito, aprovado));
 	}
 
 	@Role(RoleType.PJ)
@@ -72,6 +73,15 @@ public class EventoController {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void atualizarEvento(@PathVariable("id") Long id, @RequestBody EventoDTO evento) {
 		eventoService.updateEvento(id, evento);
+	}
+
+	@Role(RoleType.PJ)
+	@BearerToken
+	@PutMapping(path = "/{id}/{aprovar}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@Operation(summary = "Aprova um evento pelo ID.")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void aprovarEvento(@PathVariable("id") Long id, @PathVariable("aprovar") Boolean aprovar) {
+		eventoService.aprovarEvento(id, aprovar != null ? aprovar : false);
 	}
 
 	@Role(RoleType.PJ)

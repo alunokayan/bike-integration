@@ -22,7 +22,7 @@ createApp({
     async login() {
       this.loginError = '';
       try {
-        const response = await fetch(`${baseUrl}/app/do/login?username=${this.loginData.accessKey}&password=${this.loginData.secretKey}`, {
+        const response = await fetch(`${baseUrl}/app/login?username=${this.loginData.accessKey}&password=${this.loginData.secretKey}`, {
           method: 'POST'
         });
         if (response.ok) {

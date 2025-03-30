@@ -59,7 +59,7 @@ public class EventoService {
 	}
 
 	public ListEventoResponse listarEventos(Long pagina, String nome, String descricao, String data, String cidade,
-			String estado, Long faixaKm, Long tipoEvento, Long nivelHabilidade, Boolean gratuito) {
+			String estado, Long faixaKm, Long tipoEvento, Long nivelHabilidade, Boolean gratuito, Boolean aprovado) {
 
 		Long limit = PaginationType.RESULTS_PER_PAGE.getValue();
 
@@ -68,10 +68,10 @@ public class EventoService {
 		String dataAjustada = DateUtils.fixFormattDate(data);
 
 		List<Evento> eventos = eventoRepository.findAll(limit, offset, nome, descricao, dataAjustada, cidade, estado,
-				faixaKm, tipoEvento, nivelHabilidade, gratuito);
+				faixaKm, tipoEvento, nivelHabilidade, gratuito, aprovado);
 
 		Long count = eventoRepository.countAll(nome, descricao, dataAjustada, cidade, estado, faixaKm, tipoEvento,
-				nivelHabilidade, gratuito);
+				nivelHabilidade, gratuito, aprovado);
 
 		Long totalPaginas = (long) Math.ceil(count / (double) limit);
 
@@ -114,6 +114,16 @@ public class EventoService {
 			evento.setUsuario(usuario);
 
 			eventoRepository.save(evento);
+		}
+	}
+
+	public void aprovarEvento(Long id, Boolean aprovar) {
+		Evento evento = eventoRepository.findById(id).orElse(null);
+		if (evento != null) {
+			evento.setAprovado(aprovar);
+			eventoRepository.save(evento);
+		} else {
+			throw new BikeIntegrationCustomException("Evento não encontrado.");
 		}
 	}
 
