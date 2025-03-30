@@ -87,6 +87,8 @@ public class WebSecurityConfig {
 	public static List<RequestMatcher> getPublicRequestMatchers() {
 		List<RequestMatcher> matchers = new ArrayList<>();
 		matchers.add(EndpointRequest.toAnyEndpoint());
+		matchers.add(new AntPathRequestMatcher("/actuator/**", null));
+		matchers.add(new AntPathRequestMatcher("/error", null));
 		matchers.add(new RegexRequestMatcher("/v3/api-docs.*", null));
 		matchers.add(new RegexRequestMatcher("/api-docs.*", null));
 		matchers.add(new RegexRequestMatcher("/swagger.*", null));

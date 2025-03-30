@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import br.edu.ifsp.spo.bike_integration.aws.service.S3Service;
 import br.edu.ifsp.spo.bike_integration.dto.UsuarioAdmDTO;
 import br.edu.ifsp.spo.bike_integration.dto.UsuarioDTO;
 import br.edu.ifsp.spo.bike_integration.exception.BikeIntegrationCustomException;
@@ -15,9 +17,12 @@ import br.edu.ifsp.spo.bike_integration.hardcode.RoleType;
 import br.edu.ifsp.spo.bike_integration.model.Usuario;
 import br.edu.ifsp.spo.bike_integration.repository.UsuarioRepository;
 import br.edu.ifsp.spo.bike_integration.rest.service.OpenStreetMapApiService;
-import br.edu.ifsp.spo.bike_integration.util.FormatUtil;
+import br.edu.ifsp.spo.bike_integration.util.FormatUtils;
+import br.edu.ifsp.spo.bike_integration.util.S3Utils;
 import br.edu.ifsp.spo.bike_integration.util.validate.CpfValidate;
 import jakarta.transaction.Transactional;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 
 @Service
 public class UsuarioService {
@@ -34,6 +39,12 @@ public class UsuarioService {
 	@Autowired
 	private SessaoService sessaoService;
 
+	@Autowired
+	private S3Service s3Service;
+
+	@Value("${aws.s3.bucket-name}")
+	private String bucketName;
+
 	public Usuario loadUsuarioById(Long id) {
 		return usuarioRepository.findById(id).orElse(null);
 	}
@@ -49,7 +60,7 @@ public class UsuarioService {
 	public Usuario createUsuario(UsuarioDTO usuarioDto) {
 		// Busca as coordenadas do endereço
 		Map<String, Double> coordenadas = openStreetMapApiService
-				.buscarCoordenadasPorEndereco(FormatUtil.formatEnderecoToOpenStreetMapApi(usuarioDto.getEndereco()));
+				.buscarCoordenadasPorEndereco(FormatUtils.formatEnderecoToOpenStreetMapApi(usuarioDto.getEndereco()));
 		usuarioDto.getEndereco().setLatitude(coordenadas.get("lat"));
 		usuarioDto.getEndereco().setLongitude(coordenadas.get("lon"));
 
@@ -103,7 +114,21 @@ public class UsuarioService {
 
 	public void updateFotoUsuario(Long id, MultipartFile file) {
 		try {
-			usuarioRepository.saveFoto(id, file.getBytes());
+			Usuario usuario = usuarioRepository.findById(id).orElse(null);
+			if (usuario != null) {
+				String s3Key = S3Utils.createS3Key("usuario", id, file);
+				PutObjectResponse response = s3Service.put(PutObjectRequest.builder()
+						.bucket(bucketName)
+						.key(s3Key)
+						.contentType(file.getContentType())
+						.build(), file.getBytes());
+				if (response.sdkHttpResponse().isSuccessful()) {
+					usuario.setS3Key(s3Key);
+					usuarioRepository.save(usuario);
+				} else {
+					throw new BikeIntegrationCustomException("Erro ao salvar a foto do usuário.");
+				}
+			}
 		} catch (IOException e) {
 			throw new BikeIntegrationCustomException("Erro ao salvar foto do usuário", e);
 		}

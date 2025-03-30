@@ -31,19 +31,18 @@ public class NivelHabilidadeController {
 
 	@Role({ RoleType.PF, RoleType.PJ })
 	@BearerToken
-	@GetMapping(path = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
-	@Operation(summary = "Lista todos os níveis de habilidade cadastrados.")
+	@GetMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE)
+	@Operation(summary = "Retorna todos os níveis de habilidade cadastrados.")
 	public List<NivelHabilidade> listarNiveisHabilidade() {
 		return nivelHabilidadeService.listarNiveisHabilidade();
 	}
 
 	@Role(RoleType.ADMIN)
 	@BearerToken
-	@PostMapping(path = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@Operation(summary = "Cadastra um novo nível de habilidade.")
+	@PostMapping(path = "/", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@Operation(summary = "Cria um novo nível de habilidade.")
 	public ResponseEntity<NivelHabilidade> cadastrarNivelHabilidade(@RequestBody NivelHabilidadeDTO nivelHabilidade) {
 		return ResponseEntity.status(HttpStatus.CREATED)
 				.body(nivelHabilidadeService.cadastrarNivelHabilidade(nivelHabilidade));
 	}
-
 }

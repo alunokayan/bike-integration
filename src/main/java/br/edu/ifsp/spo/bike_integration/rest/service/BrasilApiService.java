@@ -17,7 +17,7 @@ import br.edu.ifsp.spo.bike_integration.model.ConfiguracaoApiExterna;
 import br.edu.ifsp.spo.bike_integration.response.BrasilApiCepResponse;
 import br.edu.ifsp.spo.bike_integration.response.BrasilApiCnpjResponse;
 import br.edu.ifsp.spo.bike_integration.service.ConfiguracaoApiExternaService;
-import br.edu.ifsp.spo.bike_integration.util.FormatUtil;
+import br.edu.ifsp.spo.bike_integration.util.FormatUtils;
 import jakarta.annotation.PostConstruct;
 
 @Service
@@ -55,7 +55,7 @@ public class BrasilApiService {
 
 		try {
 			return restTemplate.getForObject(
-					configuracao.getUrl() + BrasilApiType.CEP.getEndpoint() + FormatUtil.removeNonNumeric(cep),
+					configuracao.getUrl() + BrasilApiType.CEP.getEndpoint() + FormatUtils.removeNonNumeric(cep),
 					BrasilApiCepResponse.class);
 		} catch (Exception e) {
 			return buscarEnderecoViaCep(cep);
@@ -73,12 +73,12 @@ public class BrasilApiService {
 
 	public BrasilApiCnpjResponse buscarEmpresaPorCnpj(String cnpj) throws NotFoundException {
 		if (!cnpj.matches("\\d{2}\\.?\\d{3}\\.?\\d{3}/?\\d{4}-?\\d{2}")) {
-			cnpj = FormatUtil.formatCnpj(cnpj);
+			cnpj = FormatUtils.formatCnpj(cnpj);
 		}
 
 		try {
 			return restTemplate.getForObject(
-					configuracao.getUrl() + BrasilApiType.CNPJ.getEndpoint() + FormatUtil.removeNonNumeric(cnpj),
+					configuracao.getUrl() + BrasilApiType.CNPJ.getEndpoint() + FormatUtils.removeNonNumeric(cnpj),
 					BrasilApiCnpjResponse.class);
 		} catch (Exception e) {
 			logger.error("Erro ao buscar empresa pelo CNPJ: " + cnpj, e);

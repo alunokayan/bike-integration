@@ -64,8 +64,8 @@ public class Evento {
 	@Column(name = "aprovado", nullable = false)
 	private boolean aprovado;
 
-	@Column(name = "foto")
-	private byte[] foto;
+	@Column(name = "s3_key")
+	private String s3Key;
 
 	@PrePersist
 	void prePersist() {

@@ -31,18 +31,18 @@ public class TipoEventoController {
 
 	@Role({ RoleType.PF, RoleType.PJ })
 	@BearerToken
-	@GetMapping(path = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
-	@Operation(summary = "Lista todos os tipos de eventos cadastrados.")
-	public List<TipoEvento> listarTiposEventos() {
-		return tipoEventoService.listarTiposEventos();
+	@GetMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE)
+	@Operation(summary = "Retorna todos os tipos de eventos cadastrados.")
+	public ResponseEntity<List<TipoEvento>> listarTiposEventos() {
+		return ResponseEntity.ok(tipoEventoService.listarTiposEventos());
 	}
 
 	@Role(RoleType.ADMIN)
 	@BearerToken
-	@PostMapping(path = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(path = "/", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Cadastra um novo tipo de evento.")
 	public ResponseEntity<TipoEvento> cadastrarTipoEvento(@RequestBody TipoEventoDTO tipoEvento) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(tipoEventoService.cadastrarTipoEvento(tipoEvento));
+		return ResponseEntity.status(HttpStatus.CREATED)
+				.body(tipoEventoService.cadastrarTipoEvento(tipoEvento));
 	}
-
 }

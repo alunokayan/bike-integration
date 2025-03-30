@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.edu.ifsp.spo.bike_integration.annotation.BearerToken;
-import br.edu.ifsp.spo.bike_integration.annotation.XAccessKey;
 import br.edu.ifsp.spo.bike_integration.annotation.Role;
+import br.edu.ifsp.spo.bike_integration.annotation.XAccessKey;
 import br.edu.ifsp.spo.bike_integration.dto.UsuarioLoginDTO;
 import br.edu.ifsp.spo.bike_integration.exception.CryptoException;
 import br.edu.ifsp.spo.bike_integration.hardcode.RoleType;
@@ -33,8 +33,8 @@ public class LoginController {
 
 	@Role(RoleType.ADMIN)
 	@XAccessKey
-	@PostMapping(path = "/do", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@Operation(summary = "Realiza o login.")
+	@PostMapping(path = "/", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@Operation(summary = "Realiza a autenticação do usuário.")
 	public ResponseEntity<Usuario> login(@RequestBody UsuarioLoginDTO usuario)
 			throws CryptoException, MessagingException {
 		return ResponseEntity.ok(loginService.login(usuario));
@@ -42,10 +42,12 @@ public class LoginController {
 
 	@Role({ RoleType.PF, RoleType.PJ })
 	@BearerToken
-	@PostMapping(path = "/recover")
-	@Operation(summary = "Recupera a senha.")
+	@PostMapping(path = "/recover", produces = MediaType.APPLICATION_JSON_VALUE)
+	@Operation(summary = "Recupera a senha utilizando token e nova senha informada.")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void recoverPassword(@RequestParam String idUsuario, @RequestParam String token, String novaSenha)
+	public void recoverPassword(@RequestParam String idUsuario,
+			@RequestParam String token,
+			@RequestParam String novaSenha)
 			throws MessagingException, CryptoException {
 		loginService.recoverPassword(idUsuario, token, novaSenha);
 	}

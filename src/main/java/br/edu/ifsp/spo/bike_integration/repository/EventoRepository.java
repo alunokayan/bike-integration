@@ -62,11 +62,6 @@ public interface EventoRepository extends JpaRepository<Evento, Long> {
 
 	@Modifying
 	@Transactional
-	@Query("UPDATE Evento e SET e.foto = :foto WHERE e.id = :id")
-	void saveFoto(@Param("id") Long id, @Param("foto") byte[] foto);
-
-	@Modifying
-	@Transactional
 	@Query("DELETE FROM Evento e WHERE e.usuario = :usuario")
 	void deleteByUsuario(Usuario usuario);
 }

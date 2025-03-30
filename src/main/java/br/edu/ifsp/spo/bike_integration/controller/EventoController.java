@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,13 +40,18 @@ public class EventoController {
 
 	@Role({ RoleType.PF, RoleType.PJ })
 	@BearerToken
-	@GetMapping(path = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
-	@Operation(summary = "Lista todos os eventos cadastrados, limitando a um numero definido de resultados por pesquisa.")
-	public ResponseEntity<ListEventoResponse> listarEventos(@RequestParam(required = true) Long pagina,
-			@RequestParam(required = false) String nome, @RequestParam(required = false) String descricao,
-			@RequestParam(required = false) String data, @RequestParam(required = false) String cidade,
-			@RequestParam(required = false) String estado, @RequestParam(required = false) Long faixaKm,
-			@RequestParam(required = false) Long tipoEvento, @RequestParam(required = false) Long nivelHabilidade,
+	@GetMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE)
+	@Operation(summary = "Lista todos os eventos com paginação e filtros.")
+	public ResponseEntity<ListEventoResponse> listarEventos(
+			@RequestParam(required = true) Long pagina,
+			@RequestParam(required = false) String nome,
+			@RequestParam(required = false) String descricao,
+			@RequestParam(required = false) String data,
+			@RequestParam(required = false) String cidade,
+			@RequestParam(required = false) String estado,
+			@RequestParam(required = false) Long faixaKm,
+			@RequestParam(required = false) Long tipoEvento,
+			@RequestParam(required = false) Long nivelHabilidade,
 			@RequestParam(required = false) Boolean gratuito) {
 		return ResponseEntity.ok(eventoService.listarEventos(pagina, nome, descricao, data, cidade, estado, faixaKm,
 				tipoEvento, nivelHabilidade, gratuito));
@@ -53,63 +59,63 @@ public class EventoController {
 
 	@Role(RoleType.PJ)
 	@BearerToken
-	@PostMapping(path = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@Operation(summary = "Cadastra um novo evento.")
+	@PostMapping(path = "/", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@Operation(summary = "Cria um novo evento.")
 	public ResponseEntity<Evento> cadastrarEvento(@RequestBody EventoDTO evento) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(eventoService.createEvento(evento));
 	}
 
 	@Role(RoleType.PJ)
 	@BearerToken
-	@PutMapping(path = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@Operation(summary = "Atualiza um evento.")
+	@PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@Operation(summary = "Atualiza um evento pelo ID.")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void atualizarEvento(@RequestParam(required = true) Long id, @RequestBody EventoDTO evento) {
+	public void atualizarEvento(@PathVariable("id") Long id, @RequestBody EventoDTO evento) {
 		eventoService.updateEvento(id, evento);
 	}
 
 	@Role(RoleType.PJ)
 	@BearerToken
-	@PutMapping(path = "/update/foto/evento", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	@Operation(summary = "Atualiza a foto de um evento.")
+	@PutMapping(path = "/{id}/foto", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@Operation(summary = "Atualiza a foto do evento.")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void atualizarFotoEvento(@RequestParam(required = true) Long id,
-			@RequestParam(required = true) MultipartFile file) {
+	public void atualizarFotoEvento(@PathVariable("id") Long id, @RequestParam("file") MultipartFile file) {
 		eventoService.updateFotoEvento(id, file);
 	}
 
 	@Role(RoleType.ADMIN)
 	@BearerToken
-	@DeleteMapping(path = "/delete", produces = MediaType.APPLICATION_JSON_VALUE)
-	@Operation(summary = "Deleta um evento.")
+	@DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@Operation(summary = "Deleta um evento pelo ID.")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void deletarEvento(@RequestParam(required = true) Long id) {
+	public void deletarEvento(@PathVariable("id") Long id) {
 		eventoService.deleteEvento(id);
 	}
 
 	@Role({ RoleType.PF, RoleType.PJ })
 	@BearerToken
-	@GetMapping(path = "/get", produces = MediaType.APPLICATION_JSON_VALUE)
-	@Operation(summary = "Busca um evento pelo id.")
-	public ResponseEntity<Evento> buscarEvento(@RequestParam(required = true) Long id) {
+	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@Operation(summary = "Busca um evento pelo ID.")
+	public ResponseEntity<Evento> buscarEvento(@PathVariable("id") Long id) {
 		return ResponseEntity.ok(eventoService.buscarEvento(id));
 	}
 
 	@Role({ RoleType.PF, RoleType.PJ })
 	@BearerToken
-	@GetMapping(path = "/get/as/geoJson", produces = MediaType.APPLICATION_JSON_VALUE)
-	@Operation(summary = "Busca um evento pelo id e retorna como GeoJson.")
-	public ResponseEntity<GeoJsonDTO> buscarEventoAsGeoJson(@RequestParam(required = false) Long id)
-			throws NotFoundException {
+	@GetMapping(path = "/{id}/geojson", produces = MediaType.APPLICATION_JSON_VALUE)
+	@Operation(summary = "Busca um evento pelo ID e retorna no formato GeoJson.")
+	public ResponseEntity<GeoJsonDTO> buscarEventoAsGeoJson(@PathVariable("id") Long id) throws NotFoundException {
 		return ResponseEntity.ok(eventoService.buscarEventoAsGeoJsonById(id));
 	}
 
 	@Role({ RoleType.PF, RoleType.PJ })
 	@BearerToken
-	@GetMapping(path = "/list/by/radius", produces = MediaType.APPLICATION_JSON_VALUE)
-	@Operation(summary = "Busca eventos no raio estipulado com base na latitude e longitude informada.")
-	public ResponseEntity<List<Evento>> buscarEventosAsGeoJson(@RequestParam(required = true) Double latitude,
-			@RequestParam(required = true) Double longitude, @RequestParam(required = true) Double raio) {
+	@GetMapping(path = "/radius", produces = MediaType.APPLICATION_JSON_VALUE)
+	@Operation(summary = "Busca eventos em um raio estipulado com base na latitude e longitude informadas.")
+	public ResponseEntity<List<Evento>> buscarEventosByRadius(
+			@RequestParam(required = true) Double latitude,
+			@RequestParam(required = true) Double longitude,
+			@RequestParam(required = true) Double raio) {
 		return ResponseEntity.ok(eventoService.buscarEventosByRadius(latitude, longitude, raio));
 	}
 }

@@ -1,17 +1,17 @@
-package br.edu.ifsp.spo.bike_integration.util;
+package br.edu.ifsp.spo.bike_integration.factory;
 
 import java.util.List;
 
 import br.edu.ifsp.spo.bike_integration.dto.GeoJsonDTO;
 import br.edu.ifsp.spo.bike_integration.model.Evento;
 import br.edu.ifsp.spo.bike_integration.model.InfraestruturaCicloviaria;
-import br.edu.ifsp.spo.bike_integration.util.geojson.GeoJsonEventoUtil;
-import br.edu.ifsp.spo.bike_integration.util.geojson.GeoJsonInfraestruturaUtil;
+import br.edu.ifsp.spo.bike_integration.util.geojson.GeoJsonEventoUtils;
+import br.edu.ifsp.spo.bike_integration.util.geojson.GeoJsonInfraestruturaUtils;
 
 public class GeoJsonUtilFactory {
 
-	private static GeoJsonEventoUtil eventoUtil = new GeoJsonEventoUtil();
-	private static GeoJsonInfraestruturaUtil infraestruturaUtil = new GeoJsonInfraestruturaUtil();
+	private static GeoJsonEventoUtils eventoUtil = new GeoJsonEventoUtils();
+	private static GeoJsonInfraestruturaUtils infraestruturaUtil = new GeoJsonInfraestruturaUtils();
 
 	private GeoJsonUtilFactory() {
 	}

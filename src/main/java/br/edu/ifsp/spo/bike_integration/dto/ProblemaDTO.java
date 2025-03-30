@@ -21,15 +21,21 @@ public class ProblemaDTO {
 	@Schema(example = "Buraco na pista")
 	private String descricao;
 
+	@Schema(example = "1")
+	private Long idTipoProblema;
+
 	@Hidden
 	private LocalDateTime dtCriacao;
 
-	@Hidden
+	@Schema(example = "false")
 	private Boolean validado;
 
-	@Hidden
+	@Schema(example = "true")
 	private Boolean ativo;
 
-	@Schema(example = "1")
-	private Long idTrecho;
+	@Schema(example = "-23.123456")
+	private Double latitude;
+
+	@Schema(example = "-23.123456")
+	private Double longitude;
 }

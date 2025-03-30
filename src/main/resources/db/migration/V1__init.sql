@@ -31,7 +31,7 @@ create table if not exists `usuario` (
     `cpf` varchar(255),
     `cnpj` varchar(255),
     `id_nivel_habilidade` bigint,
-    `foto` blob,
+    `s3_key` varchar(255),
     constraint `fk_nivel_habilidade` foreign key (`id_nivel_habilidade`) references `nivel_habilidade`(`id`)
 );
 
@@ -69,7 +69,7 @@ create table if not exists `evento` (
     `id_tipo_evento` bigint not null,
     `id_usuario` bigint not null,
     `aprovado` boolean not null default false,
-    `foto` blob,
+    `s3_key` varchar(255),
     constraint `fk_tipo_evento` foreign key (`id_tipo_evento`) references `tipo_evento`(`id`),
     constraint `fk_usuario_evento` foreign key (`id_usuario`) references `usuario`(`id`)
 );
@@ -87,7 +87,6 @@ create table if not exists `infraestrutura_cicloviaria` (
     `nota_media` int not null,
     `geometria` varchar(255) not null,
     `id_tipo_infraestrutura_cicloviaria` bigint not null,
-    `foto` blob,
     constraint `fk_tipo_infraestrutura_cicloviaria` foreign key (`id_tipo_infraestrutura_cicloviaria`) references `tipo_infraestrutura_cicloviaria`(`id`)
 );
 
@@ -110,15 +109,23 @@ create table if not exists `avaliacao_infraestrutura_cicloviaria` (
     constraint `fk_infraestrutura_avaliacao` foreign key (`id_infraestrutura_cicloviaria`) references `infraestrutura_cicloviaria`(`id`)
 );
 
+create table if not exists `tipo_problema` (
+    `id` bigint primary key auto_increment,
+    `nome` varchar(255) not null,
+    `descricao` varchar(255) not null
+);
+
 create table if not exists `problema` (
     `id` bigint primary key auto_increment,
     `descricao` varchar(255) not null,
-    `foto` blob,
+    `s3_key` varchar(255),
     `dt_criacao` timestamp default (now()),
     `validado` boolean not null,
     `ativo` boolean not null,
     `id_trecho` bigint not null,
-    constraint `fk_trecho_problema` foreign key (`id_trecho`) references `trecho`(`id`)
+    `id_tipo_problema` bigint not null,
+    constraint `fk_trecho_problema` foreign key (`id_trecho`) references `trecho`(`id`),
+    constraint `fk_tipo_problema` foreign key (`id_tipo_problema`) references `tipo_problema`(`id`)
 );
 
 -- Inserts básicos
@@ -161,6 +168,20 @@ insert into `tipo_evento` (nome, id_nivel_habilidade) values
     ('Randonnée/Audax', 2), -- Intermediário
     ('Passeios ciclísticos', 1), -- Iniciante
     ('Desafios beneficentes', 1)  -- Iniciante
+on duplicate key update nome = values(nome);
+
+insert into `tipo_problema` (nome, descricao) values
+    ('Buraco', 'Buraco na pista ou calçada que pode causar acidentes.'),
+    ('Desnível', 'Desnível na pista ou calçada que pode causar acidentes.'),
+    ('Obstrução', 'Obstrução na pista ou calçada que pode causar acidentes.'),
+    ('Falta de sinalização', 'Falta de sinalização adequada para ciclistas.'),
+    ('Sinalização inadequada', 'Sinalização inadequada para ciclistas.'),
+    ('Falta de iluminação', 'Falta de iluminação adequada para ciclistas.'),
+    ('Iluminação inadequada', 'Iluminação inadequada para ciclistas.'),
+    ('Falta de manutenção', 'Falta de manutenção na pista ou calçada que pode causar acidentes.'),
+    ('Falta de espaço', 'Falta de espaço adequado para ciclistas.'),
+    ('Condições climáticas', 'Condições climáticas que podem afetar a segurança dos ciclistas.'),
+    ('Outros', 'Outros problemas que podem afetar a segurança dos ciclistas.')
 on duplicate key update nome = values(nome);
 
 BEGIN;

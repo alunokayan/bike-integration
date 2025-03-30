@@ -1,0 +1,22 @@
+package br.edu.ifsp.spo.bike_integration.util;
+
+import org.springframework.web.multipart.MultipartFile;
+
+public interface S3Utils {
+
+    /**
+     * Create S3Key for the given file name and user ID.
+     *
+     * @param entity the entity name (e.g., "usuario", "evento", "problema")
+     * @param id     the ID of the entity (e.g., user ID, event ID, problem ID)
+     * @param file   the MultipartFile to be uploaded
+     * @return the S3Key as a String
+     */
+    static String createS3Key(String entity, Long id, MultipartFile file) {
+        String fileName = file.getOriginalFilename();
+        String[] splitFileName = fileName.split("\\.");
+        String extension = splitFileName[splitFileName.length - 1];
+        return entity + "/" + id + "/image" + "." + extension;
+    }
+
+}

@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 import br.edu.ifsp.spo.bike_integration.exception.BikeIntegrationCustomException;
 
-public interface DateUtil {
+public interface DateUtils {
 
 	public static String getFormattedHyphenStringDate(LocalDateTime date) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

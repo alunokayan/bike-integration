@@ -6,7 +6,7 @@ import br.edu.ifsp.spo.bike_integration.converter.EnderecoConverter;
 import br.edu.ifsp.spo.bike_integration.dto.EnderecoDTO;
 import br.edu.ifsp.spo.bike_integration.exception.CryptoException;
 import br.edu.ifsp.spo.bike_integration.hardcode.RoleType;
-import br.edu.ifsp.spo.bike_integration.util.CryptoUtil;
+import br.edu.ifsp.spo.bike_integration.util.CryptoUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -81,13 +81,13 @@ public class Usuario {
 	@OneToOne(mappedBy = "usuario", fetch = FetchType.EAGER)
 	private Sessao sessao;
 
-	@Column(name = "foto")
-	private byte[] foto;
+	@Column(name = "s3_key")
+	private String s3Key;
 
 	@PrePersist
 	public void prePersist() throws CryptoException {
 		this.dtCriacao = LocalDateTime.now();
-		this.hash = CryptoUtil.generateKeyAsString();
-		this.senha = CryptoUtil.encrypt(this.senha, this.hash);
+		this.hash = CryptoUtils.generateKeyAsString();
+		this.senha = CryptoUtils.encrypt(this.senha, this.hash);
 	}
 }

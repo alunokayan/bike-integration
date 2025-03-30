@@ -9,7 +9,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
@@ -33,9 +32,8 @@ public class Problema {
     @Column(name = "descricao", nullable = false)
     private String descricao;
 
-    @Lob
-    @Column(name = "foto")
-    private byte[] foto;
+    @Column(name = "s3_key")
+    private String s3Key;
 
     @Column(name = "dt_criacao", nullable = false, updatable = false)
     private LocalDateTime dtCriacao;
@@ -46,9 +44,13 @@ public class Problema {
     @Column(name = "ativo", nullable = false)
     private Boolean ativo;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_trecho", nullable = false)
     private Trecho trecho;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_tipo_problema", nullable = false)
+    private TipoProblema tipoProblema;
 
     @PrePersist
     public void prePersist() {

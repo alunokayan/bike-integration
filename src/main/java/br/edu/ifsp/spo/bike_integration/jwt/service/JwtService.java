@@ -15,7 +15,7 @@ import br.edu.ifsp.spo.bike_integration.dto.JwtUserDTO;
 import br.edu.ifsp.spo.bike_integration.exception.BikeIntegrationCustomException;
 import br.edu.ifsp.spo.bike_integration.exception.CryptoException;
 import br.edu.ifsp.spo.bike_integration.model.Usuario;
-import br.edu.ifsp.spo.bike_integration.util.CryptoUtil;
+import br.edu.ifsp.spo.bike_integration.util.CryptoUtils;
 import br.edu.ifsp.spo.bike_integration.util.ObjectMapperUtils;
 
 @Service
@@ -34,7 +34,7 @@ public class JwtService {
         if (usuario == null) {
             throw new BikeIntegrationCustomException(DEFAULT_NULL_USER_MESSAGE);
         }
-        if (!CryptoUtil.isEquals(password, usuario.getSenha(), usuario.getHash())) {
+        if (!CryptoUtils.isEquals(password, usuario.getSenha(), usuario.getHash())) {
             throw new BikeIntegrationCustomException(DEFAULT_NULL_USER_MESSAGE);
         }
         return this.create(JwtUserDTO.builder().nickname(usuario.getNomeUsuario()).email(usuario.getEmail())

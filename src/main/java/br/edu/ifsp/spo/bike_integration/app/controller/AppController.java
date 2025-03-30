@@ -19,7 +19,7 @@ import br.edu.ifsp.spo.bike_integration.jwt.service.JwtService;
 import br.edu.ifsp.spo.bike_integration.model.Usuario;
 import br.edu.ifsp.spo.bike_integration.service.SessaoService;
 import br.edu.ifsp.spo.bike_integration.service.UsuarioService;
-import br.edu.ifsp.spo.bike_integration.util.CryptoUtil;
+import br.edu.ifsp.spo.bike_integration.util.CryptoUtils;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
@@ -65,7 +65,7 @@ public class AppController {
         sessaoService.create(usuario, token);
 
         return new ResponseEntity<>(
-                Map.of("token", CryptoUtil.encryptWithHexKey(token, decryptionKey)),
+                Map.of("token", CryptoUtils.encryptWithHexKey(token, decryptionKey)),
                 HttpStatus.OK);
     }
 

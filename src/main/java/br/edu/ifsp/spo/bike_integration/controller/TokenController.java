@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.edu.ifsp.spo.bike_integration.annotation.XAccessKey;
 import br.edu.ifsp.spo.bike_integration.annotation.Role;
+import br.edu.ifsp.spo.bike_integration.annotation.XAccessKey;
 import br.edu.ifsp.spo.bike_integration.hardcode.RoleType;
 import br.edu.ifsp.spo.bike_integration.model.Token;
 import br.edu.ifsp.spo.bike_integration.service.EmailService;
@@ -36,16 +36,16 @@ public class TokenController {
 
 	@Role(RoleType.ADMIN)
 	@XAccessKey
-	@GetMapping(path = "/is/valid", produces = MediaType.APPLICATION_JSON_VALUE)
-	@Operation(summary = "Valida o token.")
+	@GetMapping(path = "/validate", produces = MediaType.APPLICATION_JSON_VALUE)
+	@Operation(summary = "Verifica se o token é válido para o email informado.")
 	public ResponseEntity<Boolean> isValidateToken(@RequestParam String token, @RequestParam String email) {
 		return ResponseEntity.status(HttpStatus.OK).body(tokenService.isValidToken(token, email));
 	}
 
 	@Role(RoleType.ADMIN)
 	@XAccessKey
-	@PostMapping(path = "/send")
-	@Operation(summary = "Envia um novo token.")
+	@PostMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE)
+	@Operation(summary = "Gera um novo token e envia por email para o usuário.")
 	@ResponseStatus(HttpStatus.OK)
 	public void sendTokenEmail(@RequestParam String email) throws MessagingException {
 		emailService.sendCadastroTokenEmail(email, tokenService.generateToken(email).getTokenGerado());
@@ -53,8 +53,8 @@ public class TokenController {
 
 	@Role(RoleType.ADMIN)
 	@XAccessKey
-	@GetMapping(path = "/list/by/user", produces = MediaType.APPLICATION_JSON_VALUE)
-	@Operation(summary = "Lista os tokens de um usuário.")
+	@GetMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE)
+	@Operation(summary = "Recupera a lista de tokens associados ao email do usuário.")
 	public ResponseEntity<List<Token>> listTokensByUser(@RequestParam String email) {
 		return ResponseEntity.status(HttpStatus.OK).body(tokenService.listTokensByEmail(email));
 	}

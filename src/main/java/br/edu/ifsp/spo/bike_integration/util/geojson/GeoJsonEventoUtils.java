@@ -7,9 +7,9 @@ import br.edu.ifsp.spo.bike_integration.dto.GeoJsonDTO.FeatureDto;
 import br.edu.ifsp.spo.bike_integration.dto.GeoJsonDTO.GeometryDto;
 import br.edu.ifsp.spo.bike_integration.dto.GeoJsonDTO.PropertiesDto;
 import br.edu.ifsp.spo.bike_integration.model.Evento;
-import br.edu.ifsp.spo.bike_integration.util.GeoJsonUtil;
+import br.edu.ifsp.spo.bike_integration.util.GeoJsonUtils;
 
-public class GeoJsonEventoUtil implements GeoJsonUtil<List<Evento>> {
+public class GeoJsonEventoUtils implements GeoJsonUtils<List<Evento>> {
 
 	@Override
 	public GeoJsonDTO convertToGeoJson(List<Evento> eventos) {

@@ -7,7 +7,7 @@ import br.edu.ifsp.spo.bike_integration.dto.UsuarioLoginDTO;
 import br.edu.ifsp.spo.bike_integration.exception.CryptoException;
 import br.edu.ifsp.spo.bike_integration.model.Usuario;
 import br.edu.ifsp.spo.bike_integration.repository.UsuarioRepository;
-import br.edu.ifsp.spo.bike_integration.util.CryptoUtil;
+import br.edu.ifsp.spo.bike_integration.util.CryptoUtils;
 import jakarta.mail.MessagingException;
 
 @Service
@@ -40,8 +40,8 @@ public class LoginService {
 			throw new IllegalArgumentException("Usuário não encontrado!");
 		}
 
-		if (!usuario.getSenha().isBlank() && usuarioLogado != null && !usuario.getSenha().equals(CryptoUtil
-				.decrypt(usuarioLogado.getSenha(), CryptoUtil.getSecretKeyFromString(usuarioLogado.getHash())))) {
+		if (!usuario.getSenha().isBlank() && usuarioLogado != null && !usuario.getSenha().equals(CryptoUtils
+				.decrypt(usuarioLogado.getSenha(), CryptoUtils.getSecretKeyFromString(usuarioLogado.getHash())))) {
 			throw new IllegalArgumentException("Usuário ou senha inválidos!");
 		} else if (usuarioLogado == null) {
 			throw new IllegalArgumentException("Usuário não encontrado!");
@@ -71,8 +71,8 @@ public class LoginService {
 			throw new IllegalArgumentException("Token inválido!");
 		}
 
-		usuario.setHash(CryptoUtil.generateKeyAsString());
-		usuario.setSenha(CryptoUtil.encrypt(novaSenha, usuario.getHash()));
+		usuario.setHash(CryptoUtils.generateKeyAsString());
+		usuario.setSenha(CryptoUtils.encrypt(novaSenha, usuario.getHash()));
 		this.usuarioRepository.save(usuario);
 
 		this.tokenService.disableToken(this.tokenService.getToken(token));

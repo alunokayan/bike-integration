@@ -6,6 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,7 +31,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("v1/usuario")
-@Tag(name = "Usuario", description = "Controller para operações relacionadas a usuários.")
+@Tag(name = "Usuário", description = "Controller para operações relacionadas a usuários.")
 public class UsuarioController {
 
 	@Autowired
@@ -41,15 +42,15 @@ public class UsuarioController {
 
 	@Role({ RoleType.PF, RoleType.PJ })
 	@BearerToken
-	@GetMapping(path = "/get", produces = MediaType.APPLICATION_JSON_VALUE)
-	@Operation(summary = "Retorna um usuário pelo seu ID.")
-	public ResponseEntity<Usuario> get(@RequestParam Long id) {
+	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@Operation(summary = "Retorna os detalhes de um usuário pelo ID informado.")
+	public ResponseEntity<Usuario> get(@PathVariable Long id) {
 		return ResponseEntity.ok(usuarioService.loadUsuarioById(id));
 	}
 
 	@Role(RoleType.ADMIN)
 	@XAccessKey
-	@PostMapping(path = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Cria um novo usuário.")
 	public ResponseEntity<Usuario> create(@RequestBody UsuarioDTO usuarioDto) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.createUsuario(usuarioDto));
@@ -57,7 +58,7 @@ public class UsuarioController {
 
 	@Role(RoleType.ADMIN)
 	@XAccessKey
-	@PostMapping(path = "/create/adm", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(path = "/admin", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Cria um novo usuário administrador.")
 	public ResponseEntity<Usuario> createAdm(@RequestBody UsuarioAdmDTO usuarioAdmDto) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.createUsuarioAdm(usuarioAdmDto));
@@ -65,36 +66,35 @@ public class UsuarioController {
 
 	@Role({ RoleType.PF, RoleType.PJ })
 	@BearerToken
-	@PutMapping(path = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@Operation(summary = "Atualiza um usuário.")
-	public ResponseEntity<Usuario> update(@RequestParam Long id, @RequestBody UsuarioDTO usuarioDto) {
+	@PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@Operation(summary = "Atualiza os dados de um usuário existente.")
+	public ResponseEntity<Usuario> update(@PathVariable Long id, @RequestBody UsuarioDTO usuarioDto) {
 		return ResponseEntity.ok(usuarioService.updateUsuario(id, usuarioDto));
 	}
 
 	@Role({ RoleType.PF, RoleType.PJ })
 	@BearerToken
-	@PutMapping(path = "/updateFotoUsuario", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	@Operation(summary = "Atualiza a foto de um usuario.")
+	@PutMapping(path = "/{id}/foto", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@Operation(summary = "Atualiza a foto do usuário.")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void atualizarFotoUsuario(@RequestParam(required = true) Long id,
-			@RequestParam(required = true) MultipartFile file) {
+	public void atualizarFotoUsuario(@PathVariable Long id, @RequestParam MultipartFile file) {
 		usuarioService.updateFotoUsuario(id, file);
 	}
 
 	@Role(RoleType.ADMIN)
 	@BearerToken
-	@DeleteMapping(path = "/delete")
-	@Operation(summary = "Deleta um usuário.")
+	@DeleteMapping(path = "/{id}")
+	@Operation(summary = "Remove um usuário e seus eventos associados pelo ID informado.")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void delete(@RequestParam Long id) {
+	public void delete(@PathVariable Long id) {
 		eventoService.deleteEventosByUsuario(id);
 		usuarioService.deleteUsuario(id);
 	}
 
 	@Role({ RoleType.PF })
 	@BearerToken
-	@GetMapping(path = "/validate/cpf")
-	@Operation(summary = "Valida um CPF.")
+	@GetMapping(path = "/cpf/validate", produces = MediaType.APPLICATION_JSON_VALUE)
+	@Operation(summary = "Valida e formata um CPF informado.")
 	public ResponseEntity<String> validateCpf(@RequestParam String cpf) {
 		return ResponseEntity.ok(CpfValidate.validate(cpf));
 	}

@@ -22,7 +22,7 @@ import br.edu.ifsp.spo.bike_integration.configuration.WebSecurityConfig;
 import br.edu.ifsp.spo.bike_integration.dto.StandardErrorDTO;
 import br.edu.ifsp.spo.bike_integration.exception.CryptoException;
 import br.edu.ifsp.spo.bike_integration.hardcode.RoleType;
-import br.edu.ifsp.spo.bike_integration.util.CryptoUtil;
+import br.edu.ifsp.spo.bike_integration.util.CryptoUtils;
 import br.edu.ifsp.spo.bike_integration.util.RequestUtils;
 import br.edu.ifsp.spo.bike_integration.util.ResponseUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -70,7 +70,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 			throws IOException, CryptoException {
 		Optional<String> optToken = RequestUtils.getBearerToken(request);
 		if (optToken.isPresent() && !optToken.get().startsWith("ey")) {
-			optToken = Optional.of(CryptoUtil.decryptFromHex(optToken.get(), decryptionKey));
+			optToken = Optional.of(CryptoUtils.decryptFromHex(optToken.get(), decryptionKey));
 		}
 		if (optToken.isEmpty() || !this.jwtValidateService.isAuthenticated(optToken.get(), roles)) {
 			this.putErrorOnResponse(response, JwtValidateService.DEFAULT_NULL_TOKEN_MESSAGE);

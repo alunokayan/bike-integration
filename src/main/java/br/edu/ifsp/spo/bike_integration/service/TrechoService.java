@@ -30,4 +30,8 @@ public class TrechoService {
 		return trechoRepository.findTrechosProximosByLocation(latitude, longitude, raio);
 	}
 
+	public Trecho findTrechoProximoByLocation(double latitude, double longitude) {
+		return trechoRepository.findTrechoProximoByLocation(latitude, longitude);
+	}
+
 }

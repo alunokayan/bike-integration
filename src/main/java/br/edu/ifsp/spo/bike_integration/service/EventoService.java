@@ -12,16 +12,18 @@ import br.edu.ifsp.spo.bike_integration.aws.service.S3Service;
 import br.edu.ifsp.spo.bike_integration.dto.EventoDTO;
 import br.edu.ifsp.spo.bike_integration.dto.GeoJsonDTO;
 import br.edu.ifsp.spo.bike_integration.exception.BikeIntegrationCustomException;
+import br.edu.ifsp.spo.bike_integration.factory.GeoJsonUtilFactory;
 import br.edu.ifsp.spo.bike_integration.hardcode.PaginationType;
 import br.edu.ifsp.spo.bike_integration.model.Evento;
 import br.edu.ifsp.spo.bike_integration.model.Usuario;
 import br.edu.ifsp.spo.bike_integration.repository.EventoRepository;
 import br.edu.ifsp.spo.bike_integration.response.ListEventoResponse;
 import br.edu.ifsp.spo.bike_integration.rest.service.OpenStreetMapApiService;
-import br.edu.ifsp.spo.bike_integration.util.DateUtil;
-import br.edu.ifsp.spo.bike_integration.util.FormatUtil;
-import br.edu.ifsp.spo.bike_integration.util.GeoJsonUtilFactory;
+import br.edu.ifsp.spo.bike_integration.util.DateUtils;
+import br.edu.ifsp.spo.bike_integration.util.FormatUtils;
+import br.edu.ifsp.spo.bike_integration.util.S3Utils;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 
 @Service
 public class EventoService {
@@ -63,7 +65,7 @@ public class EventoService {
 
 		Long offset = (pagina - 1) * limit;
 
-		String dataAjustada = DateUtil.fixFormattDate(data);
+		String dataAjustada = DateUtils.fixFormattDate(data);
 
 		List<Evento> eventos = eventoRepository.findAll(limit, offset, nome, descricao, dataAjustada, cidade, estado,
 				faixaKm, tipoEvento, nivelHabilidade, gratuito);
@@ -78,14 +80,14 @@ public class EventoService {
 
 	public Evento createEvento(EventoDTO eventoDto) {
 		Map<String, Double> coordenadas = openStreetMapApiService
-				.buscarCoordenadasPorEndereco(FormatUtil.formatEnderecoToOpenStreetMapApi(eventoDto.getEndereco()));
+				.buscarCoordenadasPorEndereco(FormatUtils.formatEnderecoToOpenStreetMapApi(eventoDto.getEndereco()));
 		eventoDto.getEndereco().setLatitude(coordenadas.get("lat"));
 		eventoDto.getEndereco().setLongitude(coordenadas.get("lon"));
 
 		Usuario usuario = usuarioService.loadUsuarioById(eventoDto.getIdUsuario());
 
 		return eventoRepository.save(Evento.builder().nome(eventoDto.getNome()).descricao(eventoDto.getDescricao())
-				.data(DateUtil.parseDate(eventoDto.getData())).dtAtualizacao(eventoDto.getDataAtualizacao())
+				.data(DateUtils.parseDate(eventoDto.getData())).dtAtualizacao(eventoDto.getDataAtualizacao())
 				.endereco(eventoDto.getEndereco()).faixaKm(eventoDto.getFaixaKm()).gratuito(eventoDto.getGratuito())
 				.tipoEvento(tipoEventoService.loadTipoEvento(eventoDto.getIdTipoEvento())).usuario(usuario).build());
 	}
@@ -94,7 +96,8 @@ public class EventoService {
 		Evento evento = eventoRepository.findById(id).orElse(null);
 		if (evento != null) {
 			Map<String, Double> coordenadas = openStreetMapApiService
-					.buscarCoordenadasPorEndereco(FormatUtil.formatEnderecoToOpenStreetMapApi(eventoDto.getEndereco()));
+					.buscarCoordenadasPorEndereco(
+							FormatUtils.formatEnderecoToOpenStreetMapApi(eventoDto.getEndereco()));
 			eventoDto.getEndereco().setLatitude(coordenadas.get("lat"));
 			eventoDto.getEndereco().setLongitude(coordenadas.get("lon"));
 
@@ -102,7 +105,7 @@ public class EventoService {
 
 			evento.setNome(eventoDto.getNome());
 			evento.setDescricao(eventoDto.getDescricao());
-			evento.setData(DateUtil.parseDate(eventoDto.getData()));
+			evento.setData(DateUtils.parseDate(eventoDto.getData()));
 			evento.setDtAtualizacao(eventoDto.getDataAtualizacao());
 			evento.setEndereco(eventoDto.getEndereco());
 			evento.setTipoEvento(tipoEventoService.loadTipoEvento(eventoDto.getIdTipoEvento()));
@@ -130,8 +133,18 @@ public class EventoService {
 		try {
 			Evento evento = eventoRepository.findById(id).orElse(null);
 			if (evento != null) {
-				s3Service.put(PutObjectRequest.builder().bucket(bucketName).key(createKeyFotoEvento(id))
-						.contentType(file.getContentType()).build(), file.getBytes());
+				String s3Key = S3Utils.createS3Key("evento", evento.getId(), file);
+				PutObjectResponse response = s3Service.put(PutObjectRequest.builder()
+						.bucket(bucketName)
+						.key(s3Key)
+						.contentType(file.getContentType())
+						.build(), file.getBytes());
+				if (response.sdkHttpResponse().isSuccessful()) {
+					evento.setS3Key(s3Key);
+					eventoRepository.save(evento);
+				} else {
+					throw new BikeIntegrationCustomException("Erro ao salvar a foto do evento.");
+				}
 			}
 		} catch (Exception | Error e) {
 			throw new BikeIntegrationCustomException(
@@ -145,9 +158,5 @@ public class EventoService {
 
 	private List<Evento> getEventosProximosByLocation(Double latitude, Double longitude, Double raio) {
 		return eventoRepository.findEventosProximosByLocation(latitude, longitude, raio);
-	}
-
-	private String createKeyFotoEvento(Long id) {
-		return "evento_" + id + "_" + System.currentTimeMillis();
 	}
 }

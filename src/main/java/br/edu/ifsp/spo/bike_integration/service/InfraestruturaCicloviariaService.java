@@ -7,9 +7,9 @@ import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import br.edu.ifsp.spo.bike_integration.dto.GeoJsonDTO;
+import br.edu.ifsp.spo.bike_integration.factory.GeoJsonUtilFactory;
 import br.edu.ifsp.spo.bike_integration.model.InfraestruturaCicloviaria;
 import br.edu.ifsp.spo.bike_integration.repository.InfraestruturaCicloviariaRepository;
-import br.edu.ifsp.spo.bike_integration.util.GeoJsonUtilFactory;
 
 @Service
 public class InfraestruturaCicloviariaService {

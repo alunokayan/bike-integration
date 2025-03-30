@@ -7,9 +7,9 @@ import br.edu.ifsp.spo.bike_integration.dto.GeoJsonDTO.FeatureDto;
 import br.edu.ifsp.spo.bike_integration.dto.GeoJsonDTO.GeometryDto;
 import br.edu.ifsp.spo.bike_integration.dto.GeoJsonDTO.PropertiesDto;
 import br.edu.ifsp.spo.bike_integration.model.InfraestruturaCicloviaria;
-import br.edu.ifsp.spo.bike_integration.util.GeoJsonUtil;
+import br.edu.ifsp.spo.bike_integration.util.GeoJsonUtils;
 
-public class GeoJsonInfraestruturaUtil implements GeoJsonUtil<List<InfraestruturaCicloviaria>> {
+public class GeoJsonInfraestruturaUtils implements GeoJsonUtils<List<InfraestruturaCicloviaria>> {
 
 	@Override
 	public GeoJsonDTO convertToGeoJson(List<InfraestruturaCicloviaria> vias) {

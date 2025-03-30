@@ -15,7 +15,7 @@ import br.edu.ifsp.spo.bike_integration.hardcode.RoleType;
 import br.edu.ifsp.spo.bike_integration.response.BrasilApiCepResponse;
 import br.edu.ifsp.spo.bike_integration.rest.service.BrasilApiService;
 import br.edu.ifsp.spo.bike_integration.rest.service.OpenStreetMapApiService;
-import br.edu.ifsp.spo.bike_integration.util.FormatUtil;
+import br.edu.ifsp.spo.bike_integration.util.FormatUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -39,7 +39,7 @@ public class EnderecoController {
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Endereço encontrado com sucesso."),
 			@ApiResponse(responseCode = "404", description = "Endereço não encontrado.") })
 	public BrasilApiCepResponse buscarEnderecoPorCep(@RequestParam String cep) throws NotFoundException {
-		return brasilApiService.buscarEnderecoPorCep(FormatUtil.formatCep(cep));
+		return brasilApiService.buscarEnderecoPorCep(FormatUtils.formatCep(cep));
 	}
 
 	@Role({ RoleType.PF, RoleType.PJ })
@@ -51,8 +51,8 @@ public class EnderecoController {
 			@ApiResponse(responseCode = "404", description = "Latitude e longitude não encontradas.") })
 	public Map<String, Double> buscarLatAndLonByCepAndNumber(@RequestParam String cep, @RequestParam Long numero)
 			throws NotFoundException {
-		return openStreetMapApiService.buscarCoordenadasPorEndereco(FormatUtil.formatEnderecoToOpenStreetMapApi(
-				FormatUtil.convertToDto(brasilApiService.buscarEnderecoPorCep(cep), numero)));
+		return openStreetMapApiService.buscarCoordenadasPorEndereco(FormatUtils.formatEnderecoToOpenStreetMapApi(
+				FormatUtils.convertToDto(brasilApiService.buscarEnderecoPorCep(cep), numero)));
 	}
 
 	@Role({ RoleType.PF, RoleType.PJ })

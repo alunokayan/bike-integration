@@ -14,12 +14,12 @@ import org.springframework.security.crypto.codec.Hex;
 import br.edu.ifsp.spo.bike_integration.exception.CryptoException;
 import io.netty.handler.codec.DecoderException;
 
-public class CryptoUtil {
+public class CryptoUtils {
 
 	private static final String ALGORITHM = "AES/GCM/NoPadding";
 	private static final int GCM_TAG_LENGTH = 128;
 
-	private CryptoUtil() {
+	private CryptoUtils() {
 	}
 
 	public static SecretKey generateKey() throws CryptoException {
