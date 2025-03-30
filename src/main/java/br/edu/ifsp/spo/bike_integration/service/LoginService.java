@@ -56,7 +56,7 @@ public class LoginService {
 		// Criar sessão
 		this.sessaoService.create(usuarioLogado);
 
-		return usuarioLogado;
+		return usuarioRepository.findById(usuarioLogado.getId()).orElse(null);
 	}
 
 	public void recoverPassword(String idUsuario, String token, String novaSenha)
