@@ -21,6 +21,7 @@ import br.edu.ifsp.spo.bike_integration.annotation.Role;
 import br.edu.ifsp.spo.bike_integration.annotation.XAccessKey;
 import br.edu.ifsp.spo.bike_integration.dto.UsuarioAdmDTO;
 import br.edu.ifsp.spo.bike_integration.dto.UsuarioDTO;
+import br.edu.ifsp.spo.bike_integration.dto.UsuarioUpdateDTO;
 import br.edu.ifsp.spo.bike_integration.hardcode.RoleType;
 import br.edu.ifsp.spo.bike_integration.model.Usuario;
 import br.edu.ifsp.spo.bike_integration.service.EventoService;
@@ -68,7 +69,7 @@ public class UsuarioController {
 	@BearerToken
 	@PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Atualiza os dados de um usuário existente.")
-	public ResponseEntity<Usuario> update(@PathVariable Long id, @RequestBody UsuarioDTO usuarioDto) {
+	public ResponseEntity<Usuario> update(@PathVariable Long id, @RequestBody UsuarioUpdateDTO usuarioDto) {
 		return ResponseEntity.ok(usuarioService.updateUsuario(id, usuarioDto));
 	}
 

@@ -30,6 +30,8 @@ public interface S3Service extends AwsService {
 
     HeadObjectResponse getHead(HeadObjectRequest request) throws BikeIntegrationCustomException;
 
+    String getUrl(String key);
+
     default HeadObjectResponse getHeadSafe(HeadObjectRequest request) {
         try {
             return this.getHead(request);

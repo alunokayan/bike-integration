@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import br.edu.ifsp.spo.bike_integration.aws.service.S3Service;
 import br.edu.ifsp.spo.bike_integration.dto.UsuarioAdmDTO;
 import br.edu.ifsp.spo.bike_integration.dto.UsuarioDTO;
+import br.edu.ifsp.spo.bike_integration.dto.UsuarioUpdateDTO;
 import br.edu.ifsp.spo.bike_integration.exception.BikeIntegrationCustomException;
 import br.edu.ifsp.spo.bike_integration.hardcode.RoleType;
 import br.edu.ifsp.spo.bike_integration.model.Usuario;
@@ -96,7 +97,7 @@ public class UsuarioService {
 
 	@Modifying
 	@Transactional
-	public Usuario updateUsuario(Long id, UsuarioDTO usuarioDto) {
+	public Usuario updateUsuario(Long id, UsuarioUpdateDTO usuarioDto) {
 		Usuario usuario = usuarioRepository.findById(id).orElse(null);
 		if (usuario == null) {
 			return null;
@@ -105,9 +106,6 @@ public class UsuarioService {
 		usuario.setNomeUsuario(usuarioDto.getNomeUsuario());
 		usuario.setEndereco(usuarioDto.getEndereco());
 		usuario.setEmail(usuarioDto.getEmail());
-		usuario.setSenha(usuarioDto.getSenha());
-		usuario.setCpf(usuarioDto.getCpf());
-		usuario.setCnpj(usuarioDto.getCnpj());
 		usuario.setNivelHabilidade(nivelHabilidadeService.loadNivelHabilidade(usuarioDto.getNivelHabilidade()));
 		return usuarioRepository.save(usuario);
 	}
@@ -123,7 +121,7 @@ public class UsuarioService {
 						.contentType(file.getContentType())
 						.build(), file.getBytes());
 				if (response.sdkHttpResponse().isSuccessful()) {
-					usuario.setS3Key(s3Key);
+					usuario.setS3Url(s3Service.getUrl(s3Key));
 					usuarioRepository.save(usuario);
 				} else {
 					throw new BikeIntegrationCustomException("Erro ao salvar a foto do usuário.");

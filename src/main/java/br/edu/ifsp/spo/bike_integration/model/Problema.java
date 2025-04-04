@@ -32,8 +32,8 @@ public class Problema {
     @Column(name = "descricao", nullable = false)
     private String descricao;
 
-    @Column(name = "s3_key")
-    private String s3Key;
+    @Column(name = "s3_url")
+    private String s3Url;
 
     @Column(name = "dt_criacao", nullable = false, updatable = false)
     private LocalDateTime dtCriacao;

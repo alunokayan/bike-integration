@@ -31,7 +31,7 @@ create table if not exists `usuario` (
     `cpf` varchar(255),
     `cnpj` varchar(255),
     `id_nivel_habilidade` bigint,
-    `s3_key` varchar(255),
+    `s3_url` varchar(255),
     constraint `fk_nivel_habilidade` foreign key (`id_nivel_habilidade`) references `nivel_habilidade`(`id`)
 );
 
@@ -69,7 +69,7 @@ create table if not exists `evento` (
     `id_tipo_evento` bigint not null,
     `id_usuario` bigint not null,
     `aprovado` boolean not null default false,
-    `s3_key` varchar(255),
+    `s3_url` varchar(255),
     constraint `fk_tipo_evento` foreign key (`id_tipo_evento`) references `tipo_evento`(`id`),
     constraint `fk_usuario_evento` foreign key (`id_usuario`) references `usuario`(`id`)
 );
@@ -118,7 +118,7 @@ create table if not exists `tipo_problema` (
 create table if not exists `problema` (
     `id` bigint primary key auto_increment,
     `descricao` varchar(255) not null,
-    `s3_key` varchar(255),
+    `s3_url` varchar(255),
     `dt_criacao` timestamp default (now()),
     `validado` boolean not null,
     `ativo` boolean not null,
@@ -171,15 +171,12 @@ insert into `tipo_evento` (nome, id_nivel_habilidade) values
 on duplicate key update nome = values(nome);
 
 insert into `tipo_problema` (nome, descricao) values
+    ('Acidente', 'Acidente envolvendo ciclistas.'),
     ('Buraco', 'Buraco na pista ou calçada que pode causar acidentes.'),
-    ('Desnível', 'Desnível na pista ou calçada que pode causar acidentes.'),
-    ('Obstrução', 'Obstrução na pista ou calçada que pode causar acidentes.'),
+    ('Condições ruins', 'Desnível na pista ou calçada que pode causar acidentes.'),
+    ('Obstáculo', 'Obstrução na pista ou calçada que pode causar acidentes.'),
     ('Falta de sinalização', 'Falta de sinalização adequada para ciclistas.'),
-    ('Sinalização inadequada', 'Sinalização inadequada para ciclistas.'),
     ('Falta de iluminação', 'Falta de iluminação adequada para ciclistas.'),
-    ('Iluminação inadequada', 'Iluminação inadequada para ciclistas.'),
-    ('Falta de manutenção', 'Falta de manutenção na pista ou calçada que pode causar acidentes.'),
-    ('Falta de espaço', 'Falta de espaço adequado para ciclistas.'),
     ('Condições climáticas', 'Condições climáticas que podem afetar a segurança dos ciclistas.'),
     ('Outros', 'Outros problemas que podem afetar a segurança dos ciclistas.')
 on duplicate key update nome = values(nome);

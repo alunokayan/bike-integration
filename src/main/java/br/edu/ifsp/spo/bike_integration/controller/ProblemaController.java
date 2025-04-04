@@ -1,5 +1,7 @@
 package br.edu.ifsp.spo.bike_integration.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -71,5 +73,16 @@ public class ProblemaController {
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		problemaService.delete(id);
 		return ResponseEntity.status(HttpStatus.OK).build();
+	}
+
+	@Role(RoleType.PF)
+	@BearerToken
+	@GetMapping(path = "/radius", produces = MediaType.APPLICATION_JSON_VALUE)
+	@Operation(summary = "Busca problemas em um raio estipulado com base na latitude e longitude informadas.")
+	public ResponseEntity<List<Problema>> buscarEventosByRadius(
+			@RequestParam(required = true) Double latitude,
+			@RequestParam(required = true) Double longitude,
+			@RequestParam(required = true) Double raio) {
+		return ResponseEntity.ok(problemaService.buscarProblemasByRadius(latitude, longitude, raio));
 	}
 }

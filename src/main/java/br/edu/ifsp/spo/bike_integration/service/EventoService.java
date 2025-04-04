@@ -150,7 +150,7 @@ public class EventoService {
 						.contentType(file.getContentType())
 						.build(), file.getBytes());
 				if (response.sdkHttpResponse().isSuccessful()) {
-					evento.setS3Key(s3Key);
+					evento.setS3Url(s3Service.getUrl(s3Key));
 					eventoRepository.save(evento);
 				} else {
 					throw new BikeIntegrationCustomException("Erro ao salvar a foto do evento.");

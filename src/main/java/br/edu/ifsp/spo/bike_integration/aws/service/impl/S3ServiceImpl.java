@@ -66,4 +66,17 @@ public class S3ServiceImpl implements S3Service {
         }
     }
 
+    @Override
+    public String getUrl(String key) throws BikeIntegrationCustomException {
+        try {
+            return this.client
+                    .utilities()
+                    .getUrl(builder -> builder.bucket(bucket)
+                            .key(key))
+                    .toExternalForm();
+        } catch (Exception e) {
+            throw new BikeIntegrationCustomException(e);
+        }
+    }
+
 }

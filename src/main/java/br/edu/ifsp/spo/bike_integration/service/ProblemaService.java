@@ -1,6 +1,7 @@
 package br.edu.ifsp.spo.bike_integration.service;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -82,7 +83,7 @@ public class ProblemaService {
 						.contentType(file.getContentType())
 						.build(), file.getBytes());
 				if (response.sdkHttpResponse().isSuccessful()) {
-					problema.setS3Key(s3Key);
+					problema.setS3Url(s3Service.getUrl(s3Key));
 					problemaRepository.save(problema);
 				} else {
 					throw new RuntimeException("Erro ao salvar a foto do problema.");
@@ -99,6 +100,10 @@ public class ProblemaService {
 			throw new RuntimeException("Problema não encontrado.");
 		}
 		problemaRepository.delete(problema);
+	}
+
+	public List<Problema> buscarProblemasByRadius(Double latitude, Double longitude, Double raio) {
+		return problemaRepository.findProblemasProximosByLocation(latitude, longitude, raio);
 	}
 
 }

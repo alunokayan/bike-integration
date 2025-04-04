@@ -64,8 +64,8 @@ public class Evento {
 	@Column(name = "aprovado", nullable = false)
 	private boolean aprovado;
 
-	@Column(name = "s3_key")
-	private String s3Key;
+	@Column(name = "s3_url")
+	private String s3Url;
 
 	@PrePersist
 	void prePersist() {

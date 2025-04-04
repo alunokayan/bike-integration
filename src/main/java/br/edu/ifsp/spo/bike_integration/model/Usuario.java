@@ -81,8 +81,8 @@ public class Usuario {
 	@OneToOne(mappedBy = "usuario", fetch = FetchType.EAGER)
 	private Sessao sessao;
 
-	@Column(name = "s3_key")
-	private String s3Key;
+	@Column(name = "s3_url")
+	private String s3Url;
 
 	@PrePersist
 	public void prePersist() throws CryptoException {
