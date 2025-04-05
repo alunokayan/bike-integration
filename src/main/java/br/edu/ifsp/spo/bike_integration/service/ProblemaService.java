@@ -1,6 +1,7 @@
 package br.edu.ifsp.spo.bike_integration.service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +40,18 @@ public class ProblemaService {
 		return problemaRepository.findById(id).orElse(null);
 	}
 
+	public List<Problema> listAllExpiredProblemas() {
+		return problemaRepository.findByAtivo(false).stream()
+				.filter(problema -> problema.getDtCriacao().isBefore(LocalDateTime.now().minusDays(30)))
+				.toList();
+	}
+
 	public Problema create(ProblemaDTO problema) {
 		Trecho trecho = trechoService.findTrechoProximoByLocation(problema.getLatitude(), problema.getLongitude());
+		if (trecho == null) {
+			throw new RuntimeException("Trecho não encontrado, ou não existe trecho próximo a localização informada.");
+		}
+
 		if (problemaRepository.existsByTrechoAndTipoProblema(trecho,
 				tipoProblemaService.loadTipoProblema(problema.getIdTipoProblema()))) {
 			throw new RuntimeException(
@@ -49,8 +60,10 @@ public class ProblemaService {
 
 		return problemaRepository.save(Problema.builder()
 				.descricao(problema.getDescricao())
-				.validado(false)
+				.latitude(problema.getLatitude())
+				.longitude(problema.getLongitude())
 				.ativo(true)
+				.reportCount(0)
 				.trecho(trecho)
 				.tipoProblema(tipoProblemaService.loadTipoProblema(problema.getIdTipoProblema()))
 				.build());
@@ -61,8 +74,10 @@ public class ProblemaService {
 		if (problemaAtual != null) {
 			problemaAtual.setDescricao(
 					problema.getDescricao() != null ? problema.getDescricao() : problemaAtual.getDescricao());
-			problemaAtual
-					.setValidado(problema.getValidado() != null ? problema.getValidado() : problemaAtual.getValidado());
+			problemaAtual.setLatitude(
+					problema.getLatitude() != null ? problema.getLatitude() : problemaAtual.getLatitude());
+			problemaAtual.setLongitude(
+					problema.getLongitude() != null ? problema.getLongitude() : problemaAtual.getLongitude());
 			problemaAtual.setAtivo(problema.getAtivo() != null ? problema.getAtivo() : problemaAtual.getAtivo());
 			problemaAtual.setTrecho(
 					trechoService.findTrechoProximoByLocation(problema.getLatitude(), problema.getLongitude()));
@@ -102,8 +117,25 @@ public class ProblemaService {
 		problemaRepository.delete(problema);
 	}
 
+	public void deleteAll(List<Problema> problemas) {
+		problemaRepository.deleteAll(problemas);
+	}
+
 	public List<Problema> buscarProblemasByRadius(Double latitude, Double longitude, Double raio) {
 		return problemaRepository.findProblemasProximosByLocation(latitude, longitude, raio);
+	}
+
+	public void reportProblem(Long id) {
+		Problema problema = loadProblemaById(id);
+		if (problema != null) {
+			problema.setReportCount(problema.getReportCount() + 1);
+			if (problema.getReportCount() >= 3) {
+				problema.setAtivo(false);
+			}
+			problemaRepository.save(problema);
+		} else {
+			throw new RuntimeException("Problema não encontrado.");
+		}
 	}
 
 }

@@ -3,7 +3,6 @@ package br.edu.ifsp.spo.bike_integration.util;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
-import java.util.Base64;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;

@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.edu.ifsp.spo.bike_integration.dto.AvaliacaoDTO;
+import br.edu.ifsp.spo.bike_integration.hardcode.PaginationType;
 import br.edu.ifsp.spo.bike_integration.model.AvaliacaoInfraestruturaCicloviaria;
 import br.edu.ifsp.spo.bike_integration.repository.AvaliacaoInfraestruturaCicloviariaRepository;
+import br.edu.ifsp.spo.bike_integration.response.ListAvaliacoesResponse;
 
 @Service
 public class AvaliacaoInfraestruturaCicloviariaService {
@@ -43,10 +45,23 @@ public class AvaliacaoInfraestruturaCicloviariaService {
 
 	}
 
-	public List<AvaliacaoInfraestruturaCicloviaria> getAllByInfraestruturaCicloviariaId(
-			Long idInfraestruturaCicloviaria) {
-		return avaliacaoInfraestruturaCicloviariaRepository
-				.findAllByInfraestruturaCicloviariaId(idInfraestruturaCicloviaria);
+	public ListAvaliacoesResponse getAllByInfraestruturaCicloviariaIdAndNota(Long idInfraestruturaCicloviaria,
+			Integer nota,
+			Integer pagina) {
+		Long limit = PaginationType.RESULTS_PER_PAGE.getValue();
+
+		Long offset = (pagina - 1) * limit;
+
+		List<AvaliacaoInfraestruturaCicloviaria> avaliacoes = avaliacaoInfraestruturaCicloviariaRepository
+				.findAllByInfraestruturaCicloviariaIdAndNota(idInfraestruturaCicloviaria, nota, limit, offset);
+
+		Long count = avaliacaoInfraestruturaCicloviariaRepository
+				.countByInfraestruturaCicloviariaIdAndNota(idInfraestruturaCicloviaria, nota);
+
+		Long totalPaginas = (long) Math.ceil(count / (double) limit);
+
+		return ListAvaliacoesResponse.builder().avaliacoes(avaliacoes).totalRegistros(count)
+				.totalPaginas(totalPaginas).build();
 	}
 
 }

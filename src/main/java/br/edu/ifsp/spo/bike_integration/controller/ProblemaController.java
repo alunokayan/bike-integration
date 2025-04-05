@@ -77,6 +77,15 @@ public class ProblemaController {
 
 	@Role(RoleType.PF)
 	@BearerToken
+	@PostMapping(path = "/{id}/report", produces = MediaType.APPLICATION_JSON_VALUE)
+	@Operation(summary = "Reporta um problema como não existente.")
+	public ResponseEntity<Void> reportProblem(@PathVariable Long id) {
+		problemaService.reportProblem(id);
+		return ResponseEntity.status(HttpStatus.OK).build();
+	}
+
+	@Role(RoleType.PF)
+	@BearerToken
 	@GetMapping(path = "/radius", produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Busca problemas em um raio estipulado com base na latitude e longitude informadas.")
 	public ResponseEntity<List<Problema>> buscarEventosByRadius(

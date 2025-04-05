@@ -1,4 +1,4 @@
-package br.edu.ifsp.spo.bike_integration.job;
+package br.edu.ifsp.spo.bike_integration.schedule;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import br.edu.ifsp.spo.bike_integration.service.TokenService;
 
 @Component
-public class CleanUpExpiredTokensJob {
+public class CleanUpExpiredToken {
 	@Autowired
 	private TokenService tokenService;
 

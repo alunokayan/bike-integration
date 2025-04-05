@@ -2,6 +2,8 @@ package br.edu.ifsp.spo.bike_integration.model;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -32,19 +34,26 @@ public class Problema {
     @Column(name = "descricao", nullable = false)
     private String descricao;
 
-    @Column(name = "s3_url")
-    private String s3Url;
+    @Column(name = "latitude", nullable = false)
+    private Double latitude;
+
+    @Column(name = "longitude", nullable = false)
+    private Double longitude;
 
     @Column(name = "dt_criacao", nullable = false, updatable = false)
     private LocalDateTime dtCriacao;
 
-    @Column(name = "validado", nullable = false)
-    private Boolean validado;
-
     @Column(name = "ativo", nullable = false)
     private Boolean ativo;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @Column(name = "report_count", nullable = false)
+    private Integer reportCount;
+
+    @Column(name = "s3_url")
+    private String s3Url;
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_trecho", nullable = false)
     private Trecho trecho;
 
