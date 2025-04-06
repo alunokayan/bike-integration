@@ -52,7 +52,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 			boolean isAccessKey = method.hasMethodAnnotation(XAccessKey.class);
 			RoleType[] roles = method.getMethodAnnotation(Role.class).value();
 
-			if (isBearer) {
+			if (isBearer && !isAccessKey) {
 				return this.authenticateWithBearer(request, response, roles);
 			}
 			if (isAccessKey) {

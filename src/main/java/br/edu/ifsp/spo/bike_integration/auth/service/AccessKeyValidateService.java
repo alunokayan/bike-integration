@@ -1,5 +1,7 @@
 package br.edu.ifsp.spo.bike_integration.auth.service;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +14,8 @@ public class AccessKeyValidateService {
     private String accessKey;
 
     public boolean isValid(String accessKey, RoleType... roles) {
-        return this.accessKey.equals(accessKey) && roles.length > 0 && roles[0].equals(RoleType.ADMIN);
+        return this.accessKey.equals(accessKey) && roles.length > 0
+                && Arrays.stream(roles).anyMatch(role -> role.equals(RoleType.ADMIN));
     }
 
 }
