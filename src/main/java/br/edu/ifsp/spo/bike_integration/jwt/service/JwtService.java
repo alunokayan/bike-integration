@@ -2,8 +2,6 @@ package br.edu.ifsp.spo.bike_integration.jwt.service;
 
 import java.util.Date;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +18,6 @@ import br.edu.ifsp.spo.bike_integration.util.ObjectMapperUtils;
 
 @Service
 public class JwtService {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(JwtService.class);
 
     public static final String DEFAULT_NULL_USER_MESSAGE = "Usuário inválido";
 

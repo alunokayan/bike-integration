@@ -1,5 +1,7 @@
 package br.edu.ifsp.spo.bike_integration.controller;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -92,11 +94,12 @@ public class UsuarioController {
 		usuarioService.deleteUsuario(id);
 	}
 
-	@Role({ RoleType.PF })
+	@Role({ RoleType.PF, RoleType.ADMIN })
 	@BearerToken
+	@XAccessKey
 	@GetMapping(path = "/cpf/validate", produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Valida e formata um CPF informado.")
-	public ResponseEntity<String> validateCpf(@RequestParam String cpf) {
-		return ResponseEntity.ok(CpfValidate.validate(cpf));
+	public ResponseEntity<Map<String, String>> validateCpf(@RequestParam String cpf) {
+		return ResponseEntity.ok(Map.of("response", CpfValidate.validate(cpf)));
 	}
 }
