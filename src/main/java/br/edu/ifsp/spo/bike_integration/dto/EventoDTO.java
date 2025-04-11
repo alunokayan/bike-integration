@@ -36,6 +36,9 @@ public class EventoDTO {
 	@Schema(example = "true")
 	private Boolean gratuito;
 
+	@Schema(example = "https://www.exemplo.com")
+	private String urlSite;
+
 	@Schema(example = "1")
 	private Long idTipoEvento;
 

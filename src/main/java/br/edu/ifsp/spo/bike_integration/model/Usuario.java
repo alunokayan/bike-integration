@@ -2,6 +2,8 @@ package br.edu.ifsp.spo.bike_integration.model;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.edu.ifsp.spo.bike_integration.converter.EnderecoConverter;
 import br.edu.ifsp.spo.bike_integration.dto.EnderecoDTO;
 import br.edu.ifsp.spo.bike_integration.exception.CryptoException;
@@ -59,9 +61,11 @@ public class Usuario {
 	@Column(name = "role", nullable = false)
 	private RoleType role;
 
+	@JsonIgnore
 	@Column(name = "senha", nullable = false)
 	private String senha;
 
+	@JsonIgnore
 	@Column(name = "hash", nullable = false)
 	private String hash;
 

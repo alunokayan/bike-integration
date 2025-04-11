@@ -23,6 +23,7 @@ import br.edu.ifsp.spo.bike_integration.dto.ProblemaDTO;
 import br.edu.ifsp.spo.bike_integration.hardcode.RoleType;
 import br.edu.ifsp.spo.bike_integration.model.Problema;
 import br.edu.ifsp.spo.bike_integration.service.ProblemaService;
+import br.edu.ifsp.spo.bike_integration.util.FileUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -63,6 +64,8 @@ public class ProblemaController {
 	@PutMapping(path = "/{id}/foto", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Atualiza a foto de um problema.")
 	public void updateFotoProblema(@PathVariable Long id, @RequestParam MultipartFile file) {
+		if (!FileUtils.isValidFileType(file))
+			throw new IllegalArgumentException("Formato de arquivo inválido. Aceito apenas JPEG.");
 		problemaService.updateFotoProblema(id, file);
 	}
 

@@ -53,6 +53,9 @@ public class Evento {
 	@Column(name = "gratuito")
 	private boolean gratuito;
 
+	@Column(name = "url_site")
+	private String urlSite;
+
 	@ManyToOne
 	@JoinColumn(name = "id_tipo_evento")
 	private TipoEvento tipoEvento;

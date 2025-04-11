@@ -204,6 +204,9 @@
                           <strong>Aprovado:</strong> {{ evento.aprovado ? 'Sim' : 'Não' }}
                       </p>
                       <p class="card-text">
+                        <strong>Url do site:</strong> {{ evento.urlSite ?? '' }}
+                      </p>
+                      <p class="card-text">
                           <strong>CNPJ:</strong> {{ evento.usuario.cnpj }}<br>
                       </p>
                   </div>

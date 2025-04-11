@@ -98,8 +98,15 @@ public interface ResponseUtils {
 		return Map.of("status", status.value(), "timestamp", LocalDateTime.now(), "message", reduceMessage(message));
 	}
 
-	private static String reduceMessage(String message) {
-		return message.substring(0, 100).concat("...");
+	public static String reduceMessage(String message) {
+		if (message == null) {
+			return null;
+		}
+		int maxLength = 100;
+		if (message.length() <= maxLength) {
+			return message;
+		}
+		return message.substring(0, maxLength) + "...";
 	}
 
 }

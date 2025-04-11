@@ -28,8 +28,6 @@ public class JwtValidateService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(JwtValidateService.class);
 
-	public static final String DEFAULT_NULL_USER_MESSAGE = "Usuário inválido";
-
 	public static final String DEFAULT_NULL_TOKEN_MESSAGE = "Token inválido ou expirado";
 
 	@Autowired

@@ -28,6 +28,7 @@ import br.edu.ifsp.spo.bike_integration.hardcode.RoleType;
 import br.edu.ifsp.spo.bike_integration.model.Usuario;
 import br.edu.ifsp.spo.bike_integration.service.EventoService;
 import br.edu.ifsp.spo.bike_integration.service.UsuarioService;
+import br.edu.ifsp.spo.bike_integration.util.FileUtils;
 import br.edu.ifsp.spo.bike_integration.util.validate.CpfValidate;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -81,6 +82,8 @@ public class UsuarioController {
 	@Operation(summary = "Atualiza a foto do usuário.")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void atualizarFotoUsuario(@PathVariable Long id, @RequestParam MultipartFile file) {
+		if (!FileUtils.isValidFileType(file))
+			throw new IllegalArgumentException("Formato de arquivo inválido. Aceito apenas JPEG.");
 		usuarioService.updateFotoUsuario(id, file);
 	}
 

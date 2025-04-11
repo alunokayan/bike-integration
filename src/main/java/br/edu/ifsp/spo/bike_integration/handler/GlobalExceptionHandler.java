@@ -1,5 +1,6 @@
 package br.edu.ifsp.spo.bike_integration.handler;
 
+import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -74,6 +75,13 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<Object> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException ex,
 			WebRequest request) {
 		logger.error("MaxUploadSizeExceededException caught: ", ex);
+		return ResponseUtils.createResponse(new ErrorResponse("Erro: \n" + ex.getMessage()), HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(SizeLimitExceededException.class)
+	public ResponseEntity<Object> handleSizeLimitExceededException(SizeLimitExceededException ex,
+			WebRequest request) {
+		logger.error("SizeLimitExceededException caught: ", ex);
 		return ResponseUtils.createResponse(new ErrorResponse("Erro: \n" + ex.getMessage()), HttpStatus.BAD_REQUEST);
 	}
 

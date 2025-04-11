@@ -48,19 +48,21 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 		}
 
 		if (handler instanceof HandlerMethod method) {
-			boolean isBearer = method.hasMethodAnnotation(BearerToken.class);
-			boolean isAccessKey = method.hasMethodAnnotation(XAccessKey.class);
 			RoleType[] roles = method.getMethodAnnotation(Role.class).value();
 
-			if (isBearer && !isAccessKey) {
-				return this.authenticateWithBearer(request, response, roles);
-			}
-			if (isAccessKey) {
-				return this.authenticateWithAccessKey(request, response, roles);
+			boolean isBearer = method.hasMethodAnnotation(BearerToken.class)
+					&& RequestUtils.getBearerToken(request).isPresent()
+					&& this.authenticateWithBearer(request, response, roles);
+			boolean isAccessKey = method.hasMethodAnnotation(XAccessKey.class)
+					&& RequestUtils.getAccessKey(request).isPresent()
+					&& this.authenticateWithAccessKey(request, response, roles);
+
+			if (!isBearer && !isAccessKey) {
+				this.putErrorOnResponse(response);
+				return false;
 			}
 		}
-		this.putErrorOnResponse(response);
-		return false;
+		return true;
 	}
 
 	/*
@@ -73,7 +75,6 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 			optToken = Optional.of(CryptoUtils.decryptFromHex(optToken.get(), decryptionKey));
 		}
 		if (optToken.isEmpty() || !this.jwtValidateService.isAuthenticated(optToken.get(), roles)) {
-			this.putErrorOnResponse(response, JwtValidateService.DEFAULT_NULL_TOKEN_MESSAGE);
 			return false;
 		}
 		SecurityContextHolder.getContext().setAuthentication(
@@ -87,7 +88,6 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 			throws IOException {
 		Optional<String> optSecretKey = RequestUtils.getAccessKey(request);
 		if (optSecretKey.isEmpty() || !this.accessKeyValidateService.isValid(optSecretKey.get(), roles)) {
-			this.putErrorOnResponse(response, JwtValidateService.DEFAULT_NULL_TOKEN_MESSAGE);
 			return false;
 		}
 		return true;

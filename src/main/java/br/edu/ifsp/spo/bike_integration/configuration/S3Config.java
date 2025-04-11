@@ -22,13 +22,10 @@ public class S3Config {
         S3ClientBuilder builder = S3Client.builder()
                 .credentialsProvider(awsCredentialsProvider)
                 .serviceConfiguration(S3Configuration.builder().pathStyleAccessEnabled(true).build());
-
         if (endpoint != null && !endpoint.isEmpty()) {
             builder.endpointOverride(URI.create(endpoint));
         }
-
         return builder.build();
-
     }
 
 }

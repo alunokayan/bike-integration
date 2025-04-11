@@ -19,6 +19,7 @@ createApp({
         tipoEvento: '',
         nivelHabilidade: '',
         gratuito: '',
+        urlSite: '',
         aprovado: ''
       },
       tiposEvento: [],

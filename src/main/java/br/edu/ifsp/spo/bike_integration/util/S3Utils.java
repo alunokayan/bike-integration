@@ -2,6 +2,9 @@ package br.edu.ifsp.spo.bike_integration.util;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+
 public interface S3Utils {
 
     /**
@@ -17,6 +20,15 @@ public interface S3Utils {
         String[] splitFileName = fileName.split("\\.");
         String extension = splitFileName[splitFileName.length - 1];
         return entity + "/" + id + "/image" + "." + extension;
+    }
+
+    static PutObjectRequest createRestPutObjectRequest(String bucketName, String s3Key) {
+        return PutObjectRequest.builder()
+                .bucket(bucketName)
+                .key(s3Key)
+                .contentType("image/jpeg")
+                .acl(ObjectCannedACL.PUBLIC_READ)
+                .build();
     }
 
 }

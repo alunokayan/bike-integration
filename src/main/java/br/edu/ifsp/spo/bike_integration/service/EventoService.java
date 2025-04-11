@@ -22,7 +22,6 @@ import br.edu.ifsp.spo.bike_integration.rest.service.OpenStreetMapApiService;
 import br.edu.ifsp.spo.bike_integration.util.DateUtils;
 import br.edu.ifsp.spo.bike_integration.util.FormatUtils;
 import br.edu.ifsp.spo.bike_integration.util.S3Utils;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 
 @Service
@@ -89,7 +88,9 @@ public class EventoService {
 		return eventoRepository.save(Evento.builder().nome(eventoDto.getNome()).descricao(eventoDto.getDescricao())
 				.data(DateUtils.parseDate(eventoDto.getData())).dtAtualizacao(eventoDto.getDataAtualizacao())
 				.endereco(eventoDto.getEndereco()).faixaKm(eventoDto.getFaixaKm()).gratuito(eventoDto.getGratuito())
-				.tipoEvento(tipoEventoService.loadTipoEvento(eventoDto.getIdTipoEvento())).usuario(usuario).build());
+				.urlSite(eventoDto.getUrlSite())
+				.tipoEvento(tipoEventoService.loadTipoEvento(eventoDto.getIdTipoEvento()))
+				.usuario(usuario).build());
 	}
 
 	public void updateEvento(Long id, EventoDTO eventoDto) {
@@ -111,6 +112,7 @@ public class EventoService {
 			evento.setTipoEvento(tipoEventoService.loadTipoEvento(eventoDto.getIdTipoEvento()));
 			evento.setFaixaKm(eventoDto.getFaixaKm());
 			evento.setGratuito(eventoDto.getGratuito());
+			evento.setUrlSite(eventoDto.getUrlSite());
 			evento.setUsuario(usuario);
 
 			eventoRepository.save(evento);
@@ -144,11 +146,8 @@ public class EventoService {
 			Evento evento = eventoRepository.findById(id).orElse(null);
 			if (evento != null) {
 				String s3Key = S3Utils.createS3Key("evento", evento.getId(), file);
-				PutObjectResponse response = s3Service.put(PutObjectRequest.builder()
-						.bucket(bucketName)
-						.key(s3Key)
-						.contentType(file.getContentType())
-						.build(), file.getBytes());
+				PutObjectResponse response = s3Service.put(S3Utils.createRestPutObjectRequest(bucketName, s3Key),
+						file.getBytes());
 				if (response.sdkHttpResponse().isSuccessful()) {
 					evento.setS3Url(s3Service.getUrl(s3Key));
 					eventoRepository.save(evento);

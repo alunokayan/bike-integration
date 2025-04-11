@@ -27,6 +27,7 @@ import br.edu.ifsp.spo.bike_integration.hardcode.RoleType;
 import br.edu.ifsp.spo.bike_integration.model.Evento;
 import br.edu.ifsp.spo.bike_integration.response.ListEventoResponse;
 import br.edu.ifsp.spo.bike_integration.service.EventoService;
+import br.edu.ifsp.spo.bike_integration.util.FileUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -90,6 +91,8 @@ public class EventoController {
 	@Operation(summary = "Atualiza a foto do evento.")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void atualizarFotoEvento(@PathVariable("id") Long id, @RequestParam("file") MultipartFile file) {
+		if (!FileUtils.isValidFileType(file))
+			throw new IllegalArgumentException("Formato de arquivo inválido. Aceito apenas JPEG.");
 		eventoService.updateFotoEvento(id, file);
 	}
 

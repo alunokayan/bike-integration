@@ -22,6 +22,7 @@ import br.edu.ifsp.spo.bike_integration.util.FormatUtils;
 import br.edu.ifsp.spo.bike_integration.util.S3Utils;
 import br.edu.ifsp.spo.bike_integration.util.validate.CpfValidate;
 import jakarta.transaction.Transactional;
+import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 
@@ -115,11 +116,8 @@ public class UsuarioService {
 			Usuario usuario = usuarioRepository.findById(id).orElse(null);
 			if (usuario != null) {
 				String s3Key = S3Utils.createS3Key("usuario", id, file);
-				PutObjectResponse response = s3Service.put(PutObjectRequest.builder()
-						.bucket(bucketName)
-						.key(s3Key)
-						.contentType(file.getContentType())
-						.build(), file.getBytes());
+				PutObjectResponse response = s3Service.put(S3Utils.createRestPutObjectRequest(bucketName, s3Key),
+						file.getBytes());
 				if (response.sdkHttpResponse().isSuccessful()) {
 					usuario.setS3Url(s3Service.getUrl(s3Key));
 					usuarioRepository.save(usuario);

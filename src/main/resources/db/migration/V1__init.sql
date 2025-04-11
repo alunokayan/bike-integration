@@ -66,6 +66,7 @@ create table if not exists `evento` (
     `endereco` varchar(255) not null,
     `faixa_km` bigint not null,
     `gratuito` boolean not null,
+    `url_site` varchar(255),
     `id_tipo_evento` bigint not null,
     `id_usuario` bigint not null,
     `aprovado` boolean not null default false,

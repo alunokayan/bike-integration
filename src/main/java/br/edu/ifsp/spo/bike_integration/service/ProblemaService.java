@@ -15,6 +15,7 @@ import br.edu.ifsp.spo.bike_integration.model.Problema;
 import br.edu.ifsp.spo.bike_integration.model.Trecho;
 import br.edu.ifsp.spo.bike_integration.repository.ProblemaRepository;
 import br.edu.ifsp.spo.bike_integration.util.S3Utils;
+import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 
@@ -92,11 +93,8 @@ public class ProblemaService {
 			Problema problema = loadProblemaById(idProblema);
 			if (problema != null) {
 				String s3Key = S3Utils.createS3Key("problema", problema.getId(), file);
-				PutObjectResponse response = s3Service.put(PutObjectRequest.builder()
-						.bucket(bucketName)
-						.key(s3Key)
-						.contentType(file.getContentType())
-						.build(), file.getBytes());
+				PutObjectResponse response = s3Service.put(S3Utils.createRestPutObjectRequest(bucketName, s3Key),
+						file.getBytes());
 				if (response.sdkHttpResponse().isSuccessful()) {
 					problema.setS3Url(s3Service.getUrl(s3Key));
 					problemaRepository.save(problema);
