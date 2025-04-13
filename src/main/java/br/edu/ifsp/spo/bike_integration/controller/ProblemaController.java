@@ -53,6 +53,15 @@ public class ProblemaController {
 
 	@Role(RoleType.PF)
 	@BearerToken
+	@GetMapping(path = "/check", produces = MediaType.APPLICATION_JSON_VALUE)
+	@Operation(summary = "Checar a possibilidade de criação de problema em um trecho.")
+	public ResponseEntity<Boolean> existsTrechoByLatitudeAndLongitude(@RequestParam Double latitude,
+			@RequestParam Double longitude) {
+		return ResponseEntity.status(HttpStatus.OK).body(problemaService.existsTrechoByLatitudeAndLongitude(latitude, longitude));
+	}
+
+	@Role(RoleType.PF)
+	@BearerToken
 	@PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Atualiza um problema.")
 	public ResponseEntity<Problema> update(@PathVariable Long id, @RequestBody ProblemaDTO problema) {

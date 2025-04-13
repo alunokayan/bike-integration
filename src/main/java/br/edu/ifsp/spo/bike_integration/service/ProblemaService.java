@@ -15,8 +15,6 @@ import br.edu.ifsp.spo.bike_integration.model.Problema;
 import br.edu.ifsp.spo.bike_integration.model.Trecho;
 import br.edu.ifsp.spo.bike_integration.repository.ProblemaRepository;
 import br.edu.ifsp.spo.bike_integration.util.S3Utils;
-import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 
 @Service
@@ -45,6 +43,11 @@ public class ProblemaService {
 		return problemaRepository.findByAtivo(false).stream()
 				.filter(problema -> problema.getDtCriacao().isBefore(LocalDateTime.now().minusDays(30)))
 				.toList();
+	}
+
+
+	public boolean existsTrechoByLatitudeAndLongitude(Double latitude, Double longitude) {
+		return trechoService.findTrechoProximoByLocation(latitude, longitude) != null;
 	}
 
 	public Problema create(ProblemaDTO problema) {
