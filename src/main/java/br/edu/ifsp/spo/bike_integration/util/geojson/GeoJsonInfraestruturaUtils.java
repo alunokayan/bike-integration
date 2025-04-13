@@ -24,7 +24,7 @@ public class GeoJsonInfraestruturaUtils implements GeoJsonUtils<List<Infraestrut
 
 	private FeatureDto createFeature(InfraestruturaCicloviaria via) {
 		// Properties
-		PropertiesDto properties = PropertiesDto.builder().name(via.getNome()).id(via.getJsonId())
+		PropertiesDto properties = PropertiesDto.builder().name(via.getNome()).id(String.valueOf(via.getId()))
 				.type(via.getTipoInfraestruturaCicloviaria().getNome()).build();
 
 		// Coordinates
