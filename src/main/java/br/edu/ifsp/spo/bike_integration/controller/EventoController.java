@@ -56,7 +56,7 @@ public class EventoController {
 			@RequestParam(required = false) Boolean gratuito,
 			@RequestParam(required = false) Boolean aprovado) {
 		return ResponseEntity.ok(eventoService.listarEventos(pagina, nome, descricao, data, cidade, estado, faixaKm,
-				tipoEvento, nivelHabilidade, gratuito, aprovado));
+				tipoEvento, nivelHabilidade, gratuito, aprovado, null));
 	}
 
 	@Role(RoleType.PJ)
@@ -131,4 +131,32 @@ public class EventoController {
 			@RequestParam(required = true) Double raio) {
 		return ResponseEntity.ok(eventoService.buscarEventosByRadius(latitude, longitude, raio));
 	}
+
+	@Role({ RoleType.PJ })
+	@BearerToken
+	@GetMapping(path = "/usuario/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@Operation(summary = "Busca eventos de um usuário específico.")
+	public ResponseEntity<ListEventoResponse> buscarEventosByUsuario(
+						@PathVariable("id") Long idUsuario,
+						@RequestParam(required = true) Long pagina,
+						@RequestParam(required = false) String nome,
+						@RequestParam(required = false) String descricao,
+						@RequestParam(required = false) String data,
+						@RequestParam(required = false) String cidade,
+						@RequestParam(required = false) String estado,
+						@RequestParam(required = false) Long faixaKm,
+						@RequestParam(required = false) Long tipoEvento,
+						@RequestParam(required = false) Long nivelHabilidade,
+						@RequestParam(required = false) Boolean gratuito,
+						@RequestParam(required = false) Boolean aprovado) {
+		return ResponseEntity.ok(eventoService.listarEventos(pagina, nome, descricao, data, cidade, estado, faixaKm,
+				tipoEvento, nivelHabilidade, gratuito, aprovado, idUsuario));
+	}
+
+
+
+
+
+
+
 }

@@ -25,6 +25,7 @@ public interface EventoRepository extends JpaRepository<Evento, Long> {
 			+ "AND (:tipoEvento IS NULL OR te.id = :tipoEvento) "
 			+ "AND (:nivelHabilidade IS NULL OR te.id_nivel_habilidade = :nivelHabilidade) "
 			+ "AND (:aprovado IS NULL OR e.aprovado = :aprovado) "
+			+ "AND (:idUsuario IS NULL OR e.id_usuario = :idUsuario)"
 			+ "ORDER BY e.data DESC LIMIT :limit OFFSET :offset";
 
 	String COUNT_QUERY_FOR_LIST_FILTER = "SELECT COUNT(e.id) FROM evento e "
@@ -37,7 +38,8 @@ public interface EventoRepository extends JpaRepository<Evento, Long> {
 			+ "AND (:faixaKm IS NULL OR e.faixa_km = :faixaKm) " + "AND (:gratuito IS NULL OR e.gratuito = :gratuito) "
 			+ "AND (:tipoEvento IS NULL OR te.id = :tipoEvento) "
 			+ "AND (:nivelHabilidade IS NULL OR te.id_nivel_habilidade = :nivelHabilidade) "
-			+ "AND (:aprovado IS NULL OR e.aprovado = :aprovado) ";
+			+ "AND (:aprovado IS NULL OR e.aprovado = :aprovado) "
+			+ "AND (:idUsuario IS NULL OR e.id_usuario = :idUsuario) ";
 
 	Optional<Evento> findById(Long id);
 
@@ -48,13 +50,13 @@ public interface EventoRepository extends JpaRepository<Evento, Long> {
 			@Param("descricao") String descricao, @Param("data") String data, @Param("cidade") String cidade,
 			@Param("estado") String estado, @Param("faixaKm") Long faixaKm, @Param("tipoEvento") Long tipoEvento,
 			@Param("nivelHabilidade") Long nivelHabilidade, @Param("gratuito") Boolean gratuito,
-			@Param("aprovado") Boolean aprovado);
+			@Param("aprovado") Boolean aprovado, @Param("idUsuario") Long idUsuario);
 
 	@Query(value = COUNT_QUERY_FOR_LIST_FILTER, nativeQuery = true)
 	Long countAll(@Param("nome") String nome, @Param("descricao") String descricao, @Param("data") String data,
 			@Param("cidade") String cidade, @Param("estado") String estado, @Param("faixaKm") Long faixaKm,
 			@Param("tipoEvento") Long tipoEvento, @Param("nivelHabilidade") Long nivelHabilidade,
-			@Param("gratuito") Boolean gratuito, @Param("aprovado") Boolean aprovado);
+			@Param("gratuito") Boolean gratuito, @Param("aprovado") Boolean aprovado, @Param("idUsuario") Long idUsuario);
 
 	@Query(value = "SELECT * FROM evento e WHERE ST_Distance_Sphere("
 			+ "POINT(CAST(JSON_EXTRACT(e.endereco, '$.longitude') AS DECIMAL(10,8)), "

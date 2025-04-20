@@ -58,7 +58,7 @@ public class EventoService {
 	}
 
 	public ListEventoResponse listarEventos(Long pagina, String nome, String descricao, String data, String cidade,
-			String estado, Long faixaKm, Long tipoEvento, Long nivelHabilidade, Boolean gratuito, Boolean aprovado) {
+			String estado, Long faixaKm, Long tipoEvento, Long nivelHabilidade, Boolean gratuito, Boolean aprovado, Long idUsuario) {
 
 		Long limit = PaginationType.RESULTS_PER_PAGE.getValue();
 
@@ -67,10 +67,10 @@ public class EventoService {
 		String dataAjustada = DateUtils.fixFormattDate(data);
 
 		List<Evento> eventos = eventoRepository.findAll(limit, offset, nome, descricao, dataAjustada, cidade, estado,
-				faixaKm, tipoEvento, nivelHabilidade, gratuito, aprovado);
+				faixaKm, tipoEvento, nivelHabilidade, gratuito, aprovado, idUsuario);
 
 		Long count = eventoRepository.countAll(nome, descricao, dataAjustada, cidade, estado, faixaKm, tipoEvento,
-				nivelHabilidade, gratuito, aprovado);
+				nivelHabilidade, gratuito, aprovado, idUsuario);
 
 		Long totalPaginas = (long) Math.ceil(count / (double) limit);
 
