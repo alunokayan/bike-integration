@@ -1,14 +1,17 @@
 package br.edu.ifsp.spo.bike_integration.model;
 
-import java.sql.Timestamp;
-import java.util.Date;
+import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -31,21 +34,35 @@ public class Problema {
     @Column(name = "descricao", nullable = false)
     private String descricao;
 
-    @Lob
-    @Column(name = "foto")
-    private byte[] foto;
+    @Column(name = "latitude", nullable = false)
+    private Double latitude;
+
+    @Column(name = "longitude", nullable = false)
+    private Double longitude;
 
     @Column(name = "dt_criacao", nullable = false, updatable = false)
-    private Date dtCriacao;
-
-    @Column(name = "validado", nullable = false)
-    private Boolean validado;
+    private LocalDateTime dtCriacao;
 
     @Column(name = "ativo", nullable = false)
     private Boolean ativo;
 
+    @Column(name = "report_count", nullable = false)
+    private Integer reportCount;
+
+    @Column(name = "s3_url")
+    private String s3Url;
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_trecho", nullable = false)
+    private Trecho trecho;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_tipo_problema", nullable = false)
+    private TipoProblema tipoProblema;
+
     @PrePersist
     public void prePersist() {
-        this.dtCriacao = new Timestamp(System.currentTimeMillis());
+        this.dtCriacao = LocalDateTime.now();
     }
 }

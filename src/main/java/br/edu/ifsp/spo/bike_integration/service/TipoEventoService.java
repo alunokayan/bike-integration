@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.edu.ifsp.spo.bike_integration.dto.TipoEventoDto;
+import br.edu.ifsp.spo.bike_integration.dto.TipoEventoDTO;
 import br.edu.ifsp.spo.bike_integration.model.TipoEvento;
 import br.edu.ifsp.spo.bike_integration.repository.TipoEventoRepository;
 
@@ -22,7 +22,7 @@ public class TipoEventoService {
 		return tipoEventoRepository.findAll();
 	}
 
-	public TipoEvento cadastrarTipoEvento(TipoEventoDto tipoEvento) {
+	public TipoEvento cadastrarTipoEvento(TipoEventoDTO tipoEvento) {
 		return tipoEventoRepository.save(TipoEvento.builder().nome(tipoEvento.getNome())
 				.nivelHabilidade(nivelHabilidadeService.loadNivelHabilidade(tipoEvento.getNivelHabilidade())).build());
 	}

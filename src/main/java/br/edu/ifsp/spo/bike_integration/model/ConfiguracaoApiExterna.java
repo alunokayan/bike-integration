@@ -1,6 +1,6 @@
 package br.edu.ifsp.spo.bike_integration.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -36,10 +36,10 @@ public class ConfiguracaoApiExterna {
 	private String chave;
 
 	@Column(name = "dt_atualizacao", nullable = false)
-	private Date atualizadoEm;
+	private LocalDateTime atualizadoEm;
 
 	@PrePersist
 	public void prePersist() {
-	this.atualizadoEm = new Date();
+		this.atualizadoEm = LocalDateTime.now();
 	}
 }

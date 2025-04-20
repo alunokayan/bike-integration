@@ -3,7 +3,7 @@ package br.edu.ifsp.spo.bike_integration.util.validate;
 import org.springframework.stereotype.Component;
 
 import br.com.caelum.stella.validation.CPFValidator;
-import br.edu.ifsp.spo.bike_integration.util.FormatUtil;
+import br.edu.ifsp.spo.bike_integration.util.FormatUtils;
 
 @Component
 public interface CpfValidate {
@@ -13,7 +13,7 @@ public interface CpfValidate {
 	String CPF_VALID = "CPF válido";
 
 	static String validate(String cpf) {
-		cpf = FormatUtil.removeNonNumeric(cpf);
+		cpf = FormatUtils.removeNonNumeric(cpf);
 
 		if (!isCpfLengthValid(cpf)) {
 			return CPF_LENGTH_ERROR;

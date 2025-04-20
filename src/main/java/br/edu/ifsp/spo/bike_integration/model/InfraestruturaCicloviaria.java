@@ -47,7 +47,7 @@ public class InfraestruturaCicloviaria {
 
 	@ManyToOne
 	@JoinColumn(name = "id_tipo_infraestrutura_cicloviaria")
-	private TipoInfraestruturaCicloviaria tipoInfraestruturaCicloviariaId;
+	private TipoInfraestruturaCicloviaria tipoInfraestruturaCicloviaria;
 
 	@OneToMany(mappedBy = "infraestruturaCicloviaria", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	private List<Trecho> trechos;

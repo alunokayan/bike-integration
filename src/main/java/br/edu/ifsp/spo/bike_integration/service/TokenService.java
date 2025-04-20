@@ -1,6 +1,6 @@
 package br.edu.ifsp.spo.bike_integration.service;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,7 +23,8 @@ public class TokenService {
 			this.disableToken(lastToken);
 		}
 		return tokenRepository.save(
-				Token.builder().dtCriacao(new Date()).dtExpiracao(new Date(System.currentTimeMillis() + 6 * 60000))
+				Token.builder().dtCriacao(LocalDateTime.now())
+						.dtExpiracao(LocalDateTime.now().plusMinutes(6)).tokenGerado(this.generateToken()).email(email)
 						.tokenGerado(this.generateToken()).email(email).build());
 	}
 
@@ -33,7 +34,7 @@ public class TokenService {
 
 	public Boolean isValidToken(String tokenValue, String email) {
 		Token token = this.getToken(tokenValue);
-		if (token != null && email.equals(token.getEmail()) && token.getDtExpiracao().after(new Date())) {
+		if (token != null && email.equals(token.getEmail()) && token.getDtExpiracao().isAfter(LocalDateTime.now())) {
 			this.disableToken(token);
 			return true;
 		}
@@ -57,7 +58,7 @@ public class TokenService {
 	}
 
 	public Token disableToken(Token token) {
-		token.setDtExpiracao(new Date(System.currentTimeMillis() - 1 * 60000));
+		token.setDtExpiracao(LocalDateTime.now().minusMinutes(1));
 		return tokenRepository.save(token);
 	}
 

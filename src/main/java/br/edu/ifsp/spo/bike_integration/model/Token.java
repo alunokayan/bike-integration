@@ -1,6 +1,6 @@
 package br.edu.ifsp.spo.bike_integration.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,16 +30,16 @@ public class Token {
 	private String tokenGerado;
 
 	@Column(name = "dt_criacao", nullable = false, updatable = false)
-	private Date dtCriacao;
+	private LocalDateTime dtCriacao;
 
 	@Column(name = "dt_expiracao", nullable = false)
-	private Date dtExpiracao;
+	private LocalDateTime dtExpiracao;
 
 	@Column(name = "email", nullable = false)
 	private String email;
 
 	@PrePersist
 	public void prePersist() {
-		this.dtCriacao = new Date();
+		this.dtCriacao = LocalDateTime.now();
 	}
 }
