@@ -1,9 +1,9 @@
 package br.edu.ifsp.spo.bike_integration.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import br.edu.ifsp.spo.bike_integration.converter.EnderecoConverter;
-import br.edu.ifsp.spo.bike_integration.dto.EnderecoDto;
+import br.edu.ifsp.spo.bike_integration.dto.EnderecoDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -38,28 +38,41 @@ public class Evento {
 	private String descricao;
 
 	@Column(name = "data")
-	private Date data;
+	private LocalDateTime data;
 
 	@Column(name = "dt_atualizacao")
-	private Date dtAtualizacao;
-	
+	private LocalDateTime dtAtualizacao;
+
 	@Column(name = "endereco", nullable = false)
 	@Convert(converter = EnderecoConverter.class)
-	private EnderecoDto endereco;
-	
+	private EnderecoDTO endereco;
+
 	@Column(name = "faixa_km")
 	private Long faixaKm;
-	
+
 	@Column(name = "gratuito")
 	private boolean gratuito;
+
+	@Column(name = "url_site")
+	private String urlSite;
 
 	@ManyToOne
 	@JoinColumn(name = "id_tipo_evento")
 	private TipoEvento tipoEvento;
 
+	@ManyToOne
+	@JoinColumn(name = "id_usuario")
+	private Usuario usuario;
+
+	@Column(name = "aprovado", nullable = false)
+	private boolean aprovado;
+
+	@Column(name = "s3_url")
+	private String s3Url;
+
 	@PrePersist
 	void prePersist() {
-		this.dtAtualizacao = new Date();
+		this.dtAtualizacao = LocalDateTime.now();
 	}
 
 }

@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.edu.ifsp.spo.bike_integration.dto.NivelHabilidadeDto;
+import br.edu.ifsp.spo.bike_integration.dto.NivelHabilidadeDTO;
 import br.edu.ifsp.spo.bike_integration.model.NivelHabilidade;
 import br.edu.ifsp.spo.bike_integration.repository.NivelHabilidadeRepository;
 
@@ -19,7 +19,7 @@ public class NivelHabilidadeService {
 		return nivelHabilidadeRepository.findAll();
 	}
 
-	public NivelHabilidade cadastrarNivelHabilidade(NivelHabilidadeDto nivelHabilidade) {
+	public NivelHabilidade cadastrarNivelHabilidade(NivelHabilidadeDTO nivelHabilidade) {
 		return nivelHabilidadeRepository.save(NivelHabilidade.builder().nome(nivelHabilidade.getNome())
 				.descricao(nivelHabilidade.getDescricao()).build());
 	}

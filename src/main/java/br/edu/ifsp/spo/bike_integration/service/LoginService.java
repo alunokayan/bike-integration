@@ -3,11 +3,11 @@ package br.edu.ifsp.spo.bike_integration.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.edu.ifsp.spo.bike_integration.dto.UsuarioLoginDto;
+import br.edu.ifsp.spo.bike_integration.dto.UsuarioLoginDTO;
 import br.edu.ifsp.spo.bike_integration.exception.CryptoException;
 import br.edu.ifsp.spo.bike_integration.model.Usuario;
 import br.edu.ifsp.spo.bike_integration.repository.UsuarioRepository;
-import br.edu.ifsp.spo.bike_integration.util.CryptoUtil;
+import br.edu.ifsp.spo.bike_integration.util.CryptoUtils;
 import jakarta.mail.MessagingException;
 
 @Service
@@ -22,7 +22,10 @@ public class LoginService {
 	@Autowired
 	private EmailService emailService;
 
-	public Usuario login(UsuarioLoginDto usuario) throws CryptoException, MessagingException {
+	@Autowired
+	private SessaoService sessaoService;
+
+	public Usuario login(UsuarioLoginDTO usuario) throws CryptoException, MessagingException {
 		Usuario usuarioLogado;
 
 		if (usuario.getNomeUsuario() != null) {
@@ -37,20 +40,23 @@ public class LoginService {
 			throw new IllegalArgumentException("Usuário não encontrado!");
 		}
 
-		if (!usuario.getSenha().isBlank() && usuarioLogado != null && !usuario.getSenha().equals(CryptoUtil
-				.decrypt(usuarioLogado.getSenha(), CryptoUtil.getSecretKeyFromString(usuarioLogado.getHash())))) {
+		if (!usuario.getSenha().isBlank() && usuarioLogado != null && !usuario.getSenha().equals(CryptoUtils
+				.decrypt(usuarioLogado.getSenha(), CryptoUtils.getSecretKeyFromString(usuarioLogado.getHash())))) {
 			throw new IllegalArgumentException("Usuário ou senha inválidos!");
 		} else if (usuarioLogado == null) {
 			throw new IllegalArgumentException("Usuário não encontrado!");
 		}
 
-		// Gerar token
-		this.tokenService.generateToken(usuarioLogado.getEmail());
+		// Gerar token email
+		// this.tokenService.generateToken(usuarioLogado.getEmail());
 
 		// Enviar email com token
-		this.emailService.sendLoginTokenEmail(usuarioLogado);
+		// this.emailService.sendLoginTokenEmail(usuarioLogado);
 
-		return usuarioLogado;
+		// Criar sessão
+		this.sessaoService.create(usuarioLogado);
+
+		return usuarioRepository.findById(usuarioLogado.getId()).orElse(null);
 	}
 
 	public void recoverPassword(String idUsuario, String token, String novaSenha)
@@ -65,8 +71,8 @@ public class LoginService {
 			throw new IllegalArgumentException("Token inválido!");
 		}
 
-		usuario.setHash(CryptoUtil.generateKeyAsString());
-		usuario.setSenha(CryptoUtil.encrypt(novaSenha, usuario.getHash()));
+		usuario.setHash(CryptoUtils.generateKeyAsString());
+		usuario.setSenha(CryptoUtils.encrypt(novaSenha, usuario.getHash()));
 		this.usuarioRepository.save(usuario);
 
 		this.tokenService.disableToken(this.tokenService.getToken(token));

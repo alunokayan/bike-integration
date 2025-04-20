@@ -9,6 +9,7 @@ import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import br.edu.ifsp.spo.bike_integration.exception.BikeIntegrationCustomException;
 import br.edu.ifsp.spo.bike_integration.hardcode.ConfiguracaoApiType;
 import br.edu.ifsp.spo.bike_integration.hardcode.ViaCepApiType;
 import br.edu.ifsp.spo.bike_integration.model.ConfiguracaoApiExterna;
@@ -17,7 +18,7 @@ import br.edu.ifsp.spo.bike_integration.response.BrasilApiCepResponse.Location;
 import br.edu.ifsp.spo.bike_integration.response.BrasilApiCepResponse.Location.Coordinates;
 import br.edu.ifsp.spo.bike_integration.response.ViaCepApiResponse;
 import br.edu.ifsp.spo.bike_integration.service.ConfiguracaoApiExternaService;
-import br.edu.ifsp.spo.bike_integration.util.FormatUtil;
+import br.edu.ifsp.spo.bike_integration.util.FormatUtils;
 import jakarta.annotation.PostConstruct;
 
 @Service
@@ -47,11 +48,12 @@ public class ViaCepService {
 
 		try {
 			return this.convertToBrasilApiResponse(restTemplate.getForObject(
-					configuracao.getUrl() + ViaCepApiType.WS.getEndpoint() + FormatUtil.removeNonNumeric(cep) + "/json",
+					configuracao.getUrl() + ViaCepApiType.WS.getEndpoint() + FormatUtils.removeNonNumeric(cep)
+							+ "/json",
 					ViaCepApiResponse.class));
 		} catch (Exception e) {
 			logger.error("Erro ao buscar endereço pelo CEP: " + cep, e);
-			throw new NotFoundException();
+			throw new BikeIntegrationCustomException("Erro ao buscar endereço pelo CEP: " + cep, e);
 		}
 	}
 
