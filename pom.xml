@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>br.edu.ifsp.spo</groupId>
 	<artifactId>bike-integration</artifactId>
-	<version>implementacao-problemas-avaliacao-SNAPSHOT</version>
+	<version>develop-SNAPSHOT</version>
 	<name>bike-integration</name>
 	<description>Api de integração para gerenciamento do APP principal</description>
 	<url />
@@ -50,9 +50,9 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-		<dependency> 
-		    <groupId>org.springframework.boot</groupId>
-		    <artifactId>spring-boot-starter-thymeleaf</artifactId> 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -97,7 +97,7 @@
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 			<version>${springdoc-openapi-starter-webmvc-ui.version}</version>
-		</dependency>		
+		</dependency>
 		<dependency>
 			<groupId>jakarta.servlet</groupId>
 			<artifactId>jakarta.servlet-api</artifactId>
@@ -118,12 +118,12 @@
 			<version>${modelmapper.version}</version>
 		</dependency>
 		<dependency>
-		    <groupId>io.netty</groupId>
-		    <artifactId>netty-codec-http</artifactId>
-	    </dependency>	    
+			<groupId>io.netty</groupId>
+			<artifactId>netty-codec-http</artifactId>
+		</dependency>
 		<dependency>
-		    <groupId>org.hibernate.validator</groupId>
-		    <artifactId>hibernate-validator</artifactId>
+			<groupId>org.hibernate.validator</groupId>
+			<artifactId>hibernate-validator</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>software.amazon.awssdk</groupId>
@@ -135,9 +135,9 @@
 			<artifactId>s3</artifactId>
 			<version>${aws-java-sdk-s3.version}</version>
 		</dependency>
-	    
+
 	</dependencies>
-	
+
 
 	<build>
 		<plugins>
