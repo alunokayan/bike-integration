@@ -152,11 +152,4 @@ public class EventoController {
 		return ResponseEntity.ok(eventoService.listarEventos(pagina, nome, descricao, data, cidade, estado, faixaKm,
 				tipoEvento, nivelHabilidade, gratuito, aprovado, idUsuario));
 	}
-
-
-
-
-
-
-
 }

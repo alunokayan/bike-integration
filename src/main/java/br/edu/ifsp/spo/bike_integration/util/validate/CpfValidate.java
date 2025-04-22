@@ -1,6 +1,5 @@
 package br.edu.ifsp.spo.bike_integration.util.validate;
 
-import java.util.Map;
 
 import org.springframework.stereotype.Component;
 

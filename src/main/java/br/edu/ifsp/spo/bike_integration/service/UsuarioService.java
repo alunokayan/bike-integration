@@ -138,4 +138,8 @@ public class UsuarioService {
 	public CpfValidationResult validateCpf(String cpf) {
 		return CpfValidate.validate(cpf);
 	}
+
+	public Boolean validateUsuarioByEmailOrNomeUsuario (String nomeUsuario,String email) {
+		return usuarioRepository.existsByNomeUsuarioOrEmail(nomeUsuario, email);
+	}
 }

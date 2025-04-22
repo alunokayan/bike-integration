@@ -1,6 +1,5 @@
 package br.edu.ifsp.spo.bike_integration.controller;
 
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -105,5 +104,19 @@ public class UsuarioController {
 	@Operation(summary = "Valida e formata um CPF informado.")
 	public ResponseEntity<CpfValidationResult> validateCpf(@RequestParam String cpf) {
 		return ResponseEntity.ok(CpfValidate.validate(cpf));
+	}
+
+	@Role({ RoleType.PF, RoleType.ADMIN })
+	@BearerToken
+	@XAccessKey
+	@GetMapping(path = "/validate", produces = MediaType.APPLICATION_JSON_VALUE)
+	@Operation(summary = "Valida se o email ou nome de usuário já estão cadastrados.")
+	public ResponseEntity<Boolean> validateEmail(
+			@RequestParam(required = false) String email, 
+			@RequestParam(required = false) String nomeUsuario) {
+		if (email == null && nomeUsuario == null) {
+			throw new IllegalArgumentException("Pelo menos um dos parâmetros (email ou nomeUsuario) deve ser informado.");
+		}
+		return ResponseEntity.ok(usuarioService.validateUsuarioByEmailOrNomeUsuario(nomeUsuario, email));
 	}
 }
