@@ -30,6 +30,7 @@ import br.edu.ifsp.spo.bike_integration.service.EventoService;
 import br.edu.ifsp.spo.bike_integration.service.UsuarioService;
 import br.edu.ifsp.spo.bike_integration.util.FileUtils;
 import br.edu.ifsp.spo.bike_integration.util.validate.CpfValidate;
+import br.edu.ifsp.spo.bike_integration.util.validate.CpfValidate.CpfValidationResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -102,7 +103,7 @@ public class UsuarioController {
 	@XAccessKey
 	@GetMapping(path = "/cpf/validate", produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Valida e formata um CPF informado.")
-	public ResponseEntity<Map<String, String>> validateCpf(@RequestParam String cpf) {
-		return ResponseEntity.ok(Map.of("response", CpfValidate.validate(cpf)));
+	public ResponseEntity<CpfValidationResult> validateCpf(@RequestParam String cpf) {
+		return ResponseEntity.ok(CpfValidate.validate(cpf));
 	}
 }
