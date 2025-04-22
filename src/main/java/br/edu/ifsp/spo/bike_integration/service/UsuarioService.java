@@ -21,6 +21,7 @@ import br.edu.ifsp.spo.bike_integration.rest.service.OpenStreetMapApiService;
 import br.edu.ifsp.spo.bike_integration.util.FormatUtils;
 import br.edu.ifsp.spo.bike_integration.util.S3Utils;
 import br.edu.ifsp.spo.bike_integration.util.validate.CpfValidate;
+import br.edu.ifsp.spo.bike_integration.util.validate.CpfValidate.CpfValidationResult;
 import jakarta.transaction.Transactional;
 import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
@@ -134,7 +135,7 @@ public class UsuarioService {
 		usuarioRepository.deleteById(id);
 	}
 
-	public String validateCpf(String cpf) {
+	public CpfValidationResult validateCpf(String cpf) {
 		return CpfValidate.validate(cpf);
 	}
 }
