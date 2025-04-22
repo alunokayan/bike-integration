@@ -102,11 +102,7 @@ public class UsuarioController {
 	@GetMapping(path = "/cpf/validate", produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Valida e formata um CPF informado.")
 	public ResponseEntity<CpfValidationResult> validateCpf(@RequestParam String cpf) {
-		CpfValidationResult validationResult = usuarioService.validateCpf(cpf);
-		if (!validationResult.isValid()) {
-			return ResponseEntity.ok(validationResult);
-		}
-		return ResponseEntity.ok(usuarioService.existUsuarioCpf(cpf));
+		return ResponseEntity.ok(usuarioService.validateCpf(cpf));
 	}
 
 	@Role({ RoleType.PF, RoleType.ADMIN })

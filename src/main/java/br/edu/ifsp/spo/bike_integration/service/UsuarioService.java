@@ -135,15 +135,10 @@ public class UsuarioService {
 		usuarioRepository.deleteById(id);
 	}
 
-	public CpfValidationResult existUsuarioCpf (String cpf) {
-		if(usuarioRepository.existsByCpf(cpf)){
-			return new CpfValidationResult(false, "CPF já cadastrado.");
-		}
-		return new CpfValidationResult(true, "CPF disponível.");
-	}
-
 	public CpfValidationResult validateCpf(String cpf) {
-		return CpfValidate.validate(cpf);
+		return CpfValidate.validate(cpf).isValid()
+				? (usuarioRepository.existsByCpf(cpf) ? (new CpfValidationResult(false, "CPF já cadastrado.")):(new CpfValidationResult(true, "CPF disponível.")))
+				: new CpfValidationResult(false, "CPF inválido.");
 	}
 
 	public Boolean validateUsuarioByEmailOrNomeUsuario (String nomeUsuario,String email) {
