@@ -118,4 +118,13 @@ public class UsuarioController {
 		}
 		return ResponseEntity.ok(usuarioService.validateUsuarioByEmailOrNomeUsuario(nomeUsuario, email));
 	}
+
+	@Role({ RoleType.PF, RoleType.ADMIN })
+	@BearerToken
+	@XAccessKey
+	@GetMapping(path = "/cnpj/validate")
+	@Operation(summary = "Valida se o CNPJ já está cadastrado.")
+	public ResponseEntity<Boolean> validateCNPJ(@RequestParam(required = true) String cnpj){
+		return ResponseEntity.ok(usuarioService.validateUsuarioByCnpj(cnpj));
+	}
 }

@@ -141,6 +141,10 @@ public class UsuarioService {
 				: new CpfValidationResult(false, "CPF inválido.");
 	}
 
+	public Boolean validateUsuarioByCnpj (String cnpj) {
+		return usuarioRepository.existsByCnpj(cnpj);
+	}
+
 	public Boolean validateUsuarioByEmailOrNomeUsuario (String nomeUsuario,String email) {
 		return usuarioRepository.existsByNomeUsuarioOrEmail(nomeUsuario, email);
 	}
