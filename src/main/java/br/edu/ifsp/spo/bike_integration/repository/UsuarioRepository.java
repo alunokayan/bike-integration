@@ -21,4 +21,10 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
 	@Query(value = "SELECT CASE WHEN COUNT(u) > 0 THEN true ELSE false END FROM Usuario u WHERE u.nomeUsuario = :nomeUsuario OR u.email = :email")
 	Boolean existsByNomeUsuarioOrEmail(@Param("nomeUsuario") String nomeUsuario, @Param("email") String email);
+
+	@Query(value = "SELECT CASE WHEN COUNT(u) > 0 THEN true ELSE false END FROM Usuario u WHERE u.cpf = :cpf")
+	Boolean existsByCpf(String cpf);
+
+	@Query(value = "SELECT CASE WHEN COUNT(u) > 0 THEN true ELSE false END FROM Usuario u WHERE u.cnpj = :cnpj")
+	Boolean existsByCnpj(String cnpj);
 }

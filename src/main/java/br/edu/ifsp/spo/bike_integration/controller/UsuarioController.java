@@ -28,7 +28,6 @@ import br.edu.ifsp.spo.bike_integration.model.Usuario;
 import br.edu.ifsp.spo.bike_integration.service.EventoService;
 import br.edu.ifsp.spo.bike_integration.service.UsuarioService;
 import br.edu.ifsp.spo.bike_integration.util.FileUtils;
-import br.edu.ifsp.spo.bike_integration.util.validate.CpfValidate;
 import br.edu.ifsp.spo.bike_integration.util.validate.CpfValidate.CpfValidationResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -103,7 +102,11 @@ public class UsuarioController {
 	@GetMapping(path = "/cpf/validate", produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Valida e formata um CPF informado.")
 	public ResponseEntity<CpfValidationResult> validateCpf(@RequestParam String cpf) {
-		return ResponseEntity.ok(CpfValidate.validate(cpf));
+		CpfValidationResult validationResult = usuarioService.validateCpf(cpf);
+		if (!validationResult.isValid()) {
+			return ResponseEntity.ok(validationResult);
+		}
+		return ResponseEntity.ok(usuarioService.existUsuarioCpf(cpf));
 	}
 
 	@Role({ RoleType.PF, RoleType.ADMIN })
