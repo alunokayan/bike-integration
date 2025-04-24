@@ -23,8 +23,6 @@ import br.edu.ifsp.spo.bike_integration.util.S3Utils;
 import br.edu.ifsp.spo.bike_integration.util.validate.CpfValidate;
 import br.edu.ifsp.spo.bike_integration.util.validate.CpfValidate.CpfValidationResult;
 import jakarta.transaction.Transactional;
-import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 
 @Service
@@ -137,15 +135,16 @@ public class UsuarioService {
 
 	public CpfValidationResult validateCpf(String cpf) {
 		return CpfValidate.validate(cpf).isValid()
-				? (usuarioRepository.existsByCpf(cpf) ? (new CpfValidationResult(false, "CPF já cadastrado.")):(new CpfValidationResult(true, "CPF disponível.")))
+				? (usuarioRepository.existsByCpf(cpf) ? (new CpfValidationResult(false, "CPF já cadastrado."))
+						: (new CpfValidationResult(true, "CPF disponível.")))
 				: new CpfValidationResult(false, "CPF inválido.");
 	}
 
-	public Boolean validateUsuarioByCnpj (String cnpj) {
+	public Boolean validateUsuarioByCnpj(String cnpj) {
 		return usuarioRepository.existsByCnpj(cnpj);
 	}
 
-	public Boolean validateUsuarioByEmailOrNomeUsuario (String nomeUsuario,String email) {
+	public Boolean validateUsuarioByEmailOrNomeUsuario(String nomeUsuario, String email) {
 		return usuarioRepository.existsByNomeUsuarioOrEmail(nomeUsuario, email);
 	}
 }
