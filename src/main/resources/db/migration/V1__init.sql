@@ -131,6 +131,16 @@ create table if not exists `problema` (
     constraint `fk_tipo_problema` foreign key (`id_tipo_problema`) references `tipo_problema`(`id`)
 );
 
+create table if not exists `problema_report` (
+    `id` bigint primary key auto_increment,
+    `id_usuario` bigint not null,
+    `id_problema` bigint not null,
+    `dt_criacao` timestamp default (now()),
+    constraint `fk_usuario_report` foreign key (`id_usuario`) references `usuario`(`id`),
+    constraint `fk_problema_report` foreign key (`id_problema`) references `problema`(`id`),
+    unique (`id_usuario`, `id_problema`)
+);
+
 -- Inserts básicos
 
 -- Api's externa
@@ -142,10 +152,10 @@ on duplicate key update nome = values(nome);
 
 -- Níveis de habilidade
 insert into `nivel_habilidade` (nome, descricao) values
-    ('INICIANTE', 'Ciclista iniciante'),
-    ('INTERMEDIARIO', 'Ciclista intermediário'),
-    ('AVANCADO', 'Ciclista avançado'),
-    ('PROFISSIONAL', 'Ciclista profissional')
+    ('Iniciante', 'Ciclista iniciante'),
+    ('Intermediário', 'Ciclista intermediário'),
+    ('Avançado', 'Ciclista avançado'),
+    ('Profissional', 'Ciclista profissional')
 on duplicate key update nome = values(nome);
 
 -- Tipos de evento

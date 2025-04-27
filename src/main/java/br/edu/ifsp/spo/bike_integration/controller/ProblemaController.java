@@ -91,8 +91,8 @@ public class ProblemaController {
 	@BearerToken
 	@PostMapping(path = "/{id}/report", produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Reporta um problema como não existente.")
-	public ResponseEntity<Void> reportProblem(@PathVariable Long id) {
-		problemaService.reportProblem(id);
+	public ResponseEntity<Void> reportProblem(@PathVariable Long id, @RequestParam Long usuarioId, @RequestParam boolean exists) {
+		problemaService.reportProblem(id, usuarioId, exists);
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
