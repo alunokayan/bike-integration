@@ -26,14 +26,21 @@ createApp({
           method: 'POST'
         });
         if (response.ok) {
-          const token = await response.json().then(data => data.token);
+          const data = await response.json();
+          const token = data.token;
+          const userId = data.userId;
+          const userName = data.userName;
+
           setCookie('token', token, 1);
+          setCookie('userId', userId, 1);
+          setCookie('userName', userName, 1);
           window.location.href = 'home';
         } else {
           this.loginError = 'Erro ao fazer login.';
         }
       } catch (error) {
         this.loginError = 'Erro na requisição de login.';
+        console.error(error);
       }
     }
   }

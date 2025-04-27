@@ -65,7 +65,10 @@ public class AppController {
         sessaoService.create(usuario, token);
 
         return new ResponseEntity<>(
-                Map.of("token", CryptoUtils.encryptWithHexKey(token, decryptionKey)),
+                Map.of(
+                        "token", CryptoUtils.encryptWithHexKey(token, decryptionKey),
+                        "userId", String.valueOf(usuario.getId()),
+                        "username", usuario.getNomeUsuario()),
                 HttpStatus.OK);
     }
 

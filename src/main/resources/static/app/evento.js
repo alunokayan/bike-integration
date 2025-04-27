@@ -22,6 +22,24 @@ createApp({
         urlSite: '',
         aprovado: ''
       },
+      newEvent: {
+        nome: '',
+        descricao: '',
+        data: '',
+        endereco: {
+          cep: '',
+          estado: '',
+          cidade: '',
+          bairro: '',
+          rua: '',
+          numero: ''
+        },
+        faixaKm: '',
+        gratuito: false,
+        urlSite: '',
+        idTipoEvento: '',
+        idUsuario: ''
+      },
       tiposEvento: [],
       niveisHabilidade: []
     };
@@ -212,14 +230,6 @@ createApp({
       modalInstance.show();
     },
     submitEvent() {
-      const jsonText = document.getElementById('jsonEventInput').value;
-      let eventData;
-      try {
-          eventData = JSON.parse(jsonText);
-      } catch (error) {
-          this.eventError = 'JSON inválido. Verifique a sintaxe.';
-          return;
-      }
       const token = getCookie('token');
       fetch(`${baseUrl}/v1/evento/`, {
           method: 'POST',
@@ -227,7 +237,7 @@ createApp({
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json'
           },
-          body: JSON.stringify(eventData)
+          body: JSON.stringify(this.newEvent)
       })
       .then(response => {
           if (response.ok) {
