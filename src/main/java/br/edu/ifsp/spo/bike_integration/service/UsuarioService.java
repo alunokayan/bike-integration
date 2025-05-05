@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import br.edu.ifsp.spo.bike_integration.aws.service.S3Service;
+import br.edu.ifsp.spo.bike_integration.dto.JwtUserDTO;
 import br.edu.ifsp.spo.bike_integration.dto.UsuarioAdmDTO;
 import br.edu.ifsp.spo.bike_integration.dto.UsuarioDTO;
 import br.edu.ifsp.spo.bike_integration.dto.UsuarioUpdateDTO;
@@ -56,6 +57,11 @@ public class UsuarioService {
 
 	public Usuario loadUsuarioByNomeUsuario(String nomeUsuario) {
 		return usuarioRepository.findByNomeUsuario(nomeUsuario).orElse(null);
+	}
+
+	public Usuario loadUsuarioByJwt(JwtUserDTO jwtUserDTO) {
+		return usuarioRepository.findByEmail(jwtUserDTO.email())
+				.orElse(usuarioRepository.findByNomeUsuario(jwtUserDTO.nickname()).orElse(null));
 	}
 
 	public Usuario createUsuario(UsuarioDTO usuarioDto) {

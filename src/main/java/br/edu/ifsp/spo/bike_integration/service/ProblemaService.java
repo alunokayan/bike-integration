@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import br.edu.ifsp.spo.bike_integration.aws.service.S3Service;
+import br.edu.ifsp.spo.bike_integration.dto.JwtUserDTO;
 import br.edu.ifsp.spo.bike_integration.dto.ProblemaDTO;
 import br.edu.ifsp.spo.bike_integration.model.Problema;
 import br.edu.ifsp.spo.bike_integration.model.ProblemaReport;
@@ -37,6 +38,9 @@ public class ProblemaService {
 	@Autowired
 	private ProblemaReportRepository problemaReportRepository;
 
+	@Autowired
+	private UsuarioService usuarioService;
+
 	@Value("${aws.s3.bucket-name}")
 	private String bucketName;
 
@@ -49,7 +53,6 @@ public class ProblemaService {
 				.filter(problema -> problema.getDtCriacao().isBefore(LocalDateTime.now().minusDays(30)))
 				.toList();
 	}
-
 
 	public boolean existsTrechoByLatitudeAndLongitude(Double latitude, Double longitude) {
 		return trechoService.findTrechoProximoByLocation(latitude, longitude) != null;
@@ -131,24 +134,25 @@ public class ProblemaService {
 		return problemaRepository.findProblemasProximosByLocation(latitude, longitude, raio);
 	}
 
-	public void reportProblem(Long problemaId, long usuarioId ,boolean exists) {
+	public void reportProblem(Long problemaId, JwtUserDTO jwtUserDTO, boolean exists) {
+		Long usuarioId = usuarioService.loadUsuarioByJwt(jwtUserDTO).getId();
 		Problema problema = loadProblemaById(problemaId);
 
 		boolean alreadyReported = problemaReportRepository.existsByUsuarioIdAndProblemaId(usuarioId, problemaId);
-        if (alreadyReported) {
-            throw new IllegalArgumentException("Usuário já reportou este problema.");
-        }
+		if (alreadyReported) {
+			throw new IllegalArgumentException("Usuário já reportou este problema.");
+		}
 
 		if (problema != null) {
-			problema.setReportCount(problema.getReportCount() + (exists? -1: 1));
+			problema.setReportCount(problema.getReportCount() + (exists ? -1 : 1));
 			if (problema.getReportCount() >= 3) {
 				problema.setAtivo(false);
 			}
 
 			problemaReportRepository.save(ProblemaReport.builder()
-			.problema(problema)
-			.usuarioId(usuarioId)
-			.build());
+					.problema(problema)
+					.usuarioId(usuarioId)
+					.build());
 
 			problemaRepository.save(problema);
 		} else {

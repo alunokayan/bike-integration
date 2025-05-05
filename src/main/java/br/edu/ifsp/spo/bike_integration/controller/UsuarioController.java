@@ -1,13 +1,12 @@
 package br.edu.ifsp.spo.bike_integration.controller;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import br.edu.ifsp.spo.bike_integration.annotation.BearerToken;
 import br.edu.ifsp.spo.bike_integration.annotation.Role;
 import br.edu.ifsp.spo.bike_integration.annotation.XAccessKey;
+import br.edu.ifsp.spo.bike_integration.dto.JwtUserDTO;
 import br.edu.ifsp.spo.bike_integration.dto.UsuarioAdmDTO;
 import br.edu.ifsp.spo.bike_integration.dto.UsuarioDTO;
 import br.edu.ifsp.spo.bike_integration.dto.UsuarioUpdateDTO;
@@ -45,10 +45,10 @@ public class UsuarioController {
 
 	@Role({ RoleType.PF, RoleType.PJ })
 	@BearerToken
-	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Retorna os detalhes de um usuário pelo ID informado.")
-	public ResponseEntity<Usuario> get(@PathVariable Long id) {
-		return ResponseEntity.ok(usuarioService.loadUsuarioById(id));
+	public ResponseEntity<Usuario> get(@AuthenticationPrincipal JwtUserDTO jwtUserDTO) {
+		return ResponseEntity.ok(usuarioService.loadUsuarioByJwt(jwtUserDTO));
 	}
 
 	@Role(RoleType.ADMIN)
@@ -69,29 +69,32 @@ public class UsuarioController {
 
 	@Role({ RoleType.PF, RoleType.PJ })
 	@BearerToken
-	@PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Atualiza os dados de um usuário existente.")
-	public ResponseEntity<Usuario> update(@PathVariable Long id, @RequestBody UsuarioUpdateDTO usuarioDto) {
-		return ResponseEntity.ok(usuarioService.updateUsuario(id, usuarioDto));
+	public ResponseEntity<Usuario> update(@AuthenticationPrincipal JwtUserDTO jwtUserDTO,
+			@RequestBody UsuarioUpdateDTO usuarioDto) {
+		return ResponseEntity
+				.ok(usuarioService.updateUsuario(usuarioService.loadUsuarioByJwt(jwtUserDTO).getId(), usuarioDto));
 	}
 
 	@Role({ RoleType.PF, RoleType.PJ })
 	@BearerToken
-	@PutMapping(path = "/{id}/foto", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PutMapping(path = "/foto", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@Operation(summary = "Atualiza a foto do usuário.")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void atualizarFotoUsuario(@PathVariable Long id, @RequestParam MultipartFile file) {
+	public void atualizarFotoUsuario(@AuthenticationPrincipal JwtUserDTO jwtUserDTO, @RequestParam MultipartFile file) {
 		if (!FileUtils.isValidFileType(file))
 			throw new IllegalArgumentException("Formato de arquivo inválido. Aceito apenas JPEG.");
-		usuarioService.updateFotoUsuario(id, file);
+		usuarioService.updateFotoUsuario(usuarioService.loadUsuarioByJwt(jwtUserDTO).getId(), file);
 	}
 
 	@Role(RoleType.ADMIN)
 	@BearerToken
-	@DeleteMapping(path = "/{id}")
+	@DeleteMapping
 	@Operation(summary = "Remove um usuário e seus eventos associados pelo ID informado.")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void delete(@PathVariable Long id) {
+	public void delete(@AuthenticationPrincipal JwtUserDTO jwtUserDTO) {
+		Long id = usuarioService.loadUsuarioByJwt(jwtUserDTO).getId();
 		eventoService.deleteEventosByUsuario(id);
 		usuarioService.deleteUsuario(id);
 	}
@@ -111,10 +114,11 @@ public class UsuarioController {
 	@GetMapping(path = "/validate", produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Valida se o email ou nome de usuário já estão cadastrados.")
 	public ResponseEntity<Boolean> validateEmail(
-			@RequestParam(required = false) String email, 
+			@RequestParam(required = false) String email,
 			@RequestParam(required = false) String nomeUsuario) {
 		if (email == null && nomeUsuario == null) {
-			throw new IllegalArgumentException("Pelo menos um dos parâmetros (email ou nomeUsuario) deve ser informado.");
+			throw new IllegalArgumentException(
+					"Pelo menos um dos parâmetros (email ou nomeUsuario) deve ser informado.");
 		}
 		return ResponseEntity.ok(usuarioService.validateUsuarioByEmailOrNomeUsuario(nomeUsuario, email));
 	}
@@ -124,7 +128,7 @@ public class UsuarioController {
 	@XAccessKey
 	@GetMapping(path = "/cnpj/validate")
 	@Operation(summary = "Valida se o CNPJ já está cadastrado.")
-	public ResponseEntity<Boolean> validateCNPJ(@RequestParam(required = true) String cnpj){
+	public ResponseEntity<Boolean> validateCNPJ(@RequestParam(required = true) String cnpj) {
 		return ResponseEntity.ok(usuarioService.validateUsuarioByCnpj(cnpj));
 	}
 }
