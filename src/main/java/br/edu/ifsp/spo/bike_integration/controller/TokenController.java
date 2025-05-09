@@ -41,7 +41,7 @@ public class TokenController {
 	@Operation(summary = "Verifica se o token é válido para o email informado.")
 	public ResponseEntity<ValidateTokenResponse> isValidateToken(@RequestParam String token,
 			@RequestParam String email) {
-		return ResponseEntity.status(HttpStatus.OK).body(tokenService.validateTokenForRecover(token, email));
+		return ResponseEntity.status(HttpStatus.OK).body(tokenService.validateTokenForRegister(token, email));
 	}
 
 	@Role(RoleType.ADMIN)
@@ -60,6 +60,15 @@ public class TokenController {
 	@ResponseStatus(HttpStatus.OK)
 	public void sendRecoveryTokenEmail(@RequestParam String email) throws MessagingException {
 		emailService.sendRecuperacaoTokenEmail(email, tokenService.generateToken(email).getTokenGerado());
+	}
+
+	@Role(RoleType.ADMIN)
+	@XAccessKey
+	@GetMapping(path = "recover/validate", produces = MediaType.APPLICATION_JSON_VALUE)
+	@Operation(summary = "Verifica se o token é válido para o email informado.")
+	public ResponseEntity<ValidateTokenResponse> isValidateRecoveryToken(@RequestParam String token,
+			@RequestParam String email) {
+		return ResponseEntity.status(HttpStatus.OK).body(tokenService.validateTokenForRecover(token, email));
 	}
 
 	@Role(RoleType.ADMIN)

@@ -49,6 +49,14 @@ public class TokenService {
 		return response;
 	}
 
+	public ValidateTokenResponse validateTokenForRegister(String tokenValue, String email) {
+		ValidateTokenResponse response = ValidateTokenResponse.builder().success(false).token(null).build();
+		if (this.isValidToken(tokenValue, email)) {
+			response.setSuccess(true);
+		}
+		return response;
+	}
+
 	public Boolean isValidToken(String tokenValue, String email) {
 		Token token = this.getToken(tokenValue);
 		if (token != null && email.equals(token.getEmail())
