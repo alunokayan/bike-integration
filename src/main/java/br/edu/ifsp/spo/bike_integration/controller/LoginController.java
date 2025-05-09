@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,11 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 import br.edu.ifsp.spo.bike_integration.annotation.BearerToken;
 import br.edu.ifsp.spo.bike_integration.annotation.Role;
 import br.edu.ifsp.spo.bike_integration.annotation.XAccessKey;
+import br.edu.ifsp.spo.bike_integration.dto.JwtUserDTO;
 import br.edu.ifsp.spo.bike_integration.dto.UsuarioLoginDTO;
 import br.edu.ifsp.spo.bike_integration.exception.CryptoException;
 import br.edu.ifsp.spo.bike_integration.hardcode.RoleType;
 import br.edu.ifsp.spo.bike_integration.model.Usuario;
 import br.edu.ifsp.spo.bike_integration.service.LoginService;
+import br.edu.ifsp.spo.bike_integration.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
@@ -30,6 +33,9 @@ public class LoginController {
 
 	@Autowired
 	private LoginService loginService;
+
+	@Autowired
+	private UsuarioService usuarioService;
 
 	@Role(RoleType.ADMIN)
 	@XAccessKey
@@ -45,10 +51,9 @@ public class LoginController {
 	@PostMapping(path = "/recover", produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Recupera a senha utilizando token e nova senha informada.")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void recoverPassword(@RequestParam String idUsuario,
-			@RequestParam String token,
+	public void recoverPassword(@AuthenticationPrincipal JwtUserDTO jwtUserDTO,
 			@RequestParam String novaSenha)
 			throws MessagingException, CryptoException {
-		loginService.recoverPassword(idUsuario, token, novaSenha);
+		loginService.recoverPassword(usuarioService.loadUsuarioByJwt(jwtUserDTO).getId(), novaSenha);
 	}
 }

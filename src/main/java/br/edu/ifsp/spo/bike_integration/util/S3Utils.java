@@ -1,5 +1,7 @@
 package br.edu.ifsp.spo.bike_integration.util;
 
+import java.util.UUID;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
@@ -15,7 +17,7 @@ public interface S3Utils {
      * @param file   the MultipartFile to be uploaded
      * @return the S3Key as a String
      */
-    static String createS3Key(String entity, Long id, MultipartFile file) {
+    static String createS3Key(String entity, String id, MultipartFile file) {
         String fileName = file.getOriginalFilename();
         String[] splitFileName = fileName.split("\\.");
         String extension = splitFileName[splitFileName.length - 1];

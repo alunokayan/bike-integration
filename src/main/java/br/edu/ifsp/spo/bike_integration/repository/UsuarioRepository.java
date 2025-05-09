@@ -8,8 +8,8 @@ import org.springframework.data.repository.query.Param;
 
 import br.edu.ifsp.spo.bike_integration.model.Usuario;
 
-public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
-	Optional<Usuario> findById(Long id);
+public interface UsuarioRepository extends JpaRepository<Usuario, String> {
+	Optional<Usuario> findById(String id);
 
 	Optional<Usuario> findByNomeUsuario(String nomeUsuario);
 

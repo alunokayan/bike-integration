@@ -29,7 +29,7 @@ public class ProblemaReport {
     private Long id;
 
     @Column(name = "id_usuario", nullable = false)
-    private Long usuarioId;
+    private String usuarioId;
 
     @ManyToOne
     @JoinColumn(name = "id_problema", nullable = false)
@@ -39,8 +39,8 @@ public class ProblemaReport {
     private LocalDateTime dtCricao;
 
     @PrePersist
-    void prePersist(){
+    void prePersist() {
         this.dtCricao = LocalDateTime.now();
     }
-    
+
 }

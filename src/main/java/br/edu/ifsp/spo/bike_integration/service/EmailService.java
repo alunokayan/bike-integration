@@ -5,6 +5,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import br.edu.ifsp.spo.bike_integration.exception.BikeIntegrationCustomException;
 import br.edu.ifsp.spo.bike_integration.model.Usuario;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -18,6 +19,9 @@ public class EmailService {
 	@Autowired
 	private TokenService tokenService;
 
+	@Autowired
+	private UsuarioService usuarioService;
+
 	// Constants for email subjects
 	private static final String SUBJECT_CADASTRO = "Token de Cadastro - Bicity App";
 	private static final String SUBJECT_RECUPERACAO = "Token de Recuperação - Bicity App";
@@ -30,6 +34,10 @@ public class EmailService {
 
 	// Envia um e-mail com o token de cadastro para o usuário.
 	public void sendCadastroTokenEmail(String email, String token) throws MessagingException {
+		if (usuarioService.loadUsuarioByEmail(email) == null) {
+			throw new BikeIntegrationCustomException("Usuário não encontrado com o e-mail informado.");
+		}
+
 		String htmlContent = buildEmailContent("", "Obrigado por se registrar no <strong>Bicity App</strong>.",
 				"Seu token de cadastro é:", token);
 		sendEmail(email, SUBJECT_CADASTRO, htmlContent);

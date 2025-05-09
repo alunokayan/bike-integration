@@ -58,7 +58,8 @@ public class EventoService {
 	}
 
 	public ListEventoResponse listarEventos(Long pagina, String nome, String descricao, String data, String cidade,
-			String estado, Long faixaKm, Long tipoEvento, Long nivelHabilidade, Boolean gratuito, Boolean aprovado, Long idUsuario) {
+			String estado, Long faixaKm, Long tipoEvento, Long nivelHabilidade, Boolean gratuito, Boolean aprovado,
+			String idUsuario) {
 
 		Long limit = PaginationType.RESULTS_PER_PAGE.getValue();
 
@@ -136,7 +137,7 @@ public class EventoService {
 		}
 	}
 
-	public void deleteEventosByUsuario(Long idUsuario) {
+	public void deleteEventosByUsuario(String idUsuario) {
 		Usuario usuario = usuarioService.loadUsuarioById(idUsuario);
 		eventoRepository.deleteByUsuario(usuario);
 	}
@@ -145,7 +146,7 @@ public class EventoService {
 		try {
 			Evento evento = eventoRepository.findById(id).orElse(null);
 			if (evento != null) {
-				String s3Key = S3Utils.createS3Key("evento", evento.getId(), file);
+				String s3Key = S3Utils.createS3Key("evento", evento.getId().toString(), file);
 				PutObjectResponse response = s3Service.put(S3Utils.createRestPutObjectRequest(bucketName, s3Key),
 						file.getBytes());
 				if (response.sdkHttpResponse().isSuccessful()) {

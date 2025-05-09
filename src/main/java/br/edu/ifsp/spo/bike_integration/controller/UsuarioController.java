@@ -45,7 +45,7 @@ public class UsuarioController {
 
 	@Role({ RoleType.PF, RoleType.PJ })
 	@BearerToken
-	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Retorna os detalhes de um usuário pelo ID informado.")
 	public ResponseEntity<Usuario> get(@AuthenticationPrincipal JwtUserDTO jwtUserDTO) {
 		return ResponseEntity.ok(usuarioService.loadUsuarioByJwt(jwtUserDTO));
@@ -94,7 +94,7 @@ public class UsuarioController {
 	@Operation(summary = "Remove um usuário e seus eventos associados pelo ID informado.")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void delete(@AuthenticationPrincipal JwtUserDTO jwtUserDTO) {
-		Long id = usuarioService.loadUsuarioByJwt(jwtUserDTO).getId();
+		String id = usuarioService.loadUsuarioByJwt(jwtUserDTO).getId();
 		eventoService.deleteEventosByUsuario(id);
 		usuarioService.deleteUsuario(id);
 	}

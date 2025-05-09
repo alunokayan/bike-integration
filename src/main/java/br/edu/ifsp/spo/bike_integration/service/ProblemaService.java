@@ -103,7 +103,7 @@ public class ProblemaService {
 		try {
 			Problema problema = loadProblemaById(idProblema);
 			if (problema != null) {
-				String s3Key = S3Utils.createS3Key("problema", problema.getId(), file);
+				String s3Key = S3Utils.createS3Key("problema", problema.getId().toString(), file);
 				PutObjectResponse response = s3Service.put(S3Utils.createRestPutObjectRequest(bucketName, s3Key),
 						file.getBytes());
 				if (response.sdkHttpResponse().isSuccessful()) {
@@ -135,7 +135,7 @@ public class ProblemaService {
 	}
 
 	public void reportProblem(Long problemaId, JwtUserDTO jwtUserDTO, boolean exists) {
-		Long usuarioId = usuarioService.loadUsuarioByJwt(jwtUserDTO).getId();
+		String usuarioId = usuarioService.loadUsuarioByJwt(jwtUserDTO).getId();
 		Problema problema = loadProblemaById(problemaId);
 
 		boolean alreadyReported = problemaReportRepository.existsByUsuarioIdAndProblemaId(usuarioId, problemaId);

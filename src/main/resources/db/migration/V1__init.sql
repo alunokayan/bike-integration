@@ -19,7 +19,7 @@ create table if not exists `nivel_habilidade` (
 );
 
 create table if not exists `usuario` (
-    `id` bigint primary key auto_increment,
+    `id` varchar(255) primary key,
     `nome` varchar(255) not null,
     `nome_usuario` varchar(255) unique not null,
     `endereco` varchar(255) not null,
@@ -37,7 +37,7 @@ create table if not exists `usuario` (
 
 create table if not exists `sessao` (
     `id` bigint primary key auto_increment,
-    `id_usuario` bigint not null unique,
+    `id_usuario` varchar(255) not null unique,
     `token` blob,
     constraint `fk_usuario_sessao` foreign key (`id_usuario`) references `usuario`(`id`)
 );
@@ -68,7 +68,7 @@ create table if not exists `evento` (
     `gratuito` boolean not null,
     `url_site` varchar(255),
     `id_tipo_evento` bigint not null,
-    `id_usuario` bigint not null,
+    `id_usuario` varchar(255) not null,
     `aprovado` boolean not null default false,
     `s3_url` varchar(255),
     constraint `fk_tipo_evento` foreign key (`id_tipo_evento`) references `tipo_evento`(`id`),
@@ -101,7 +101,7 @@ create table if not exists `trecho` (
 
 create table if not exists `avaliacao_infraestrutura_cicloviaria` (
     `id` bigint primary key auto_increment,
-    `id_usuario` bigint not null,
+    `id_usuario` varchar(255) not null,
     `id_infraestrutura_cicloviaria` bigint not null,
     `nota` int not null,
     `comentario` varchar(255),
@@ -133,7 +133,7 @@ create table if not exists `problema` (
 
 create table if not exists `problema_report` (
     `id` bigint primary key auto_increment,
-    `id_usuario` bigint not null,
+    `id_usuario` varchar(255) not null,
     `id_problema` bigint not null,
     `dt_criacao` timestamp default (now()),
     constraint `fk_usuario_report` foreign key (`id_usuario`) references `usuario`(`id`),

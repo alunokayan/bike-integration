@@ -47,7 +47,7 @@ public class UsuarioService {
 	@Value("${aws.s3.bucket-name}")
 	private String bucketName;
 
-	public Usuario loadUsuarioById(Long id) {
+	public Usuario loadUsuarioById(String id) {
 		return usuarioRepository.findById(id).orElse(null);
 	}
 
@@ -88,6 +88,14 @@ public class UsuarioService {
 
 	}
 
+	public Usuario refreshSession(String email) {
+		Usuario usuario = usuarioRepository.findByEmail(email).orElse(null);
+		if (usuario != null) {
+			sessaoService.create(usuario);
+		}
+		return usuarioRepository.findById(usuario.getId()).orElse(null);
+	}
+
 	public Usuario createUsuarioAdm(UsuarioAdmDTO usuarioAdmoDto) {
 		// Salva o usuário
 		Usuario usuario = usuarioRepository.saveAndFlush(Usuario.builder().nome(usuarioAdmoDto.getNome())
@@ -103,7 +111,7 @@ public class UsuarioService {
 
 	@Modifying
 	@Transactional
-	public Usuario updateUsuario(Long id, UsuarioUpdateDTO usuarioDto) {
+	public Usuario updateUsuario(String id, UsuarioUpdateDTO usuarioDto) {
 		Usuario usuario = usuarioRepository.findById(id).orElse(null);
 		if (usuario == null) {
 			return null;
@@ -116,11 +124,11 @@ public class UsuarioService {
 		return usuarioRepository.save(usuario);
 	}
 
-	public void updateFotoUsuario(Long id, MultipartFile file) {
+	public void updateFotoUsuario(String id, MultipartFile file) {
 		try {
 			Usuario usuario = usuarioRepository.findById(id).orElse(null);
 			if (usuario != null) {
-				String s3Key = S3Utils.createS3Key("usuario", id, file);
+				String s3Key = S3Utils.createS3Key("usuario", id.toString(), file);
 				PutObjectResponse response = s3Service.put(S3Utils.createRestPutObjectRequest(bucketName, s3Key),
 						file.getBytes());
 				if (response.sdkHttpResponse().isSuccessful()) {
@@ -135,7 +143,7 @@ public class UsuarioService {
 		}
 	}
 
-	public void deleteUsuario(Long id) {
+	public void deleteUsuario(String id) {
 		usuarioRepository.deleteById(id);
 	}
 
