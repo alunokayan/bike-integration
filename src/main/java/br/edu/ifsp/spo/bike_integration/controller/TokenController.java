@@ -55,6 +55,15 @@ public class TokenController {
 
 	@Role(RoleType.ADMIN)
 	@XAccessKey
+	@PostMapping(path = "/recover", produces = MediaType.APPLICATION_JSON_VALUE)
+	@Operation(summary = "Gera um novo token de recuperacao e envia por email para o usuário.")
+	@ResponseStatus(HttpStatus.OK)
+	public void sendRecoveryTokenEmail(@RequestParam String email) throws MessagingException {
+		emailService.sendRecuperacaoTokenEmail(email, tokenService.generateToken(email).getTokenGerado());
+	}
+
+	@Role(RoleType.ADMIN)
+	@XAccessKey
 	@GetMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "Recupera a lista de tokens associados ao email do usuário.")
 	public ResponseEntity<List<Token>> listTokensByUser(@RequestParam String email) {

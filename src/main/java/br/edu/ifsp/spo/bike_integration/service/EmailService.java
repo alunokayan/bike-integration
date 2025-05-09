@@ -34,21 +34,21 @@ public class EmailService {
 
 	// Envia um e-mail com o token de cadastro para o usuário.
 	public void sendCadastroTokenEmail(String email, String token) throws MessagingException {
-		if (usuarioService.loadUsuarioByEmail(email) == null) {
-			throw new BikeIntegrationCustomException("Usuário não encontrado com o e-mail informado.");
-		}
-
 		String htmlContent = buildEmailContent("", "Obrigado por se registrar no <strong>Bicity App</strong>.",
 				"Seu token de cadastro é:", token);
 		sendEmail(email, SUBJECT_CADASTRO, htmlContent);
 	}
 
 	// Envia um e-mail com o token de recuperação para o usuário.
-	public void sendRecuperacaoTokenEmail(Usuario usuario) throws MessagingException {
-		String htmlContent = buildEmailContent(usuario.getNome(),
+	public void sendRecuperacaoTokenEmail(String email, String token) throws MessagingException {
+		if (usuarioService.loadUsuarioByEmail(email) == null) {
+			throw new BikeIntegrationCustomException("Usuário não encontrado com o e-mail informado.");
+		}
+
+		String htmlContent = buildEmailContent("",
 				"Você solicitou a recuperação de sua senha no <strong>Bicity App</strong>.",
-				"Seu token de recuperação é:", tokenService.getLastTokenByEmail(usuario.getEmail()).getTokenGerado());
-		sendEmail(usuario.getEmail(), SUBJECT_RECUPERACAO, htmlContent);
+				"Seu token de recuperação é:", token);
+		sendEmail(email, SUBJECT_RECUPERACAO, htmlContent);
 	}
 
 	// Envia um e-mail com o token de login para o usuário.
